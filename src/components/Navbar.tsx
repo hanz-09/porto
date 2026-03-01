@@ -1,152 +1,310 @@
 ﻿"use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Code2 } from "lucide-react";
+import { Menu, X, User, Clock, Wrench, LayoutGrid, Mail, Rocket, Download } from "lucide-react";
 
 const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Projects", href: "#projects" },
-  { label: "Contact", href: "#contact" },
+  { label: "About",    href: "#about",    icon: User },
+  { label: "Timeline", href: "#timeline", icon: Clock },
+  { label: "Skills",   href: "#skills",   icon: Wrench },
+  { label: "Projects", href: "#projects", icon: LayoutGrid },
+  { label: "Contact",  href: "#contact",  icon: Mail },
 ];
 
-export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
+/* ─────────────────────────────────────────────────────────
+   Liquid glass CSS-in-JS helpers
+───────────────────────────────────────────────────────── */
+const liquidGlass = {
+  /* Main pill glass surface */
+  background: "rgba(255,255,255,0.055)",
+  backdropFilter: "blur(28px) saturate(160%) brightness(1.08)",
+  WebkitBackdropFilter: "blur(28px) saturate(160%) brightness(1.08)",
+  /* Prismatic/iridescent edge: top highlight is brighter */
+  border: "1px solid transparent",
+  backgroundClip: "padding-box",
+  /* Layered box shadows: inner highlight top + outer glow */
+  boxShadow: [
+    "inset 0 1px 0 rgba(255,255,255,0.22)",   /* top inner shine */
+    "inset 0 -1px 0 rgba(255,255,255,0.06)",   /* bottom inner */
+    "inset 1px 0 0 rgba(255,255,255,0.1)",     /* left inner */
+    "inset -1px 0 0 rgba(255,255,255,0.1)",    /* right inner */
+    "0 8px 32px rgba(0,0,0,0.35)",             /* depth shadow */
+    "0 0 0 1px rgba(255,255,255,0.09)",        /* outer border */
+    "0 0 24px rgba(0,212,255,0.06)",           /* subtle cyan glow */
+  ].join(", "),
+} as React.CSSProperties;
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+/* Active link pill */
+const activePillStyle: React.CSSProperties = {
+  background: "rgba(255,255,255,0.12)",
+  backdropFilter: "blur(8px)",
+  WebkitBackdropFilter: "blur(8px)",
+  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), 0 0 8px rgba(0,212,255,0.15)",
+};
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection("#" + entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-    navLinks.forEach(({ href }) => {
-      const el = document.querySelector(href);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
+/* ─────────────────────────────────────────────────────────
+   Iridescent shimmer line
+───────────────────────────────────────────────────────── */
+function IridescentEdge() {
+  return (
+    <div
+      aria-hidden
+      className="absolute top-0 left-4 right-4 h-px rounded-full pointer-events-none"
+      style={{
+        background:
+          "linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.5) 20%, rgba(167,139,250,0.6) 40%, rgba(244,114,182,0.5) 60%, rgba(0,212,255,0.4) 80%, transparent 100%)",
+        opacity: 0.7,
+      }}
+    />
+  );
+}
 
-  const handleNavClick = (href: string) => {
-    setMobileOpen(false);
-    const el = document.querySelector(href);
-    el?.scrollIntoView({ behavior: "smooth" });
-  };
+/* ─────────────────────────────────────────────────────────
+   Nav Item with Tooltip
+───────────────────────────────────────────────────────── */
+function NavItem({ link, isActive, onClick }: { link: typeof navLinks[0]; isActive: boolean; onClick: () => void }) {
+  const [hovered, setHovered] = useState(false);
+  const Icon = link.icon;
 
   return (
-    <motion.header
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "glass-card border-b border-white/6 py-3"
-          : "bg-transparent py-5"
-      }`}
+    <div
+      className="relative flex items-center justify-center"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
-      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex items-center gap-2 group"
-        >
-          <div className="w-8 h-8 rounded-lg bg-linear-to-br from-cyan-400 to-violet-600 flex items-center justify-center">
-            <Code2 size={16} className="text-white" />
-          </div>
-          <span className="font-display font-bold text-lg gradient-text">
-            farhan.dev
-          </span>
-        </motion.button>
+      <button
+        onClick={onClick}
+        className="relative p-3 rounded-full flex items-center justify-center transition-colors duration-200"
+        style={{ color: isActive ? "#ffffff" : "rgba(255,255,255,0.55)" }}
+        aria-label={link.label}
+      >
+        {isActive && (
+          <motion.span
+            layoutId="nav-active"
+            className="absolute inset-0 rounded-full"
+            style={activePillStyle}
+            transition={{ type: "spring", stiffness: 340, damping: 28 }}
+          />
+        )}
+        <Icon size={18} className="relative z-10" />
+      </button>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <button
-              key={link.href}
-              onClick={() => handleNavClick(link.href)}
-              className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
-                activeSection === link.href
-                  ? "text-(--accent-cyan)"
-                  : "text-(--text-secondary) hover:text-foreground"
-              }`}
-            >
-              {activeSection === link.href && (
-                <motion.span
-                  layoutId="nav-pill"
-                  className="absolute inset-0 rounded-lg bg-white/6"
-                  transition={{ type: "spring", duration: 0.5 }}
-                />
-              )}
-              <span className="relative z-10">{link.label}</span>
-            </button>
-          ))}
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => handleNavClick("#contact")}
-            className="ml-4 px-5 py-2 rounded-full text-sm font-semibold bg-linear-to-r from-cyan-500 to-violet-600 text-white hover:shadow-lg hover:shadow-cyan-500/25 transition-shadow"
-          >
-            Hire Me
-          </motion.button>
-        </nav>
-
-        {/* Mobile Toggle */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden p-2 rounded-lg glass-card text-(--text-secondary)"
-        >
-          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
+      {/* Tooltip Popover (opens UPWARDS) */}
       <AnimatePresence>
-        {mobileOpen && (
+        {hovered && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden border-t border-white/6 glass-card"
+            initial={{ opacity: 0, y: -15, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="absolute bottom-full mb-4 flex flex-col items-center pointer-events-none z-50"
           >
-            <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1">
-              {navLinks.map((link, i) => (
-                <motion.button
-                  key={link.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.07 }}
-                  onClick={() => handleNavClick(link.href)}
-                  className="text-left px-4 py-3 rounded-lg text-sm font-medium text-(--text-secondary) hover:text-foreground hover:bg-white/6 transition-all"
-                >
-                  {link.label}
-                </motion.button>
-              ))}
-              <button
-                onClick={() => handleNavClick("#contact")}
-                className="mt-2 px-5 py-3 rounded-full text-sm font-semibold bg-linear-to-r from-cyan-500 to-violet-600 text-white"
-              >
-                Hire Me
-              </button>
+            {/* Tooltip Body */}
+            <div
+              className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-white whitespace-nowrap"
+              style={{
+                background: "rgba(30,30,35,0.9)",
+                backdropFilter: "blur(12px)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+              }}
+            >
+              {link.label}
             </div>
+            {/* Tooltip Arrow (pointing down) */}
+            <div
+              className="w-2.5 h-2.5 rotate-45 -mt-1.5 relative z-0"
+              style={{
+                background: "rgba(30,30,35,0.9)",
+                borderBottom: "1px solid rgba(255,255,255,0.15)",
+                borderRight: "1px solid rgba(255,255,255,0.15)",
+              }}
+            />
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </div>
+  );
+}
+
+export default function Navbar() {
+  const [scrolled, setScrolled]   = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
+
+  /* Scroll detection */
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* Active section via IntersectionObserver */
+  useEffect(() => {
+    const ids = ["hero", ...navLinks.map((l) => l.href.slice(1))];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const vis = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (vis.length) setActiveSection(vis[0].target.id);
+      },
+      { threshold: 0.3, rootMargin: "-10% 0px -10% 0px" }
+    );
+    ids.forEach((id) => { const el = document.getElementById(id); if (el) observer.observe(el); });
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollTo = useCallback((href: string) => {
+    setMobileOpen(false);
+    const el = document.querySelector(href);
+    el?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  return (
+    <>
+      {/* ── Universal Pill Navbar ── */}
+      <motion.nav
+        initial={{ y: 80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 2.5 }}
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-max max-w-[95vw] mb-safe"
+      >
+        <div
+          style={{
+            ...liquidGlass,
+            padding: "8px 12px",
+            borderRadius: "9999px",
+          }}
+          className="relative flex items-center gap-1.5"
+        >
+          {/* Iridescent top shimmer */}
+          <IridescentEdge />
+
+          {/* Nav links (Icons + Tooltips) */}
+          {navLinks.map((link) => (
+            <NavItem
+              key={link.href}
+              link={link}
+              isActive={activeSection === link.href.slice(1)}
+              onClick={() => scrollTo(link.href)}
+            />
+          ))}
+
+          {/* Divider */}
+          <div className="w-px h-6 mx-2 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
+
+          {/* CTA Actions */}
+          <div className="flex items-center gap-1.5">
+            {/* Resume CTA */}
+            <motion.div
+              className="relative flex items-center justify-center"
+              initial="initial"
+              whileHover="hover"
+            >
+              <motion.a
+                href="/cv.pdf"
+                whileTap={{ scale: 0.96 }}
+                className="p-3 rounded-full text-white relative overflow-hidden transition-colors hover:bg-white/10"
+                aria-label="Download Resume"
+              >
+                <Download size={18} className="relative z-10" />
+              </motion.a>
+              
+              {/* Resume Tooltip */}
+              <motion.div
+                variants={{
+                  initial: { opacity: 0, y: -15, scale: 0.9 },
+                  hover: { opacity: 1, y: 0, scale: 1 },
+                }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="absolute bottom-full mb-4 flex flex-col items-center pointer-events-none z-50"
+              >
+                <div
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-white whitespace-nowrap"
+                  style={{
+                    background: "rgba(30,30,35,0.9)",
+                    backdropFilter: "blur(12px)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+                  }}
+                >
+                  Resume
+                </div>
+                <div
+                  className="w-2.5 h-2.5 rotate-45 -mt-1.5 relative z-0"
+                  style={{
+                    background: "rgba(30,30,35,0.9)",
+                    borderBottom: "1px solid rgba(255,255,255,0.15)",
+                    borderRight: "1px solid rgba(255,255,255,0.15)",
+                  }}
+                />
+              </motion.div>
+            </motion.div>
+
+            {/* Hire Me CTA */}
+            <motion.div
+              className="relative flex items-center justify-center"
+              initial="initial"
+              whileHover="hover"
+            >
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                onClick={() => scrollTo("#contact")}
+                className="p-3 rounded-full text-white relative overflow-hidden"
+                aria-label="Hire Me"
+                style={{
+                  background: "linear-gradient(135deg, #00d4ff, #7c3aed)",
+                  boxShadow: "0 0 14px rgba(0,212,255,0.3), inset 0 1px 0 rgba(255,255,255,0.25)",
+                }}
+              >
+                {/* Shine sweep on button */}
+                <motion.div
+                  className="absolute inset-0 rounded-full opacity-0 hover:opacity-100"
+                  style={{
+                    background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
+                  }}
+                  animate={{ x: ["-100%", "200%"] }}
+                  transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 2 }}
+                />
+                <Rocket size={18} className="relative z-10" />
+              </motion.button>
+
+              {/* Hire Me Tooltip (opens UPWARDS) */}
+              <motion.div
+                variants={{
+                  initial: { opacity: 0, y: -15, scale: 0.9 },
+                  hover: { opacity: 1, y: 0, scale: 1 },
+                }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="absolute bottom-full mb-4 flex flex-col items-center pointer-events-none z-50"
+              >
+                <div
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-white whitespace-nowrap"
+                  style={{
+                    background: "rgba(30,30,35,0.9)",
+                    backdropFilter: "blur(12px)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+                  }}
+                >
+                  Hire Me
+                </div>
+                <div
+                  className="w-2.5 h-2.5 rotate-45 -mt-1.5 relative z-0"
+                  style={{
+                    background: "rgba(30,30,35,0.9)",
+                    borderBottom: "1px solid rgba(255,255,255,0.15)",
+                    borderRight: "1px solid rgba(255,255,255,0.15)",
+                  }}
+                />
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </motion.nav>
+
+    </>
   );
 }

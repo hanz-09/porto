@@ -8,27 +8,20 @@ import dynamic from "next/dynamic";
 const Aurora = dynamic(() => import("./Aurora"), { ssr: false });
 
 // "Hello" in 20 languages
+// "Hello" in 8 languages to keep the sequence short but sweet
 const hellos = [
   { word: "Hello",      lang: "English" },
   { word: "Hola",       lang: "Spanish" },
   { word: "Bonjour",    lang: "French" },
   { word: "Ciao",       lang: "Italian" },
   { word: "こんにちは",  lang: "Japanese" },
-  { word: "안녕하세요",  lang: "Korean" },
-  { word: "你好",       lang: "Chinese" },
   { word: "Hallo",      lang: "German" },
-  { word: "Привет",     lang: "Russian" },
-  { word: "مرحبا",      lang: "Arabic" },
-  { word: "Olá",        lang: "Portuguese" },
-  { word: "Merhaba",    lang: "Turkish" },
-  { word: "Hei",        lang: "Norwegian" },
-  { word: "สวัสดี",     lang: "Thai" },
+  { word: "안녕하세요",  lang: "Korean" },
   { word: "Halo",       lang: "Indonesian" },
-  { word: "Sawubona",   lang: "Zulu" },
 ];
 
 // Duration config (ms)
-const LOADING_DURATION = 2200; // fake progress bar fills in this time
+const LOADING_DURATION = 4500; // fake progress bar fills in this time (slower, more realistic)
 const HELLO_INTERVAL   = 750;  // each word shows for Xms — long enough to read
 const HELLO_ROUNDS     = 1;    // one full loop through all languages
 
@@ -119,17 +112,17 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
   useEffect(() => {
     if (phase !== "hello") return;
 
-    const totalSteps = Math.ceil(hellos.length * HELLO_ROUNDS);
-    let step = 0;
-
     const interval = setInterval(() => {
-      step++;
-      setHelloIndex((prev) => (prev + 1) % hellos.length);
-      if (step >= totalSteps) {
-        clearInterval(interval);
-        // linger on the last word a bit longer before exit
-        setTimeout(() => setPhase("exit"), 900);
-      }
+      setHelloIndex((prev) => {
+        const next = prev + 1;
+        if (next >= hellos.length) {
+          clearInterval(interval);
+          // linger on the last word a bit longer before exit
+          setTimeout(() => setPhase("exit"), 900);
+          return prev; // keep showing the last word while lingering
+        }
+        return next;
+      });
     }, HELLO_INTERVAL);
 
     return () => clearInterval(interval);
@@ -138,7 +131,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
   // Phase 3: trigger exit → parent removes this overlay
   useEffect(() => {
     if (phase === "exit") {
-      const t = setTimeout(onDone, 700);
+      const t = setTimeout(onDone, 1000); // Wait 1s for the slide-up animation
       return () => clearTimeout(t);
     }
   }, [phase, onDone]);
@@ -148,11 +141,12 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
       {phase !== "exit" && (
         <motion.div
           key="loader"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.04 }}
-          transition={{ duration: 0.65, ease: [0.76, 0, 0.24, 1] }}
-          className="fixed inset-0 z-9999 flex flex-col items-center justify-center overflow-hidden"
-          style={{ background: "#050508" }}
+          // We apply a rounded bottom border specifically during the exit animation
+          initial={{ y: "0%", borderBottomLeftRadius: "0%", borderBottomRightRadius: "0%" }}
+          exit={{ y: "-100%", borderBottomLeftRadius: "100%", borderBottomRightRadius: "100%" }}
+          transition={{ duration: 1.0, ease: [0.76, 0, 0.24, 1] }}
+          className="fixed inset-0 z-9999 flex flex-col items-center justify-center overflow-hidden origin-top"
+          style={{ background: "#000000" }} // True black for max contrast during the slide-up reveal
         >
           {/* Aurora WebGL background */}
           <div className="absolute inset-0 opacity-60">
@@ -202,8 +196,37 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
                   </div>
 
                   <div className="flex flex-col items-center gap-3">
-                    <p className="text-sm tracking-[0.25em] uppercase text-white/40">
-                      Loading portfolio
+                    <p className="text-sm tracking-[0.25em] relative uppercase text-white font-bold h-5 flex items-center justify-center w-full">
+                      <AnimatePresence mode="popLayout">
+                        <motion.span
+                          key={
+                            progress < 20
+                              ? "init"
+                              : progress < 50
+                              ? "assets"
+                              : progress < 85
+                              ? "modules"
+                              : progress < 99
+                              ? "almost"
+                              : "done"
+                          }
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute whitespace-nowrap"
+                        >
+                          {progress < 20
+                            ? "INITIALIZING CORE ENGINE"
+                            : progress < 50
+                            ? "LOADING HIGH-RES ASSETS"
+                            : progress < 85
+                            ? "COMPILING UI MODULES"
+                            : progress < 99
+                            ? "ALMOST DONE..."
+                            : "HERE WE GO!"}
+                        </motion.span>
+                      </AnimatePresence>
                     </p>
 
                     {/* Progress bar */}

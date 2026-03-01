@@ -7,10 +7,13 @@ import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
+import Timeline from "@/components/Timeline";
 import Skills from "@/components/Skills";
 import Projects from "@/components/Projects";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import ScrollProgressBar from "@/components/ScrollProgressBar";
+import ChapterNav from "@/components/ChapterNav";
 
 // LoadingScreen uses WebGL + dynamic imports, load client-side only
 const LoadingScreen = dynamic(() => import("@/components/LoadingScreen"), {
@@ -33,9 +36,14 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
           >
+            {/* Global scroll-driven UI */}
+            <ScrollProgressBar />
+            <ChapterNav />
+
             <Navbar />
             <Hero />
             <About />
+            <Timeline />
             <Skills />
             <Projects />
             <Contact />

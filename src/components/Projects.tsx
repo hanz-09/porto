@@ -1,8 +1,8 @@
 ﻿"use client";
 
-import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
-import { Github, ExternalLink, Star } from "lucide-react";
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { Github, ExternalLink, Star, LayoutGrid } from "lucide-react";
 import TiltedCard from "./TiltedCard";
 import ScrollReveal from "./ScrollReveal";
 import BlurText from "./BlurText";
@@ -42,7 +42,7 @@ const projects: Project[] = [
   {
     title: "Blog Platform",
     description: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo CRUD blog.",
-    techs: ["Next.js", "MDX", "Tailwind CSS"],
+    techs: ["Next.js", "MDX", "Tailwind"],
     github: "https://github.com",
     live: "https://example.com",
     gradient: "from-pink-500/20 to-orange-400/20",
@@ -69,7 +69,7 @@ const projects: Project[] = [
   {
     title: "Weather App",
     description: "Nulla facilisi. Cras consectetur felis id metus ornare, ac faucibus magna aliquet. Weather API integration.",
-    techs: ["React", "OpenWeather API", "CSS"],
+    techs: ["React", "REST API", "CSS"],
     github: "https://github.com",
     live: "https://example.com",
     gradient: "from-blue-500/20 to-cyan-500/20",
@@ -77,11 +77,24 @@ const projects: Project[] = [
   },
 ];
 
+// Collect unique tags from all projects
+const ALL_TAG = "All";
+const allTechs: string[] = [
+  ALL_TAG,
+  ...Array.from(new Set(projects.flatMap((p) => p.techs))).sort(),
+];
+
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <ScrollReveal preset="fadeUp" delay={index * 0.08}>
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.92, y: 24 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.88, y: -12 }}
+      transition={{ duration: 0.35, delay: index * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }}
+    >
       <TiltedCard tiltStrength={8} glareOpacity={0.1} className="h-full">
         <div
           className="group relative glass-card rounded-2xl overflow-hidden border border-white/6 hover:border-white/14 transition-colors h-full flex flex-col"
@@ -100,20 +113,17 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <span className="relative font-display font-bold text-5xl opacity-20 text-white">
               {project.title.charAt(0)}
             </span>
-            {/* Accent glow */}
             <div
               className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               style={{ background: `radial-gradient(ellipse at center, ${project.accent}22 0%, transparent 70%)` }}
             />
-
             {project.featured && (
               <div className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 text-xs font-semibold">
                 <Star size={10} className="fill-yellow-400" />
                 Featured
               </div>
             )}
-
-            {/* Hover Overlay */}
+            {/* Hover overlay */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: hovered ? 1 : 0 }}
@@ -146,7 +156,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             </motion.div>
           </div>
 
-          {/* Card Body */}
+          {/* Body */}
           <div className="p-5 space-y-3 flex flex-col flex-1">
             <h3
               className="font-display font-bold text-lg transition-colors"
@@ -171,11 +181,21 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           </div>
         </div>
       </TiltedCard>
-    </ScrollReveal>
+    </motion.div>
   );
 }
 
 export default function Projects() {
+  const [activeFilter, setActiveFilter] = useState<string>(ALL_TAG);
+
+  const filtered = useMemo(
+    () =>
+      activeFilter === ALL_TAG
+        ? projects
+        : projects.filter((p) => p.techs.includes(activeFilter)),
+    [activeFilter]
+  );
+
   return (
     <section id="projects" className="section-padding relative overflow-hidden">
       <div
@@ -184,7 +204,8 @@ export default function Projects() {
       />
 
       <div className="max-w-6xl mx-auto px-6">
-        <ScrollReveal preset="fadeUp" className="text-center mb-16">
+        {/* Heading */}
+        <ScrollReveal preset="fadeUp" className="text-center mb-10">
           <span className="text-sm font-semibold tracking-widest uppercase" style={{ color: "var(--accent-pink)" }}>
             What I&apos;ve built
           </span>
@@ -193,17 +214,87 @@ export default function Projects() {
             className="font-display font-bold text-4xl md:text-5xl mt-3 justify-center"
             delay={0.08}
           />
-          <p className="mt-4 text-sm max-w-md mx-auto" style={{ color: "var(--text-secondary)" }}>
-            Hover a card to see links. Click to explore.
-          </p>
         </ScrollReveal>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project, i) => (
-            <ProjectCard key={project.title} project={project} index={i} />
-          ))}
-        </div>
+        {/* ── Filter Buttons ── */}
+        <ScrollReveal preset="fadeUp" delay={0.1} className="mb-10">
+          <div className="flex flex-wrap gap-2 justify-center">
+            {allTechs.map((tech) => {
+              const isActive = activeFilter === tech;
+              return (
+                <motion.button
+                  key={tech}
+                  onClick={() => setActiveFilter(tech)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.96 }}
+                  className="relative flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all select-none"
+                  style={{
+                    border: `1px solid ${isActive ? "rgba(0,212,255,0.5)" : "rgba(255,255,255,0.08)"}`,
+                    color: isActive ? "#00d4ff" : "rgba(160,160,200,0.7)",
+                    background: isActive ? "rgba(0,212,255,0.08)" : "rgba(255,255,255,0.03)",
+                  }}
+                >
+                  {tech === ALL_TAG && <LayoutGrid size={13} />}
+                  {tech}
+                  {/* active pill indicator */}
+                  {isActive && (
+                    <motion.span
+                      layoutId="filter-pill"
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        boxShadow: "inset 0 0 0 1px rgba(0,212,255,0.5)",
+                        background: "rgba(0,212,255,0.06)",
+                      }}
+                      transition={{ type: "spring", stiffness: 380, damping: 28 }}
+                    />
+                  )}
+                  {/* count badge */}
+                  <span
+                    className="ml-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full"
+                    style={{
+                      background: isActive ? "rgba(0,212,255,0.2)" : "rgba(255,255,255,0.06)",
+                      color: isActive ? "#00d4ff" : "rgba(160,160,200,0.5)",
+                    }}
+                  >
+                    {tech === ALL_TAG
+                      ? projects.length
+                      : projects.filter((p) => p.techs.includes(tech)).length}
+                  </span>
+                </motion.button>
+              );
+            })}
+          </div>
+        </ScrollReveal>
 
+        {/* ── Project Grid ── */}
+        <LayoutGroup>
+          <AnimatePresence mode="popLayout">
+            {filtered.length > 0 ? (
+              <motion.div
+                layout
+                className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
+                {filtered.map((project, i) => (
+                  <ProjectCard key={project.title} project={project} index={i} />
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="text-center py-24"
+              >
+                <p className="text-sm" style={{ color: "rgba(160,160,200,0.5)" }}>
+                  No projects found for <strong style={{ color: "#00d4ff" }}>{activeFilter}</strong>
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </LayoutGroup>
+
+        {/* GitHub link */}
         <ScrollReveal preset="fadeUp" delay={0.3} className="text-center mt-12">
           <a
             href="https://github.com"

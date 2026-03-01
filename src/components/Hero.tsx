@@ -1,226 +1,350 @@
 ﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useSpring, useTransform, useMotionValue } from "framer-motion";
-import { Github, Linkedin, Instagram, ArrowDown, Download, Mail } from "lucide-react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValue,
+  useSpring,
+  AnimatePresence,
+} from "framer-motion";
+import { ArrowDown, Mail, Download } from "lucide-react";
 import Magnet from "./Magnet";
 
-const socialLinks = [
-  { icon: Github, href: "https://github.com", label: "GitHub" },
-  { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-  { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+/* ─────────────────────────────────────────────────────────
+   Marquee (single row, infinite, two directions)
+───────────────────────────────────────────────────────── */
+const MARQUEE_TEXT = [
+  "FRONTEND DEVELOPER",
+  "—",
+  "FULLSTACK DEVELOPER WANNABE",
+  "—",
+  "UI ENTHUSIAST",
+  "—",
+  "WEB CRAFTSMAN",
+  "—",
 ];
 
-const roles = ["Frontend Developer", "UI Enthusiast", "React Specialist", "Next.js Developer"];
+function Marquee({ reverse = false }: { reverse?: boolean }) {
+  // To create a truly seamless infinite marquee, we duplicate the array enough times
+  // so that moving it by exactly half its width (or -50%) perfectly lines up with its start.
+  // Using 4 sets of the text guarantees we have enough content to fill the screen and loop without a visible jump.
+  const base = [...MARQUEE_TEXT];
+  const content = [...base, ...base, ...base, ...base];
 
+  return (
+    <div className="overflow-hidden select-none w-full flex">
+      <motion.div
+        className="flex gap-8 whitespace-nowrap min-w-max"
+        animate={{ x: reverse ? ["0%", "-50%"] : ["-50%", "0%"] }}
+        transition={{ duration: 170, repeat: Infinity, ease: "linear" }}
+      >
+        {content.map((word, i) => (
+          <span
+            key={i}
+            className={`font-display font-black tracking-tight shrink-0 ${
+              word === "—" ? "opacity-30" : ""
+            }`}
+            style={{
+              fontSize: "clamp(3.5rem, 10vw, 9rem)",
+              /* Alternating solid / outline style per word */
+              color: word === "—" ? "rgba(255,255,255,0.2)" : "transparent",
+              WebkitTextStroke:
+                word === "—"
+                  ? "none"
+                  : i % 2 === 0
+                  ? "1px rgba(255,255,255,0.18)"
+                  : "1px rgba(0,212,255,0.35)",
+              textShadow:
+                i % 2 !== 0 && word !== "—"
+                  ? "0 0 40px rgba(0,212,255,0.15)"
+                  : "none",
+            }}
+          >
+            {word}
+          </span>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────
+   Live clock (WIB — Western Indonesia Time UTC+7)
+───────────────────────────────────────────────────────── */
+function LiveClock() {
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const tick = () => {
+      setTime(
+        new Intl.DateTimeFormat("id-ID", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+          timeZone: "Asia/Jakarta",
+        }).format(new Date())
+      );
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <span className="font-mono text-xs tracking-widest tabular-nums"
+      style={{ color: "rgba(255,255,255,0.35)" }}>
+      WIB {time}
+    </span>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────
+   Mouse spotlight
+───────────────────────────────────────────────────────── */
+function MouseSpotlight() {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 80, damping: 22 });
+  const sy = useSpring(y, { stiffness: 80, damping: 22 });
+
+  useEffect(() => {
+    const move = (e: MouseEvent) => { x.set(e.clientX); y.set(e.clientY); };
+    window.addEventListener("mousemove", move);
+    return () => window.removeEventListener("mousemove", move);
+  }, [x, y]);
+
+  return (
+    <motion.div
+      className="pointer-events-none fixed inset-0 z-0"
+      style={{
+        background: "transparent",
+      }}
+    >
+      <motion.div
+        style={{
+          position: "absolute",
+          left: sx,
+          top: sy,
+          translateX: "-50%",
+          translateY: "-50%",
+          width: 500,
+          height: 500,
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 65%)",
+          pointerEvents: "none",
+        }}
+      />
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────
+   Hero
+───────────────────────────────────────────────────────── */
 export default function Hero() {
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [displayed, setDisplayed] = useState("");
-  const [typing, setTyping] = useState(true);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Mouse parallax values
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const springX = useSpring(mouseX, { stiffness: 60, damping: 20 });
-  const springY = useSpring(mouseY, { stiffness: 60, damping: 20 });
+  // Scroll-driven exit
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const opacity  = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+  const yPercent = useTransform(scrollYProgress, [0, 1],    [0, -18]);
+  const scale    = useTransform(scrollYProgress, [0, 0.8],  [1, 0.93]);
 
-  // Blob parallax offsets (different layers = different depth)
-  const blob1X = useTransform(springX, [-300, 300], [-30, 30]);
-  const blob1Y = useTransform(springY, [-300, 300], [-20, 20]);
-  const blob2X = useTransform(springX, [-300, 300], [20, -20]);
-  const blob2Y = useTransform(springY, [-300, 300], [10, -10]);
-  const textX  = useTransform(springX, [-300, 300], [-6, 6]);
-  const textY  = useTransform(springY, [-300, 300], [-4, 4]);
-
-  // Typing effect
-  useEffect(() => {
-    const current = roles[roleIndex];
-    let timeout: ReturnType<typeof setTimeout>;
-    if (typing) {
-      if (displayed.length < current.length) {
-        timeout = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), 80);
-      } else {
-        timeout = setTimeout(() => setTyping(false), 2200);
-      }
-    } else {
-      if (displayed.length > 0) {
-        timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 40);
-      } else {
-        setRoleIndex((prev) => (prev + 1) % roles.length);
-        setTyping(true);
-      }
-    }
-    return () => clearTimeout(timeout);
-  }, [displayed, typing, roleIndex]);
-
-  // Mouse tracking
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = sectionRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    mouseX.set(e.clientX - rect.left - rect.width / 2);
-    mouseY.set(e.clientY - rect.top - rect.height / 2);
+  // Stagger entrance variants
+  const enter = {
+    hidden: { opacity: 0, y: 28, filter: "blur(8px)" },
+    show:   { opacity: 1, y: 0,  filter: "blur(0px)" },
   };
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
-
-  const containerVariants = {
+  const stagger = {
     hidden: {},
-    show: { transition: { staggerChildren: 0.12 } },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: "easeOut" as const } },
+    show:   { transition: { staggerChildren: 0.13, delayChildren: 0.1 } },
   };
 
   return (
     <section
+      id="hero"
       ref={sectionRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden noise"
+      className="relative min-h-screen flex flex-col overflow-hidden"
+      style={{ background: "#060608" }}
     >
-      {/* Background: parallax blobs */}
-      <motion.div
-        style={{ x: blob1X, y: blob1Y }}
-        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full animate-glow-pulse pointer-events-none"
-        aria-hidden
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5 }}
-      >
-        <div className="w-full h-full rounded-full" style={{ background: "radial-gradient(circle, rgba(0,212,255,0.18) 0%, transparent 70%)" }} />
-      </motion.div>
-      <motion.div
-        style={{ x: blob2X, y: blob2Y }}
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full pointer-events-none"
-        aria-hidden
-      >
-        <div className="w-full h-full rounded-full animate-glow-pulse" style={{ background: "radial-gradient(circle, rgba(124,58,237,0.22) 0%, transparent 70%)", animationDelay: "2s" }} />
+      {/* Global mouse spotlight */}
+      <MouseSpotlight />
 
-      </motion.div>
+      {/* Noise Texture */}
+      <div className="noise absolute inset-0 pointer-events-none z-0 opacity-40" aria-hidden />
 
-      {/* Floating orbs */}
-      <div className="absolute top-20 right-20 w-4 h-4 rounded-full bg-cyan-400/60 animate-float pointer-events-none" aria-hidden />
-      <div className="absolute bottom-32 left-16 w-3 h-3 rounded-full bg-violet-400/60 animate-float pointer-events-none" style={{ animationDelay: "2s" }} aria-hidden />
-      <div className="absolute top-1/2 right-12 w-2 h-2 rounded-full bg-pink-400/60 animate-float pointer-events-none" style={{ animationDelay: "1s" }} aria-hidden />
-
-      {/* Grid */}
+      {/* Edge vignette */}
       <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        className="absolute inset-0 pointer-events-none z-0"
         style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
+          background:
+            "radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(6,6,8,0.92) 100%)",
         }}
         aria-hidden
       />
 
-      {/* Content — subtle mouse parallax on text layer */}
+      {/* Blue-edge glow */}
+      <div
+        className="absolute inset-0 pointer-events-none z-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 60% 60% at 50% 100%, rgba(0,212,255,0.06) 0%, transparent 70%)",
+        }}
+        aria-hidden
+      />
+
+      {/* Scroll exit wrapper */}
       <motion.div
-        style={{ x: textX, y: textY }}
-        className="relative z-10 max-w-6xl mx-auto px-6 pt-24 text-center w-full"
+        className="flex flex-col flex-1"
+        style={{ opacity, y: yPercent, scale, transformOrigin: "center top" }}
       >
+        {/* ── TOP BAR ── */}
+        <div className="relative z-20 flex items-center justify-between px-7 pt-2 md:pt-4">
+          {/* Logo / Name */}
+          <motion.div
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex items-center gap-2"
+          >
+            <div
+              className="w-7 h-7 rounded-lg flex items-center justify-center"
+              style={{ background: "linear-gradient(135deg, #00d4ff, #7c3aed)" }}
+            >
+              <span className="font-display font-black text-white text-xs">F</span>
+            </div>
+            <span className="font-display font-bold text-sm tracking-wide"
+              style={{ color: "rgba(255,255,255,0.7)" }}>
+              farhan.dev
+            </span>
+          </motion.div>
+
+          {/* Live clock */}
+          <motion.div
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <LiveClock />
+          </motion.div>
+        </div>
+
+        {/* ── MARQUEE ROW 1 (scroll right → left) ── */}
+        <div className="relative z-10 mt-1 md:mt-2 opacity-100">
+          <Marquee reverse={false} />
+        </div>
+
+        {/* ── CENTER CONTENT ── */}
         <motion.div
-          variants={containerVariants}
+          variants={stagger}
           initial="hidden"
           animate="show"
-          className="flex flex-col items-center gap-6"
+          className="relative z-20 flex-1 flex flex-col items-center justify-center text-center px-6 gap-2 md:gap-4"
+          style={{ marginTop: "-4rem", marginBottom: "-1rem" }}
         >
-          {/* Badge */}
-          <motion.div variants={itemVariants}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card text-sm border border-cyan-500/20" style={{ color: "var(--accent-cyan)" }}>
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+          {/* Available badge */}
+          <motion.div variants={enter} transition={{ duration: 0.55 }}>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase"
+              style={{
+                background: "rgba(0,212,255,0.07)",
+                border: "1px solid rgba(0,212,255,0.3)",
+                color: "#00d4ff",
+              }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
               Available for work
             </span>
           </motion.div>
 
-          {/* Heading */}
-          <motion.div variants={itemVariants} className="space-y-2">
-            <h1 className="font-display font-bold leading-tight" style={{ fontSize: "clamp(3rem,9vw,6.5rem)", color: "var(--text-primary)" }}>
-              Hi, I&apos;m{" "}
-              <span className="gradient-text-shimmer">Farhan</span>
+          {/* Name */}
+          <motion.div variants={enter} transition={{ duration: 0.65 }}>
+            <h1 className="font-display font-black leading-none tracking-tight"
+              style={{ fontSize: "clamp(4rem, 12vw, 10rem)", color: "#ffffff" }}>
+              Farhan 
+              <br />
+              <span
+                style={{
+                  background: "linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #f472b6 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                Zuhdi
+              </span>
             </h1>
           </motion.div>
 
-          {/* Typing */}
-          <motion.div variants={itemVariants}>
-            <p className="font-display text-2xl md:text-3xl font-semibold h-10" style={{ color: "var(--text-secondary)" }}>
-              <span style={{ color: "var(--text-primary)" }}>{displayed}</span>
-              <span className="animate-blink" style={{ color: "var(--accent-cyan)" }}>|</span>
-            </p>
-          </motion.div>
-
-          {/* Description */}
-          <motion.p variants={itemVariants} className="max-w-xl text-base md:text-lg leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-            I craft beautiful, performant web experiences with modern technologies.
-            Passionate about clean code, stunning UI, and seamless user journeys.
+          {/* Role subtitle */}
+          <motion.p
+            variants={enter}
+            transition={{ duration: 0.55 }}
+            className="font-display text-base md:text-lg tracking-[0.25em] uppercase font-medium"
+            style={{ color: "rgba(255,255,255,0.35)" }}
+          >
+            Frontend Developer &nbsp;·&nbsp; UI Enthusiast 
           </motion.p>
 
-          {/* CTA Buttons — Magnetic */}
-          <motion.div variants={itemVariants} className="flex flex-wrap gap-4 justify-center">
-            <Magnet strength={30}>
-              <motion.a
-                href="#contact"
-                whileTap={{ scale: 0.96 }}
-                className="flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-white transition-all"
-                style={{ background: "linear-gradient(135deg, #00d4ff, #7c3aed)" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
+
+
+          {/* Circular Spinning Scroll Cue */}
+          <motion.a
+            href="#about"
+            onClick={(e) => { e.preventDefault(); document.getElementById("about")?.scrollIntoView({ behavior: "smooth" }); }}
+            initial="idle"
+            animate="idle"
+            whileHover="hover"
+            whileTap={{ scale: 0.95 }}
+            transition={{ delay: 1.6, duration: 0.8 }}
+            className="flex flex-col items-center gap-3 mt-8 cursor-pointer group"
+          >
+            <span 
+              className="text-[10px] font-bold tracking-[0.3em] uppercase transition-colors duration-300"
+              style={{ color: "rgba(255,255,255,0.3)" }}
+            >
+            </span>
+
+            {/* Circular Ring */}
+            <div className="relative w-14 h-14 rounded-full flex items-center justify-center">
+              {/* Outer dashed spinning ring that only spins on hover */}
+              <motion.div
+                className="absolute inset-0 rounded-full border border-dashed border-white/20 group-hover:border-[#00d4ff]/60 transition-colors duration-500"
+                variants={{
+                  idle: { rotate: 0 },
+                  hover: { rotate: 360, transition: { repeat: Infinity, duration: 8, ease: "linear" } }
+                }}
+              />
+              
+              {/* Inner glowing core that appears on hover */}
+              <div className="absolute inset-1 rounded-full bg-transparent group-hover:bg-[#00d4ff]/10 blur-md transition-colors duration-500" />
+
+              {/* Bouncing Arrow inside */}
+              <motion.div 
+                className="text-white/40 group-hover:text-[#00d4ff] z-10 transition-colors duration-300"
+                variants={{
+                  idle: { y: 0, opacity: 1 },
+                  hover: { 
+                    y: [0, 5, 0], 
+                    opacity: [1, 0.6, 1],
+                    transition: { repeat: Infinity, duration: 1.2, ease: "easeInOut" }
+                  }
                 }}
               >
-                <Mail size={18} />
-                Contact Me
-              </motion.a>
-            </Magnet>
-            <Magnet strength={30}>
-              <motion.a
-                href="/cv.pdf"
-                whileTap={{ scale: 0.96 }}
-                className="flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold glass-card border border-white/10 hover:border-cyan-500/40 transition-all"
-                style={{ color: "var(--text-primary)" }}
-              >
-                <Download size={18} />
-                Download CV
-              </motion.a>
-            </Magnet>
-          </motion.div>
-
-          {/* Social Links — Magnetic */}
-          <motion.div variants={itemVariants} className="flex gap-3">
-            {socialLinks.map(({ icon: Icon, href, label }) => (
-              <Magnet key={label} strength={25}>
-                <motion.a
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-full glass-card border border-white/10 hover:border-cyan-500/30 flex items-center justify-center transition-all"
-                  style={{ color: "var(--text-secondary)" }}
-                  whileHover={{ color: "var(--accent-cyan)" } as Parameters<typeof motion.a>[0]["whileHover"]}
-                  aria-label={label}
-                >
-                  <Icon size={18} />
-                </motion.a>
-              </Magnet>
-            ))}
-          </motion.div>
+                <ArrowDown size={18} strokeWidth={2.5} />
+              </motion.div>
+            </div>
+          </motion.a>
         </motion.div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.8 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-          style={{ color: "var(--text-muted)" }}
-        >
-          <span className="text-xs tracking-widest uppercase">Scroll</span>
-          <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
-            <ArrowDown size={16} />
-          </motion.div>
-        </motion.div>
+        {/* ── MARQUEE ROW 2 (opposite direction) ── */}
+        <div className="relative z-10 mb-4 opacity-100">
+          <Marquee reverse={true} />
+        </div>
       </motion.div>
     </section>
   );
