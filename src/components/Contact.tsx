@@ -13,8 +13,8 @@ import { Mail, MapPin, Send, CheckCircle2, Loader2, Sparkles, Github, Linkedin, 
 import Magnet from "./Magnet";
 
 const contactInfo = [
-  { icon: Mail, label: "Email", value: "farhanzuhdi400@gmail.com", href: "mailto:farhanzuhdi400@gmail.com", color: "#00d4ff" },
-  { icon: MapPin, label: "Location", value: "Batam, Indonesia 🇮🇩", href: "#", color: "#7c3aed" },
+  { icon: Mail, label: "Email", value: "farhanzuhdi400@gmail.com", href: "mailto:farhanzuhdi400@gmail.com", color: "#00f0ff" },
+  { icon: MapPin, label: "Location", value: "Batam, Indonesia 🇮🇩", href: "#", color: "#2563eb" },
 ];
 
 const socials = [
@@ -93,20 +93,20 @@ export default function Contact() {
     >
       {/* Abstract Background Elements */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <motion.div className="absolute rounded-full" style={{ width: 600, height: 600, right: "-10%", top: "5%", background: "radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%)", filter: "blur(50px)" }} animate={{ x: [0, -30, 0], y: [0, 40, 0] }} transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }} />
-        <motion.div className="absolute rounded-full" style={{ width: 500, height: 500, left: "-8%", bottom: "5%", background: "radial-gradient(circle, rgba(0,212,255,0.05) 0%, transparent 70%)", filter: "blur(40px)" }} animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }} />
+        <motion.div className="absolute rounded-full" style={{ width: 600, height: 600, right: "-10%", top: "5%", background: "radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%)", filter: "blur(50px)" }} animate={{ x: [0, -30, 0], y: [0, 40, 0] }} transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }} />
+        <motion.div className="absolute rounded-full" style={{ width: 500, height: 500, left: "-8%", bottom: "5%", background: "radial-gradient(circle, rgba(0,240,255,0.05) 0%, transparent 70%)", filter: "blur(40px)" }} animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }} />
       </div>
       <div aria-hidden className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)" }} />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
         {/* ── Heading ── */}
         <div className="text-center mb-16">
-          <motion.span initial={{ opacity: 0, letterSpacing: "0.8em" }} whileInView={{ opacity: 1, letterSpacing: "0.4em" }} viewport={{ once: true }} transition={{ duration: 0.9 }} className="inline-flex items-center gap-2 text-xs font-black uppercase mb-4" style={{ color: "#00d4ff" }}>
+          <motion.span initial={{ opacity: 0, letterSpacing: "0.8em" }} whileInView={{ opacity: 1, letterSpacing: "0.4em" }} viewport={{ once: true }} transition={{ duration: 0.9 }} className="inline-flex items-center gap-2 text-xs font-black uppercase mb-4" style={{ color: "#00f0ff" }}>
             <Sparkles size={12} /> Let&apos;s Connect
           </motion.span>
           <motion.h2 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-white mb-4">
             Get in{" "}
-            <span style={{ background: "linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+            <span style={{ background: "linear-gradient(135deg, #00f0ff 0%, #2563eb 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
               Touch
             </span>
           </motion.h2>
@@ -216,7 +216,7 @@ export default function Contact() {
                   <div className="grid sm:grid-cols-2 gap-6">
                     {/* Name */}
                     <div className="space-y-2 relative">
-                      <label htmlFor="name" className="block text-[10px] font-black uppercase tracking-widest transition-colors duration-300" style={{ color: focusedField === "name" ? "#00d4ff" : "rgba(255,255,255,0.4)" }}>
+                      <label htmlFor="name" className="block text-[10px] font-black uppercase tracking-widest transition-colors duration-300" style={{ color: focusedField === "name" ? "#00f0ff" : "rgba(255,255,255,0.4)" }}>
                         Your Name
                       </label>
                       <input
@@ -234,7 +234,7 @@ export default function Contact() {
                     </div>
                     {/* Email */}
                     <div className="space-y-2 relative">
-                      <label htmlFor="email" className="block text-[10px] font-black uppercase tracking-widest transition-colors duration-300" style={{ color: focusedField === "email" ? "#00d4ff" : "rgba(255,255,255,0.4)" }}>
+                      <label htmlFor="email" className="block text-[10px] font-black uppercase tracking-widest transition-colors duration-300" style={{ color: focusedField === "email" ? "#00f0ff" : "rgba(255,255,255,0.4)" }}>
                         Your Email
                       </label>
                       <input
@@ -254,7 +254,7 @@ export default function Contact() {
 
                   {/* Message */}
                   <div className="space-y-2 relative mt-4">
-                    <label htmlFor="message" className="block text-[10px] font-black uppercase tracking-widest transition-colors duration-300" style={{ color: focusedField === "message" ? "#00d4ff" : "rgba(255,255,255,0.4)" }}>
+                    <label htmlFor="message" className="block text-[10px] font-black uppercase tracking-widest transition-colors duration-300" style={{ color: focusedField === "message" ? "#00f0ff" : "rgba(255,255,255,0.4)" }}>
                       Message
                     </label>
                     <textarea
@@ -282,8 +282,8 @@ export default function Contact() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         disabled={status === "loading"}
-                        className="flex items-center gap-3 px-8 py-4 rounded-full font-bold text-white overflow-hidden group disabled:opacity-70 transition-shadow hover:shadow-[0_0_40px_rgba(0,212,255,0.4)] relative"
-                        style={{ background: "linear-gradient(135deg, #00d4ff, #7c3aed)" }}
+                        className="flex items-center gap-3 px-8 py-4 rounded-full font-bold text-white overflow-hidden group disabled:opacity-70 transition-shadow hover:shadow-[0_0_40px_rgba(0,240,255,0.4)] relative"
+                        style={{ background: "linear-gradient(135deg, #00f0ff, #2563eb)" }}
                       >
                         {/* Shimmer on hover */}
                         <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)" }} />

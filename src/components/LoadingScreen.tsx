@@ -153,7 +153,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
           <div className="absolute inset-0 opacity-40 overflow-hidden pointer-events-none">
             <motion.div
               className="absolute -top-[20%] -left-[10%] w-[70vw] h-[70vw] rounded-full mix-blend-screen filter blur-[100px]"
-              style={{ background: "#00d4ff" }}
+              style={{ background: "#00f0ff" }}
               animate={{
                 x: ["0%", "20%", "-10%", "0%"],
                 y: ["0%", "10%", "-20%", "0%"],
@@ -162,7 +162,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
             />
             <motion.div
               className="absolute top-[10%] -right-[10%] w-[60vw] h-[60vw] rounded-full mix-blend-screen filter blur-[100px]"
-              style={{ background: "#7c3aed" }}
+              style={{ background: "#2563eb" }}
               animate={{
                 x: ["0%", "-25%", "15%", "0%"],
                 y: ["0%", "-15%", "25%", "0%"],
@@ -171,7 +171,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
             />
             <motion.div
               className="absolute -bottom-[20%] left-[10%] w-[80vw] h-[80vw] rounded-full mix-blend-screen filter blur-[120px]"
-              style={{ background: "#f472b6" }}
+              style={{ background: "#0ea5e9" }}
               animate={{
                 x: ["0%", "15%", "-25%", "0%"],
                 y: ["0%", "-20%", "10%", "0%"],
@@ -213,7 +213,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
                       className="absolute -inset-2 rounded-3xl border-2 border-transparent animate-spin-slow"
                       style={{
                         background:
-                          "linear-gradient(#050508, #050508) padding-box, linear-gradient(90deg, #00d4ff, #7c3aed, #f472b6, #00d4ff) border-box",
+                          "linear-gradient(#050508, #050508) padding-box, linear-gradient(90deg, #00f0ff, #2563eb, #0ea5e9, #00f0ff) border-box",
                       }}
                     />
                   </div>
@@ -259,7 +259,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
                         style={{
                           width: `${progress}%`,
                           background:
-                            "linear-gradient(90deg, #00d4ff, #7c3aed, #f472b6)",
+                            "linear-gradient(90deg, #00f0ff, #2563eb, #0ea5e9)",
                         }}
                       />
                     </div>
@@ -296,9 +296,9 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
 
           {/* Floating orbs */}
           <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full animate-glow-pulse pointer-events-none"
-            style={{ background: "radial-gradient(circle, rgba(0,212,255,0.12) 0%, transparent 70%)" }} />
+            style={{ background: "radial-gradient(circle, rgba(0,240,255,0.12) 0%, transparent 70%)" }} />
           <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full animate-glow-pulse pointer-events-none"
-            style={{ background: "radial-gradient(circle, rgba(244,114,182,0.12) 0%, transparent 70%)", animationDelay: "1s" }} />
+            style={{ background: "radial-gradient(circle, rgba(14,165,233,0.12) 0%, transparent 70%)", animationDelay: "1s" }} />
         </motion.div>
       )}
     </AnimatePresence>

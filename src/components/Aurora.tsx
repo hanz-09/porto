@@ -65,7 +65,7 @@ interface AuroraProps {
 }
 
 export default function Aurora({
-  colorStops = ["#00d4ff", "#7c3aed", "#f472b6"],
+  colorStops = ["#00f0ff", "#2563eb", "#0ea5e9"],
   amplitude = 1.0,
   blend = 0.5,
   className = "",

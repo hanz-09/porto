@@ -10,10 +10,10 @@ type Chapter = {
 };
 
 const chapters: Chapter[] = [
-  { id: "hero",     label: "Home",     color: "#00d4ff" },
-  { id: "about",    label: "About",    color: "#7c3aed" },
+  { id: "hero",     label: "Home",     color: "#00f0ff" },
+  { id: "about",    label: "About",    color: "#2563eb" },
   { id: "timeline", label: "Timeline", color: "#a78bfa" },
-  { id: "skills",   label: "Skills",   color: "#f472b6" },
+  { id: "skills",   label: "Skills",   color: "#0ea5e9" },
   { id: "projects", label: "Projects", color: "#fbbf24" },
   { id: "contact",  label: "Contact",  color: "#4ade80" },
 ];

@@ -54,14 +54,14 @@ type Project = {
    Accent palette — cycles through these for visual variety
 ───────────────────────────────────────────────────────── */
 const ACCENTS = [
-  { color: "#00d4ff", glow: "rgba(0,212,255,0.12)" },
-  { color: "#a78bfa", glow: "rgba(167,139,250,0.12)" },
-  { color: "#f472b6", glow: "rgba(244,114,182,0.12)" },
-  { color: "#4ade80", glow: "rgba(74,222,128,0.12)" },
-  { color: "#fb923c", glow: "rgba(251,146,60,0.12)" },
-  { color: "#facc15", glow: "rgba(250,204,21,0.12)" },
+  { color: "#00f0ff", glow: "rgba(0,240,255,0.12)" },
+  { color: "#3b82f6", glow: "rgba(59,130,246,0.12)" },
+  { color: "#0ea5e9", glow: "rgba(14,165,233,0.12)" },
+  { color: "#2563eb", glow: "rgba(37,99,235,0.12)" },
+  { color: "#06b6d4", glow: "rgba(6,182,212,0.12)" },
+  { color: "#60a5fa", glow: "rgba(96,165,250,0.12)" },
   { color: "#38bdf8", glow: "rgba(56,189,248,0.12)" },
-  { color: "#e879f9", glow: "rgba(232,121,249,0.12)" },
+  { color: "#818cf8", glow: "rgba(129,140,248,0.12)" },
 ];
 
 function mapRepo(repo: GitHubRepo, index: number): Project {
@@ -270,7 +270,7 @@ function FeaturedCard({ project }: { project: Project }) {
                 <motion.a href={project.live} target="_blank" rel="noopener noreferrer"
                   whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
                   className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white"
-                  style={{ background: `linear-gradient(135deg, ${project.accent}cc, #7c3aed)` }}>
+                  style={{ background: `linear-gradient(135deg, ${project.accent}cc, #2563eb)` }}>
                   <ExternalLink size={14} /> Live Demo <ArrowUpRight size={14} />
                 </motion.a>
               )}
@@ -441,8 +441,8 @@ export default function Projects() {
     >
       {/* Ambient blobs */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <motion.div className="absolute rounded-full" style={{ width: 600, height: 600, left: "-10%", top: "5%", background: "radial-gradient(circle, rgba(0,212,255,0.05) 0%, transparent 70%)", filter: "blur(50px)" }} animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }} />
-        <motion.div className="absolute rounded-full" style={{ width: 500, height: 500, right: "-8%", bottom: "15%", background: "radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%)", filter: "blur(40px)" }} animate={{ x: [0, -30, 0], y: [0, 40, 0] }} transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }} />
+        <motion.div className="absolute rounded-full" style={{ width: 600, height: 600, left: "-10%", top: "5%", background: "radial-gradient(circle, rgba(0,240,255,0.05) 0%, transparent 70%)", filter: "blur(50px)" }} animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }} />
+        <motion.div className="absolute rounded-full" style={{ width: 500, height: 500, right: "-8%", bottom: "15%", background: "radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%)", filter: "blur(40px)" }} animate={{ x: [0, -30, 0], y: [0, 40, 0] }} transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }} />
       </div>
       <div aria-hidden className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)" }} />
 
@@ -450,12 +450,12 @@ export default function Projects() {
 
         {/* Heading */}
         <div className="text-center mb-16">
-          <motion.span initial={{ opacity: 0, letterSpacing: "0.8em" }} whileInView={{ opacity: 1, letterSpacing: "0.4em" }} viewport={{ once: true }} transition={{ duration: 0.9 }} className="inline-block text-xs font-black uppercase mb-4" style={{ color: "#f472b6" }}>
+          <motion.span initial={{ opacity: 0, letterSpacing: "0.8em" }} whileInView={{ opacity: 1, letterSpacing: "0.4em" }} viewport={{ once: true }} transition={{ duration: 0.9 }} className="inline-block text-xs font-black uppercase mb-4" style={{ color: "#0ea5e9" }}>
             — What I&apos;ve Built
           </motion.span>
           <motion.h2 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-white mb-4">
             My{" "}
-            <span style={{ background: "linear-gradient(135deg, #f472b6 0%, #7c3aed 55%, #00d4ff 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+            <span style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 55%, #00f0ff 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
               Projects
             </span>
           </motion.h2>

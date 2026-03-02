@@ -56,10 +56,10 @@ function Marquee({ reverse = false }: { reverse?: boolean }) {
                   ? "none"
                   : i % 2 === 0
                   ? "1px rgba(255,255,255,0.18)"
-                  : "1px rgba(0,212,255,0.35)",
+                  : "1px rgba(0,240,255,0.35)",
               textShadow:
                 i % 2 !== 0 && word !== "—"
-                  ? "0 0 40px rgba(0,212,255,0.15)"
+                  ? "0 0 40px rgba(0,240,255,0.15)"
                   : "none",
             }}
           >
@@ -134,7 +134,7 @@ function MouseSpotlight() {
           width: 500,
           height: 500,
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 65%)",
+          background: "radial-gradient(circle, rgba(0,240,255,0.07) 0%, transparent 65%)",
           pointerEvents: "none",
         }}
       />
@@ -180,7 +180,7 @@ export default function Hero() {
       {/* Interactive React Bits Particles Background */}
       <div className="absolute inset-0 z-0 opacity-40">
         <Particles
-          particleColors={["#ffffff", "#00d4ff"]}
+          particleColors={["#ffffff", "#00f0ff"]}
           particleCount={200}
           particleSpread={10}
           speed={0.1}
@@ -210,7 +210,7 @@ export default function Hero() {
         className="absolute inset-0 pointer-events-none z-0"
         style={{
           background:
-            "radial-gradient(ellipse 60% 60% at 50% 100%, rgba(0,212,255,0.06) 0%, transparent 70%)",
+            "radial-gradient(ellipse 60% 60% at 50% 100%, rgba(0,240,255,0.06) 0%, transparent 70%)",
         }}
         aria-hidden
       />
@@ -231,7 +231,7 @@ export default function Hero() {
           >
             <div
               className="w-7 h-7 rounded-lg flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg, #00d4ff, #7c3aed)" }}
+              style={{ background: "linear-gradient(135deg, #00f0ff, #2563eb)" }}
             >
               <span className="font-display font-black text-white text-xs">F</span>
             </div>
@@ -268,9 +268,9 @@ export default function Hero() {
           <motion.div variants={enter} transition={{ duration: 0.55 }}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase"
               style={{
-                background: "rgba(0,212,255,0.07)",
-                border: "1px solid rgba(0,212,255,0.3)",
-                color: "#00d4ff",
+                background: "rgba(0,240,255,0.07)",
+                border: "1px solid rgba(0,240,255,0.3)",
+                color: "#00f0ff",
               }}>
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
               Available for work
@@ -285,7 +285,7 @@ export default function Hero() {
               <br />
               <span
                 style={{
-                  background: "linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #f472b6 100%)",
+                  background: "linear-gradient(135deg, #00f0ff 0%, #2563eb 50%, #0ea5e9 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -329,7 +329,7 @@ export default function Hero() {
             <div className="relative w-14 h-14 rounded-full flex items-center justify-center">
               {/* Outer dashed spinning ring that only spins on hover */}
               <motion.div
-                className="absolute inset-0 rounded-full border border-dashed border-white/20 group-hover:border-[#00d4ff]/60 transition-colors duration-500"
+                className="absolute inset-0 rounded-full border border-dashed border-white/20 group-hover:border-[#00f0ff]/60 transition-colors duration-500"
                 variants={{
                   idle: { rotate: 0 },
                   hover: { rotate: 360, transition: { repeat: Infinity, duration: 8, ease: "linear" } }
@@ -337,11 +337,11 @@ export default function Hero() {
               />
               
               {/* Inner glowing core that appears on hover */}
-              <div className="absolute inset-1 rounded-full bg-transparent group-hover:bg-[#00d4ff]/10 blur-md transition-colors duration-500" />
+              <div className="absolute inset-1 rounded-full bg-transparent group-hover:bg-[#00f0ff]/10 blur-md transition-colors duration-500" />
 
               {/* Bouncing Arrow inside */}
               <motion.div 
-                className="text-white/40 group-hover:text-[#00d4ff] z-10 transition-colors duration-300"
+                className="text-white/40 group-hover:text-[#00f0ff] z-10 transition-colors duration-300"
                 variants={{
                   idle: { y: 0, opacity: 1 },
                   hover: { 

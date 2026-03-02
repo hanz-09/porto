@@ -393,7 +393,7 @@ export default function Skills() {
           className="absolute rounded-full"
           style={{
             width: 700, height: 700, right: "-15%", top: "10%",
-            background: "radial-gradient(circle, rgba(0,212,255,0.05) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(0,240,255,0.05) 0%, transparent 70%)",
             filter: "blur(50px)",
           }}
           animate={{ x: [0, -50, 0], y: [0, 30, 0] }}
@@ -403,7 +403,7 @@ export default function Skills() {
           className="absolute rounded-full"
           style={{
             width: 600, height: 600, left: "-12%", bottom: "10%",
-            background: "radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%)",
             filter: "blur(45px)",
           }}
           animate={{ x: [0, 40, 0], y: [0, -40, 0] }}
@@ -427,7 +427,7 @@ export default function Skills() {
             viewport={{ once: true }}
             transition={{ duration: 0.9 }}
             className="inline-block text-xs font-black uppercase mb-4"
-            style={{ color: "#00d4ff" }}
+            style={{ color: "#00f0ff" }}
           >
             — What I Work With
           </motion.span>
@@ -441,7 +441,7 @@ export default function Skills() {
             My{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #00d4ff 0%, #7c3aed 55%, #f472b6 100%)",
+                background: "linear-gradient(135deg, #00f0ff 0%, #2563eb 55%, #0ea5e9 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",

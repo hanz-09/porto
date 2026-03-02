@@ -112,8 +112,8 @@ export default function About() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 70% 50% at 20% 60%, rgba(0,212,255,0.04) 0%, transparent 70%), " +
-            "radial-gradient(ellipse 60% 50% at 80% 30%, rgba(124,58,237,0.05) 0%, transparent 70%)",
+            "radial-gradient(ellipse 70% 50% at 20% 60%, rgba(0,240,255,0.04) 0%, transparent 70%), " +
+            "radial-gradient(ellipse 60% 50% at 80% 30%, rgba(37,99,235,0.05) 0%, transparent 70%)",
         }}
       />
       <div
@@ -128,7 +128,7 @@ export default function About() {
         <Reveal className="text-center mb-16 md:mb-24">
           <span
             className="inline-block text-xs font-bold tracking-[0.35em] uppercase mb-4"
-            style={{ color: "#00d4ff" }}
+            style={{ color: "#00f0ff" }}
           >
             — Get to know me
           </span>
@@ -139,7 +139,7 @@ export default function About() {
             About{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #f472b6 100%)",
+                background: "linear-gradient(135deg, #00f0ff 0%, #2563eb 50%, #0ea5e9 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -179,12 +179,12 @@ export default function About() {
                   pauseAfterType={2000}
                   className="font-display font-bold"
                   textStyle={{
-                    background: "linear-gradient(90deg, #00d4ff, #7c3aed)",
+                    background: "linear-gradient(90deg, #00f0ff, #2563eb)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
                   }}
-                  cursorClassName="bg-[#00d4ff] mx-[2px]"
+                  cursorClassName="bg-[#00f0ff] mx-[2px]"
                 />
               </h3>
             </Reveal>
@@ -217,8 +217,8 @@ export default function About() {
                       }}
                       onMouseEnter={(e) => {
                         const el = e.currentTarget as HTMLElement;
-                        el.style.borderColor = "rgba(0,212,255,0.25)";
-                        el.style.background = "rgba(0,212,255,0.05)";
+                        el.style.borderColor = "rgba(0,240,255,0.25)";
+                        el.style.background = "rgba(0,240,255,0.05)";
                       }}
                       onMouseLeave={(e) => {
                         const el = e.currentTarget as HTMLElement;
@@ -228,9 +228,9 @@ export default function About() {
                     >
                       <div
                         className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                        style={{ background: "rgba(0,212,255,0.1)" }}
+                        style={{ background: "rgba(0,240,255,0.1)" }}
                       >
-                        <Icon size={14} style={{ color: "#00d4ff" }} />
+                        <Icon size={14} style={{ color: "#00f0ff" }} />
                       </div>
                       <div className="min-w-0">
                         <div className="text-xs font-bold text-white/80 truncate">{label}</div>

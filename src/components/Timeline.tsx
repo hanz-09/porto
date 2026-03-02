@@ -84,10 +84,10 @@ const cfg: Record<
   TItem["type"],
   { icon: typeof Briefcase; label: string; color: string; gradient: string; glow: string }
 > = {
-  work:      { icon: Briefcase,     label: "Work",      color: "#00d4ff", gradient: "from-[#00d4ff] to-[#0284c7]", glow: "rgba(0,212,255,0.35)" },
-  education: { icon: GraduationCap, label: "Education", color: "#a78bfa", gradient: "from-[#a78bfa] to-[#7c3aed]", glow: "rgba(167,139,250,0.35)" },
-  award:     { icon: Award,         label: "Award",     color: "#fbbf24", gradient: "from-[#fbbf24] to-[#f59e0b]", glow: "rgba(251,191,36,0.35)" },
-  project:   { icon: Code2,         label: "Project",   color: "#f472b6", gradient: "from-[#f472b6] to-[#ec4899]", glow: "rgba(244,114,182,0.35)" },
+  work:      { icon: Briefcase,     label: "Work",      color: "#00f0ff", gradient: "from-[#00f0ff] to-[#0ea5e9]", glow: "rgba(0,240,255,0.35)" },
+  education: { icon: GraduationCap, label: "Education", color: "#3b82f6", gradient: "from-[#3b82f6] to-[#2563eb]", glow: "rgba(59,130,246,0.35)" },
+  award:     { icon: Award,         label: "Award",     color: "#06b6d4", gradient: "from-[#06b6d4] to-[#0891b2]", glow: "rgba(6,182,212,0.35)" },
+  project:   { icon: Code2,         label: "Project",   color: "#60a5fa", gradient: "from-[#60a5fa] to-[#3b82f6]", glow: "rgba(96,165,250,0.35)" },
 };
 
 /* ─────────────────────────────────────────────────────────
@@ -348,7 +348,7 @@ export default function Timeline() {
           className="absolute rounded-full"
           style={{
             width: 600, height: 600, left: "-10%", top: "15%",
-            background: "radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(0,240,255,0.06) 0%, transparent 70%)",
             filter: "blur(50px)",
           }}
           animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
@@ -358,7 +358,7 @@ export default function Timeline() {
           className="absolute rounded-full"
           style={{
             width: 500, height: 500, right: "-8%", bottom: "20%",
-            background: "radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(37,99,235,0.07) 0%, transparent 70%)",
             filter: "blur(40px)",
           }}
           animate={{ x: [0, -40, 0], y: [0, 40, 0] }}
@@ -426,9 +426,9 @@ export default function Timeline() {
             transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
             className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold"
             style={{
-              background: "rgba(0,212,255,0.08)",
-              border: "1px solid rgba(0,212,255,0.2)",
-              color: "#00d4ff",
+              background: "rgba(0,240,255,0.08)",
+              border: "1px solid rgba(0,240,255,0.2)",
+              color: "#00f0ff",
             }}
           >
             <ChevronRight size={12} />

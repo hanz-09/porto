@@ -95,7 +95,7 @@ export default function ProfileCard({
         aria-hidden
         className="absolute -inset-4 rounded-[44px] opacity-40 blur-2xl pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse at 60% 40%, rgba(0,212,255,0.35) 0%, rgba(124,58,237,0.25) 50%, transparent 75%)",
+          background: "radial-gradient(ellipse at 60% 40%, rgba(0,240,255,0.35) 0%, rgba(37,99,235,0.25) 50%, transparent 75%)",
         }}
       />
 
@@ -136,7 +136,7 @@ export default function ProfileCard({
           {/* Cyan accent bar at the top */}
           <div
             className="absolute top-0 inset-x-0 h-[2px]"
-            style={{ background: "linear-gradient(90deg, transparent, #00d4ff, #7c3aed, transparent)" }}
+            style={{ background: "linear-gradient(90deg, transparent, #00f0ff, #2563eb, transparent)" }}
           />
         </div>
 
@@ -149,7 +149,7 @@ export default function ProfileCard({
               <div
                 className="absolute -inset-[3px] rounded-full opacity-80"
                 style={{
-                  background: "linear-gradient(135deg, #00d4ff, #7c3aed, #f472b6)",
+                  background: "linear-gradient(135deg, #00f0ff, #2563eb, #0ea5e9)",
                   filter: "blur(4px)",
                 }}
               />
@@ -176,7 +176,7 @@ export default function ProfileCard({
 
               {/* Online dot */}
               <div className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-[#0d0d1a] flex items-center justify-center">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#00d4ff] animate-pulse" />
+                <div className="w-2.5 h-2.5 rounded-full bg-[#00f0ff] animate-pulse" />
               </div>
             </div>
 
@@ -184,9 +184,9 @@ export default function ProfileCard({
             <div
               className="mb-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase"
               style={{
-                background: "rgba(0,212,255,0.1)",
-                border: "1px solid rgba(0,212,255,0.25)",
-                color: "#00d4ff",
+                background: "rgba(0,240,255,0.1)",
+                border: "1px solid rgba(0,240,255,0.25)",
+                color: "#00f0ff",
               }}
             >
               Open to Work
@@ -199,7 +199,7 @@ export default function ProfileCard({
           </h3>
           <p
             className="text-xs font-bold tracking-widest uppercase mb-4"
-            style={{ color: "#00d4ff" }}
+            style={{ color: "#00f0ff" }}
           >
             {title}
           </p>
@@ -232,9 +232,9 @@ export default function ProfileCard({
                   border: "1px solid rgba(255,255,255,0.08)",
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "#00d4ff";
-                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.4)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "0 0 14px rgba(0,212,255,0.2)";
+                  (e.currentTarget as HTMLElement).style.color = "#00f0ff";
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,240,255,0.4)";
+                  (e.currentTarget as HTMLElement).style.boxShadow = "0 0 14px rgba(0,240,255,0.2)";
                 }}
                 onMouseLeave={(e) => {
                   (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.5)";
@@ -255,7 +255,7 @@ export default function ProfileCard({
             whileTap={{ scale: 0.97 }}
             className="block w-full text-center py-3 rounded-xl text-sm font-bold text-white relative overflow-hidden"
             style={{
-              background: "linear-gradient(135deg, rgba(0,212,255,0.15), rgba(124,58,237,0.15))",
+              background: "linear-gradient(135deg, rgba(0,240,255,0.15), rgba(37,99,235,0.15))",
               border: "1px solid rgba(255,255,255,0.1)",
             }}
           >

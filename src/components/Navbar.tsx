@@ -31,7 +31,7 @@ const liquidGlass = {
     "inset -1px 0 0 rgba(255,255,255,0.1)",    /* right inner */
     "0 8px 32px rgba(0,0,0,0.35)",             /* depth shadow */
     "0 0 0 1px rgba(255,255,255,0.09)",        /* outer border */
-    "0 0 24px rgba(0,212,255,0.06)",           /* subtle cyan glow */
+    "0 0 24px rgba(0,240,255,0.06)",           /* subtle cyan glow */
   ].join(", "),
 } as React.CSSProperties;
 
@@ -40,7 +40,7 @@ const activePillStyle: React.CSSProperties = {
   background: "rgba(255,255,255,0.12)",
   backdropFilter: "blur(8px)",
   WebkitBackdropFilter: "blur(8px)",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), 0 0 8px rgba(0,212,255,0.15)",
+  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), 0 0 8px rgba(0,240,255,0.15)",
 };
 
 /* ─────────────────────────────────────────────────────────
@@ -53,7 +53,7 @@ function IridescentEdge() {
       className="absolute top-0 left-4 right-4 h-px rounded-full pointer-events-none"
       style={{
         background:
-          "linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.5) 20%, rgba(167,139,250,0.6) 40%, rgba(244,114,182,0.5) 60%, rgba(0,212,255,0.4) 80%, transparent 100%)",
+          "linear-gradient(90deg, transparent 0%, rgba(0,240,255,0.5) 20%, rgba(167,139,250,0.6) 40%, rgba(14,165,233,0.5) 60%, rgba(0,240,255,0.4) 80%, transparent 100%)",
         opacity: 0.7,
       }}
     />
@@ -256,8 +256,8 @@ export default function Navbar() {
                 className="p-3 rounded-full text-white relative overflow-hidden"
                 aria-label="Hire Me"
                 style={{
-                  background: "linear-gradient(135deg, #00d4ff, #7c3aed)",
-                  boxShadow: "0 0 14px rgba(0,212,255,0.3), inset 0 1px 0 rgba(255,255,255,0.25)",
+                  background: "linear-gradient(135deg, #00f0ff, #2563eb)",
+                  boxShadow: "0 0 14px rgba(0,240,255,0.3), inset 0 1px 0 rgba(255,255,255,0.25)",
                 }}
               >
                 {/* Shine sweep on button */}
