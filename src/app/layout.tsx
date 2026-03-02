@@ -15,14 +15,14 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Farhan — Portfolio",
+  title: "Han — Web Developer",
   description:
     "Personal portfolio website — Frontend Developer crafting modern web experiences with React & Next.js.",
   keywords: ["portfolio", "frontend developer", "react", "nextjs", "web developer"],
   authors: [{ name: "Farhan Zuhdi" }],
   openGraph: {
-    title: "Farhan — Portfolio",
-    description: "Frontend Developer crafting modern web experiences.",
+    title: "Han — Web Developer",
+    description: "Personal portfolio website — Frontend Developer crafting modern web experiences with React & Next.js.",
     type: "website",
   },
 };

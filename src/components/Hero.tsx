@@ -11,6 +11,7 @@ import {
 } from "framer-motion";
 import { ArrowDown, Mail, Download } from "lucide-react";
 import Magnet from "./Magnet";
+import Particles from "./Particles";
 
 /* ─────────────────────────────────────────────────────────
    Marquee (single row, infinite, two directions)
@@ -175,6 +176,21 @@ export default function Hero() {
     >
       {/* Global mouse spotlight */}
       <MouseSpotlight />
+
+      {/* Interactive React Bits Particles Background */}
+      <div className="absolute inset-0 z-0 opacity-40">
+        <Particles
+          particleColors={["#ffffff", "#00d4ff"]}
+          particleCount={200}
+          particleSpread={10}
+          speed={0.1}
+          particleBaseSize={80}
+          moveParticlesOnHover={false}
+          alphaParticles
+          disableRotation={false}
+          className="absolute inset-0"
+        />
+      </div>
 
       {/* Noise Texture */}
       <div className="noise absolute inset-0 pointer-events-none z-0 opacity-40" aria-hidden />

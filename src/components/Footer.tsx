@@ -1,7 +1,8 @@
 ﻿"use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Github, Linkedin, Instagram, ArrowUp, Code2, Heart } from "lucide-react";
+import { Github, Linkedin, Instagram, ArrowUpRight, Heart } from "lucide-react";
 
 const socialLinks = [
   { icon: Github, href: "https://github.com", label: "GitHub" },
@@ -9,85 +10,76 @@ const socialLinks = [
   { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
 ];
 
-const footerLinks = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Projects", href: "#projects" },
-  { label: "Contact", href: "#contact" },
-];
-
 export default function Footer() {
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  // Local time state
+  const [time, setTime] = useState<string>("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const formatter = new Intl.DateTimeFormat("en-ID", {
+        timeZone: "Asia/Jakarta",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      });
+      setTime(formatter.format(new Date()));
+    };
+    
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <footer className="relative border-t border-white/6">
-      {/* Top glow line */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-linear-to-r from-transparent via-cyan-500/40 to-transparent" />
+    <footer className="relative w-full border-t border-white/10 bg-black/50 backdrop-blur-lg">
+      {/* Subtle top glow line */}
+      <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-cyan-500/20 to-transparent" />
 
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-linear-to-br from-cyan-400 to-violet-600 flex items-center justify-center">
-              <Code2 size={16} className="text-white" />
+      {/* pb-32 pushes content above the floating navigation dock */}
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col md:flex-row items-center justify-between gap-6"
+        >
+          
+          {/* Left: Branding & Time */}
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 text-xs font-semibold tracking-widest uppercase text-white/50">
+            <div className="flex items-center gap-1.5 transition-colors hover:text-white/80">
+              <span>&copy; {new Date().getFullYear()}</span>
+              <span className="w-1 h-1 rounded-full bg-white/20 mx-2" />
+              <span>Built with <Heart size={12} className="inline text-pink-500 fill-pink-500 animate-pulse" /> by Han</span>
             </div>
-            <span className="font-display font-bold text-lg gradient-text">farhan.dev</span>
           </div>
 
-          {/* Nav Links */}
-          <nav className="flex flex-wrap justify-center gap-6">
-            {footerLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="text-sm text-(--text-muted) hover:text-foreground transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
-
-          {/* Social + Back-to-top */}
-          <div className="flex items-center gap-3">
-            {socialLinks.map(({ icon: Icon, href, label }) => (
-              <motion.a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.15, y: -2 }}
-                className="w-9 h-9 rounded-full glass-card border border-white/8 hover:border-cyan-500/30 flex items-center justify-center text-(--text-muted) hover:text-(--accent-cyan) transition-all"
-                aria-label={label}
-              >
-                <Icon size={16} />
-              </motion.a>
-            ))}
-
-            <motion.button
-              whileHover={{ scale: 1.1, y: -2, boxShadow: "0 0 20px rgba(0,212,255,0.3)" }}
-              whileTap={{ scale: 0.95 }}
-              onClick={scrollToTop}
-              className="ml-2 w-9 h-9 rounded-full bg-linear-to-br from-cyan-500 to-violet-600 flex items-center justify-center text-white"
-              aria-label="Back to top"
-            >
-              <ArrowUp size={16} />
-            </motion.button>
+          {/* Right: Socials */}
+          <div className="flex items-center gap-6">
+            {socialLinks.map((link, i) => {
+              const Icon = link.icon;
+              return (
+                <motion.a 
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 + (i * 0.1), duration: 0.5 }}
+                  className="group flex items-center gap-2 text-xs font-semibold text-white/50 hover:text-white transition-colors"
+                >
+                  <Icon size={14} className="group-hover:text-cyan-400 transition-colors" />
+                  <span className="uppercase tracking-widest">{link.label}</span>
+                  <ArrowUpRight size={12} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-cyan-400 transition-all duration-300" />
+                </motion.a>
+              )
+            })}
           </div>
-        </div>
 
-        {/* Divider */}
-        <div className="mt-8 pt-8 border-t border-white/4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-(--text-muted)">
-          <p>
-            © {new Date().getFullYear()} Farhan Zuhdi. All rights reserved.
-          </p>
-          <p className="flex items-center gap-1">
-            Built with <Heart size={12} className="text-pink-500 fill-pink-500 mx-0.5" /> using Next.js & Framer Motion
-          </p>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );

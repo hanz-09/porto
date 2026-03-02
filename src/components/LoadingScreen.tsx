@@ -91,6 +91,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
 
   // Phase 1: animate progress bar
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
     const animate = (ts: number) => {
       if (!startRef.current) startRef.current = ts;
       const elapsed = ts - startRef.current;
@@ -99,12 +100,15 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
       if (p < 100) {
         rafRef.current = requestAnimationFrame(animate);
       } else {
-        setPhase("hello");
+        timeoutId = setTimeout(() => {
+          setPhase("hello");
+        }, 1000);
       }
     };
     rafRef.current = requestAnimationFrame(animate);
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (timeoutId) clearTimeout(timeoutId);
     };
   }, []);
 
