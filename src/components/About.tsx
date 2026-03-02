@@ -104,7 +104,7 @@ export default function About() {
       id="about"
       ref={sectionRef}
       style={{ opacity: sectionOpacity, y: sectionY, scale: sectionScale }}
-      className="relative py-24 md:py-36 overflow-hidden"
+      className="relative py-16 md:py-24 lg:py-36 overflow-hidden"
     >
       {/* ── Background decorations ── */}
       <div
@@ -133,7 +133,7 @@ export default function About() {
             — Get to know me
           </span>
           <h2
-            className="font-display font-black text-4xl md:text-6xl leading-none tracking-tight"
+            className="font-display font-black text-4xl sm:text-5xl md:text-6xl leading-none tracking-tight"
             style={{ color: "#ffffff" }}
           >
             About{" "}
@@ -151,7 +151,7 @@ export default function About() {
         </Reveal>
 
         {/* ── Two-col: Profile Card | Text ── */}
-        <div className="grid md:grid-cols-2 gap-16 lg:gap-24 items-start">
+        <div className="grid md:grid-cols-2 gap-10 md:gap-16 lg:gap-24 items-start">
 
           {/* Left — Profile Card slides in from left */}
           <Reveal fromLeft delay={0.05}>

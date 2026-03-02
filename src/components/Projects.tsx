@@ -437,7 +437,7 @@ export default function Projects() {
       id="projects"
       ref={sectionRef}
       style={{ opacity: sOpacity, y: sY, scale: sScale }}
-      className="relative py-24 md:py-36 overflow-hidden"
+      className="relative py-16 md:py-24 lg:py-36 overflow-hidden"
     >
       {/* Ambient blobs */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -453,7 +453,7 @@ export default function Projects() {
           <motion.span initial={{ opacity: 0, letterSpacing: "0.8em" }} whileInView={{ opacity: 1, letterSpacing: "0.4em" }} viewport={{ once: true }} transition={{ duration: 0.9 }} className="inline-block text-xs font-black uppercase mb-4" style={{ color: "#f472b6" }}>
             — What I&apos;ve Built
           </motion.span>
-          <motion.h2 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-5xl md:text-7xl leading-none tracking-tight text-white mb-4">
+          <motion.h2 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-white mb-4">
             My{" "}
             <span style={{ background: "linear-gradient(135deg, #f472b6 0%, #7c3aed 55%, #00d4ff 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
               Projects

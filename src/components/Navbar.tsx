@@ -169,7 +169,8 @@ export default function Navbar() {
         initial={{ y: 80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 2.5 }}
-        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-max max-w-[95vw] mb-safe"
+        className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-100 w-max max-w-[95vw]"
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div
           style={{

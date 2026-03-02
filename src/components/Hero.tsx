@@ -171,7 +171,7 @@ export default function Hero() {
     <section
       id="hero"
       ref={sectionRef}
-      className="relative min-h-screen flex flex-col overflow-hidden"
+      className="relative min-h-dvh flex flex-col overflow-hidden"
       style={{ background: "#060608" }}
     >
       {/* Global mouse spotlight */}

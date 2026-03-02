@@ -34,10 +34,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body
-        className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
-      >
-        {children}
+      <body className={`${inter.variable} ${spaceGrotesk.variable} antialiased max-w-[100vw] overflow-x-hidden`}>
+        <div className="flex min-h-screen w-full flex-col overflow-x-hidden relative">
+          {children}
+        </div>
       </body>
     </html>
   );

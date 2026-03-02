@@ -2,10 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import dynamic from "next/dynamic";
 
-// Dynamically import Aurora to avoid SSR issues with WebGL
-const Aurora = dynamic(() => import("./Aurora"), { ssr: false });
 
 // "Hello" in 20 languages
 // "Hello" in 8 languages to keep the sequence short but sweet
@@ -152,12 +149,34 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
           className="fixed inset-0 z-9999 flex flex-col items-center justify-center overflow-hidden origin-top"
           style={{ background: "#000000" }} // True black for max contrast during the slide-up reveal
         >
-          {/* Aurora WebGL background */}
-          <div className="absolute inset-0 opacity-60">
-            <Aurora
-              colorStops={["#00d4ff", "#7c3aed", "#f472b6"]}
-              amplitude={1.2}
-              blend={0.45}
+          {/* Pure CSS Animated Mesh Gradient Background (Mobile Stable) */}
+          <div className="absolute inset-0 opacity-40 overflow-hidden pointer-events-none">
+            <motion.div
+              className="absolute -top-[20%] -left-[10%] w-[70vw] h-[70vw] rounded-full mix-blend-screen filter blur-[100px]"
+              style={{ background: "#00d4ff" }}
+              animate={{
+                x: ["0%", "20%", "-10%", "0%"],
+                y: ["0%", "10%", "-20%", "0%"],
+              }}
+              transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute top-[10%] -right-[10%] w-[60vw] h-[60vw] rounded-full mix-blend-screen filter blur-[100px]"
+              style={{ background: "#7c3aed" }}
+              animate={{
+                x: ["0%", "-25%", "15%", "0%"],
+                y: ["0%", "-15%", "25%", "0%"],
+              }}
+              transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute -bottom-[20%] left-[10%] w-[80vw] h-[80vw] rounded-full mix-blend-screen filter blur-[120px]"
+              style={{ background: "#f472b6" }}
+              animate={{
+                x: ["0%", "15%", "-25%", "0%"],
+                y: ["0%", "-20%", "10%", "0%"],
+              }}
+              transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
             />
           </div>
 

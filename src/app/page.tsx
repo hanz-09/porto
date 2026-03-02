@@ -38,7 +38,6 @@ export default function Home() {
           >
             {/* Global scroll-driven UI */}
             <ScrollProgressBar />
-            <ChapterNav />
 
             <Navbar />
             <Hero />

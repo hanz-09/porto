@@ -89,7 +89,7 @@ export default function Contact() {
       id="contact"
       ref={sectionRef}
       style={{ opacity: sOpacity, y: sY, scale: sScale }}
-      className="relative pt-24 pb-12 md:pt-36 md:pb-16 min-h-screen flex items-center"
+      className="relative pt-16 pb-12 md:pt-24 md:pb-16 lg:pt-36 min-h-dvh flex items-center overflow-hidden"
     >
       {/* Abstract Background Elements */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -104,7 +104,7 @@ export default function Contact() {
           <motion.span initial={{ opacity: 0, letterSpacing: "0.8em" }} whileInView={{ opacity: 1, letterSpacing: "0.4em" }} viewport={{ once: true }} transition={{ duration: 0.9 }} className="inline-flex items-center gap-2 text-xs font-black uppercase mb-4" style={{ color: "#00d4ff" }}>
             <Sparkles size={12} /> Let&apos;s Connect
           </motion.span>
-          <motion.h2 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-5xl md:text-7xl leading-none tracking-tight text-white mb-4">
+          <motion.h2 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-white mb-4">
             Get in{" "}
             <span style={{ background: "linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
               Touch

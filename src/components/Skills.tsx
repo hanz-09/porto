@@ -385,7 +385,7 @@ export default function Skills() {
       id="skills"
       ref={sectionRef}
       style={{ opacity: sOpacity, y: sY, scale: sScale }}
-      className="relative py-24 md:py-36 overflow-hidden"
+      className="relative py-16 md:py-24 lg:py-36 overflow-hidden"
     >
       {/* Ambient glow blobs */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -436,7 +436,7 @@ export default function Skills() {
             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="font-display font-black text-5xl md:text-7xl leading-none tracking-tight text-white mb-4"
+            className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-white mb-4"
           >
             My{" "}
             <span
