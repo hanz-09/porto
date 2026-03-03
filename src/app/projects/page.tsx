@@ -81,37 +81,7 @@ function mapRepo(repo: GitHubRepo, index: number): Project {
   };
 }
 
-/* ─────────────────────────────────────────────────────────
-   Mouse-tilt hook
-───────────────────────────────────────────────────────── */
-function useTilt() {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const glareRef = useRef<HTMLDivElement>(null);
 
-  const onMove = useCallback((e: MouseEvent<HTMLDivElement>) => {
-    const card = cardRef.current;
-    const glare = glareRef.current;
-    if (!card || !glare) return;
-    const r = card.getBoundingClientRect();
-    const x = e.clientX - r.left;
-    const y = e.clientY - r.top;
-    const rx = ((y - r.height / 2) / r.height) * -8;
-    const ry = ((x - r.width  / 2) / r.width ) *  8;
-    card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.02,1.02,1.02)`;
-    glare.style.background = `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(var(--foreground-rgb, 255,255,255), 0.1) 0%, transparent 65%)`;
-    glare.style.opacity = "1";
-  }, []);
-
-  const onLeave = useCallback(() => {
-    const card = cardRef.current;
-    const glare = glareRef.current;
-    if (!card || !glare) return;
-    card.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)";
-    glare.style.opacity = "0";
-  }, []);
-
-  return { cardRef, glareRef, onMove, onLeave };
-}
 
 /* ─────────────────────────────────────────────────────────
    Shimmer skeleton card
@@ -151,124 +121,98 @@ function SkeletonCard({ resolvedTheme }: { resolvedTheme?: string }) {
 function FeaturedCard({ project, resolvedTheme }: { project: Project; resolvedTheme?: string }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
-  const { cardRef, glareRef, onMove, onLeave } = useTilt();
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 60, scale: 0.94 }}
+      initial={{ opacity: 0, y: 40, scale: 0.96 }}
       animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      className="mb-6"
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      className="mb-8"
     >
       <div
-        ref={cardRef}
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
-        className="relative rounded-3xl overflow-hidden cursor-default"
-        style={{ transition: "transform 0.12s ease" }}
+        className="relative min-h-[300px] md:min-h-[360px] flex flex-col md:flex-row items-stretch overflow-hidden rounded-3xl group transition-all duration-500"
+        style={{
+          background: resolvedTheme === 'light' ? "#ffffff" : "rgba(var(--foreground-rgb, 255,255,255), 0.03)",
+          border: resolvedTheme === 'light' ? `1px solid rgba(15,23,42,0.12)` : `1px solid rgba(var(--foreground-rgb, 255,255,255), 0.08)`,
+          boxShadow: resolvedTheme === 'light' ? `0 12px 32px -8px rgba(15,23,42,0.1), 0 4px 12px -4px rgba(15,23,42,0.06)` : `0 20px 40px rgba(0,0,0,0.5)`,
+        }}
       >
+        {/* Left art panel */}
         <div
-          ref={glareRef}
-          className="pointer-events-none absolute inset-0 z-20 rounded-3xl transition-opacity duration-100"
-          style={{ opacity: 0 }}
-        />
-
-        <div
-          className="relative min-h-[300px] md:min-h-[360px] flex flex-col md:flex-row items-stretch overflow-hidden"
-          style={{
-            background: resolvedTheme === 'light' ? "rgba(255,255,255, 0.7)" : "rgba(var(--background-rgb, 8,8,16), 0.94)",
-            backdropFilter: resolvedTheme === 'light' ? "blur(20px)" : "none",
-            border: `1px solid ${project.accent}22`,
-            boxShadow: resolvedTheme === 'light' ? `0 40px 80px rgba(15,23,42,0.1), inset 0 1px 0 rgba(255,255,255,1)` : `0 40px 80px rgba(0,0,0,0.7), 0 0 60px ${project.glow}`,
-          }}
+          className="relative md:w-2/5 min-h-[220px] md:min-h-0 overflow-hidden shrink-0 flex items-center justify-center transition-colors duration-500"
+          style={{ background: resolvedTheme === 'light' ? `linear-gradient(135deg, ${project.accent}12 0%, rgba(248,250,252,1) 100%)` : `${project.accent}20` }}
         >
-          {/* Left art panel */}
           <div
-            className="relative md:w-2/5 min-h-[160px] md:min-h-0 overflow-hidden shrink-0"
-            style={{ background: `radial-gradient(ellipse at 50% 50%, ${project.accent}18 0%, transparent 70%)` }}
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: resolvedTheme === 'light' ? "radial-gradient(circle at 2px 2px, rgba(15,23,42,0.15) 1px, transparent 0)" : "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)",
+              backgroundSize: "24px 24px",
+            }}
+          />
+          <motion.div
+            className="font-black select-none pointer-events-none drop-shadow-2xl z-10 transition-transform duration-700 group-hover:scale-110"
+            style={{ fontSize: "10rem", color: project.accent, lineHeight: 1 }}
           >
-            <div
-              className="absolute inset-0 opacity-[0.06]"
-              style={{
-                backgroundImage: "linear-gradient(rgba(255,255,255,.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.8) 1px, transparent 1px)",
-                backgroundSize: "40px 40px",
-              }}
-            />
-            <div
-              className="absolute inset-0 flex items-center justify-center select-none pointer-events-none font-black"
-              style={{ fontSize: "12rem", color: `${project.accent}07`, lineHeight: 1 }}
-            >
-              {project.title.charAt(0).toUpperCase()}
+            {project.title.charAt(0).toUpperCase()}
+          </motion.div>
+          <div className="absolute top-0 bottom-0 right-0 w-px bg-linear-to-b from-transparent via-foreground/20 to-transparent opacity-30" />
+        </div>
+
+        {/* Right content */}
+        <div className="flex flex-col justify-between p-8 md:p-10 flex-1 relative">
+          <div>
+            <div className="flex items-center gap-3 mb-4 flex-wrap">
+              <span className="text-xs font-bold tracking-widest uppercase px-3 py-1.5 rounded-full" style={{ background: "rgba(251,191,36,0.15)", color: "#d97706" }}>
+                ★ Featured
+              </span>
+              {project.stars > 0 && (
+                <span className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full ${resolvedTheme === 'light' ? 'bg-slate-100 text-slate-700' : 'bg-foreground/5 text-foreground/70'}`}>
+                  <Star size={14} className="fill-current text-amber-500" /> {project.stars}
+                </span>
+              )}
+              {project.language && (
+                <span className={`text-xs font-bold px-3 py-1.5 rounded-full ${resolvedTheme === 'light' ? 'bg-slate-100 text-slate-700' : 'bg-foreground/5 text-foreground/70'}`}>
+                  {project.language}
+                </span>
+              )}
+              <span className={`text-xs font-bold px-3 py-1.5 rounded-full tracking-wider ${resolvedTheme === 'light' ? 'bg-slate-100 text-slate-700' : 'bg-foreground/5 text-foreground/70'}`}>
+                {project.year}
+              </span>
             </div>
-            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, ${project.accent}, transparent)` }} />
-            <div className="absolute top-0 bottom-0 left-0 w-px" style={{ background: `linear-gradient(180deg, ${project.accent}, transparent)` }} />
-            <motion.div
-              className="absolute rounded-full"
-              style={{ width: 180, height: 180, top: "50%", left: "50%", marginTop: -90, marginLeft: -90, background: `radial-gradient(circle, ${project.accent}30 0%, transparent 70%)`, filter: "blur(30px)" }}
-              animate={{ scale: [1, 1.2, 1], opacity: [0.6, 1, 0.6] }}
-              transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-            />
-            <div
-              className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase"
-              style={{ background: `${project.accent}18`, border: `1px solid ${project.accent}35`, color: project.accent }}
-            >
-              {project.year}
+
+            <h3 className="font-display font-black text-3xl md:text-5xl leading-tight mb-4 capitalize group-hover:text-(--accent-cyan) transition-colors duration-500"
+                style={{ color: "var(--color-foreground)" }}>
+              {project.title}
+            </h3>
+            <p className="text-base leading-relaxed mb-6" style={{ color: resolvedTheme === 'light' ? "rgba(15,23,42,0.7)" : "rgba(var(--foreground-rgb, 255,255,255), 0.7)" }}>
+              {project.description}
+            </p>
+
+            <div className="flex flex-wrap gap-2 mb-8">
+              {project.techs.map((t) => (
+                <span key={t} className="text-xs px-3 py-1.5 rounded-lg font-bold capitalize transition-colors"
+                  style={{ background: resolvedTheme === 'light' ? `rgba(15,23,42,0.06)` : `${project.accent}15`, color: resolvedTheme === 'light' ? "#0f172a" : project.accent }}>
+                  {t}
+                </span>
+              ))}
             </div>
           </div>
 
-          {/* Right content */}
-          <div className="flex flex-col justify-between p-8 md:p-10 flex-1">
-            <div>
-              <div className="flex items-center gap-3 mb-4 flex-wrap">
-                <span className="text-[10px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full" style={{ background: "rgba(255,230,0,0.08)", border: "1px solid rgba(255,230,0,0.2)", color: "#fbbf24" }}>
-                  ★ Top Project
-                </span>
-                {project.stars > 0 && (
-                  <span className="flex items-center gap-1 text-xs font-semibold text-foreground/50 dark:text-foreground/30">
-                    <Star size={12} className="fill-current" style={{ color: "#fbbf24" }} />
-                    {project.stars}
-                  </span>
-                )}
-                {project.language && (
-                  <span className="text-xs font-semibold text-foreground/70 dark:text-foreground/60">
-                    {project.language}
-                  </span>
-                )}
-              </div>
-
-              <h3 className="font-display font-black text-3xl md:text-4xl leading-tight text-foreground mb-4 capitalize" style={{ textShadow: resolvedTheme === 'light' ? "none" : `0 0 40px ${project.accent}40` }}>
-                {project.title}
-              </h3>
-              <p className="text-sm leading-relaxed mb-6 text-foreground/80 dark:text-foreground/80">
-                {project.description}
-              </p>
-
-              <div className="flex flex-wrap gap-2 mb-8">
-                {project.techs.map((t) => (
-                  <span key={t} className="text-xs px-3 py-1 rounded-full font-semibold capitalize"
-                    style={{ background: `${project.accent}12`, border: `1px solid ${project.accent}30`, color: project.accent }}>
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 flex-wrap">
-              {project.live && (
-                <motion.a href={project.live} target="_blank" rel="noopener noreferrer"
-                  whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-foreground"
-                  style={{ background: `linear-gradient(135deg, ${project.accent}cc, #2563eb)` }}>
-                  <ExternalLink size={14} /> Live Demo <ArrowUpRight size={14} />
-                </motion.a>
-              )}
-              <motion.a href={project.github} target="_blank" rel="noopener noreferrer"
-                whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border ${resolvedTheme === 'light' ? 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200' : 'bg-foreground/5 border-foreground/10 text-foreground/70 hover:bg-foreground/10'}`}>
-                <Github size={14} /> View Code
+          <div className="flex items-center gap-3 flex-wrap">
+            {project.live && (
+              <motion.a href={project.live} target="_blank" rel="noopener noreferrer"
+                whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white shadow-lg transition-transform"
+                style={{ background: resolvedTheme === 'light' ? "#0f172a" : `linear-gradient(135deg, ${project.accent}, #2563eb)` }}>
+                <ExternalLink size={16} /> Live Demo <ArrowUpRight size={14} className="opacity-50" />
               </motion.a>
-            </div>
+            )}
+            <motion.a href={project.github} target="_blank" rel="noopener noreferrer"
+              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+              className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold border transition-colors ${resolvedTheme === 'light' ? 'bg-white border-slate-300 text-slate-800 hover:bg-slate-100 shadow-sm' : 'bg-foreground/5 border-foreground/10 text-foreground hover:bg-foreground/15'}`}>
+              <Github size={16} /> Source Code
+            </motion.a>
           </div>
         </div>
       </div>
@@ -281,102 +225,83 @@ function FeaturedCard({ project, resolvedTheme }: { project: Project; resolvedTh
 ───────────────────────────────────────────────────────── */
 function ProjectCard({ project, index, resolvedTheme }: { project: Project; index: number; resolvedTheme?: string }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.15 });
-  const { cardRef, glareRef, onMove, onLeave } = useTilt();
-  const [hovered, setHovered] = useState(false);
+  const inView = useInView(ref, { once: true, amount: 0.1 });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 50, scale: 0.94 }}
+      initial={{ opacity: 0, y: 30, scale: 0.96 }}
       animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: (index % 4) * 0.08 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: (index % 4) * 0.05 }}
       className="h-full"
     >
       <div
-        ref={cardRef}
-        onMouseMove={onMove}
-        onMouseLeave={() => { onLeave(); setHovered(false); }}
-        onMouseEnter={() => setHovered(true)}
-        className="relative h-full rounded-2xl overflow-hidden cursor-default"
-        style={{ transition: "transform 0.12s ease" }}
+        className="relative h-full flex flex-col p-8 rounded-3xl group overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+        style={{
+          background: resolvedTheme === 'light' ? "#ffffff" : "rgba(var(--foreground-rgb, 255,255,255), 0.02)",
+          border: resolvedTheme === 'light' ? `1px solid rgba(15,23,42,0.12)` : `1px solid rgba(var(--foreground-rgb, 255,255,255), 0.05)`,
+          boxShadow: resolvedTheme === 'light' ? `0 8px 24px rgba(15,23,42,0.04)` : `0 10px 30px rgba(0,0,0,0.2)`,
+        }}
       >
-        <div
-          ref={glareRef}
-          className="pointer-events-none absolute inset-0 z-20 rounded-2xl transition-opacity duration-100"
-          style={{ opacity: 0 }}
-        />
+        <div className="absolute top-0 left-0 w-full h-1 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" style={{ background: project.accent }} />
 
-        <div
-          className="relative h-full flex flex-col p-6 rounded-2xl"
-          style={{
-            background: resolvedTheme === 'light' ? "linear-gradient(145deg, rgba(255,255,255, 0.6) 0%, rgba(248,250,252, 0.3) 100%)" : "rgba(var(--background-rgb, 9,9,18), 0.9)",
-            backdropFilter: resolvedTheme === 'light' ? "blur(20px)" : "none",
-            border: resolvedTheme === 'light' ? `1px solid ${hovered ? project.accent + "50" : "rgba(15,23,42,0.06)"}` : `1px solid ${hovered ? project.accent + "30" : "rgba(var(--foreground-rgb, 255,255,255), 0.07)"}`,
-            boxShadow: resolvedTheme === 'light' && hovered ? `0 24px 64px -12px rgba(15,23,42, 0.1), inset 0 1px 0 rgba(255,255,255,0.8)` : hovered ? `0 20px 50px rgba(0,0,0,0.5), 0 0 30px ${project.glow}` : resolvedTheme === 'light' ? '0 10px 30px rgba(15,23,42,0.05)' : "0 10px 30px rgba(0,0,0,0.3)",
-            transition: "border-color 0.3s, box-shadow 0.3s",
-          }}
-        >
-          <div className="absolute top-0 left-6 right-6 h-px" style={{ background: `linear-gradient(90deg, transparent, ${project.accent}${hovered ? "60" : "25"}, transparent)`, transition: "background 0.3s" }} />
-          <div className="absolute left-0 top-6 bottom-6 w-[3px] rounded-full" style={{ background: `linear-gradient(180deg, transparent, ${project.accent}, transparent)`, opacity: hovered ? 1 : 0.3, transition: "opacity 0.3s" }} />
-
+        <div className="flex items-center justify-between mb-6">
           <div
-            className="absolute right-4 bottom-4 font-black select-none pointer-events-none"
-            style={{ fontSize: "5rem", color: `${project.accent}05`, lineHeight: 1 }}
+            className="w-12 h-12 rounded-2xl flex items-center justify-center font-black text-2xl transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110"
+            style={{ 
+               background: resolvedTheme === 'light' ? `linear-gradient(135deg, ${project.accent}12 0%, rgba(248,250,252,1) 100%)` : `${project.accent}20`,
+               color: project.accent,
+               border: resolvedTheme === 'light' ? `1px solid ${project.accent}20` : 'none'
+            }}
           >
-            {String(index + 1).padStart(2, "0")}
+            {project.title.charAt(0).toUpperCase()}
           </div>
+          <span className={`text-xs font-bold tracking-widest uppercase px-3 py-1 rounded-full ${resolvedTheme === 'light' ? 'bg-slate-100 text-slate-500' : 'text-foreground/40 bg-foreground/5'}`}>
+            {project.year}
+          </span>
+        </div>
 
-          <div className="flex items-start justify-between mb-4 gap-2">
-            <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: project.accent + "80" }}>
-              {project.year}
+        <h3 className="font-display font-bold text-xl leading-tight mb-3 capitalize text-foreground group-hover:text-(--accent-cyan) transition-colors">
+          {project.title}
+        </h3>
+
+        <p className="text-sm leading-relaxed flex-1 mb-6 text-foreground/60 line-clamp-3">
+          {project.description}
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-6">
+          {project.techs.slice(0, 3).map((t) => (
+            <span key={t} className={`text-xs font-bold px-2.5 py-1 rounded-md capitalize ${resolvedTheme === 'light' ? 'bg-slate-50 border border-slate-200 text-slate-600' : 'bg-foreground/5 text-foreground/60'}`}>
+              {t}
             </span>
-            <div className="flex items-center gap-2">
-              {project.stars > 0 && (
-                <span className="flex items-center gap-1 text-[10px] font-semibold text-foreground/40 dark:text-foreground/25">
-                  <Star size={10} style={{ fill: "#fbbf24", color: "#fbbf24" }} /> {project.stars}
-             </span>
-              )}
-              {project.language && (
-                <span className="text-[10px] font-semibold text-foreground/40 dark:text-foreground/20">
-                  {project.language}
-                </span>
-              )}
-            </div>
-          </div>
+          ))}
+          {project.techs.length > 3 && (
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-md capitalize ${resolvedTheme === 'light' ? 'bg-slate-50 border border-slate-200 text-slate-600' : 'bg-foreground/5 text-foreground/60'}`}>
+              +{project.techs.length - 3}
+            </span>
+          )}
+        </div>
 
-          <h3 className="font-display font-bold text-base leading-tight mb-3 capitalize transition-colors duration-300" style={{ color: hovered ? project.accent : "var(--color-foreground)" }}>
-            {project.title}
-          </h3>
-
-          <p className="text-sm leading-relaxed flex-1 mb-4 line-clamp-3 text-foreground/60 dark:text-foreground/40">
-            {project.description}
-          </p>
-
-          <div className="flex flex-wrap gap-1.5 mb-4">
-            {project.techs.slice(0, 4).map((t) => (
-              <span key={t} className={`text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize border ${resolvedTheme === 'light' ? 'bg-slate-100 border-slate-200 text-slate-600' : 'bg-foreground/5 border-foreground/10 text-foreground/40'}`}>
-                {t}
-              </span>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3 relative z-10">
+        <div className="flex items-center justify-between border-t border-foreground/5 pt-5 mt-auto">
+           <div className="flex gap-4">
             <a href={project.github} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-xs font-semibold transition-colors duration-200"
-              style={{ color: hovered ? project.accent : (resolvedTheme === 'light' ? "rgba(15,23,42, 0.5)" : "rgba(var(--foreground-rgb, 255,255,255), 0.3)") }}
-              onClick={(e) => e.stopPropagation()}>
-              <Github size={12} /> Code
+              className="flex items-center gap-2 text-sm font-bold text-foreground/80 hover:text-blue-600 transition-colors group/link">
+              <Github size={16} /> <span className="relative overflow-hidden group-hover/link:after:translate-x-0 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-current after:-translate-x-[101%] after:transition-transform">Repo</span>
             </a>
             {project.live && (
               <a href={project.live} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-xs font-semibold transition-colors duration-200"
-                style={{ color: hovered ? project.accent : (resolvedTheme === 'light' ? "rgba(15,23,42, 0.5)" : "rgba(var(--foreground-rgb, 255,255,255), 0.3)") }}
-                onClick={(e) => e.stopPropagation()}>
-                <ExternalLink size={12} /> Demo
+                className="flex items-center gap-2 text-sm font-bold text-foreground/80 hover:text-blue-600 transition-colors group/link">
+                <ExternalLink size={16} /> <span className="relative overflow-hidden group-hover/link:after:translate-x-0 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-current after:-translate-x-[101%] after:transition-transform">Live</span>
               </a>
             )}
-          </div>
+           </div>
+           
+           {(project.stars > 0 || project.language) && (
+             <div className="flex items-center gap-3 text-xs font-bold text-foreground/60">
+               {project.language && <span>{project.language}</span>}
+               {project.stars > 0 && <span className="flex items-center gap-1.5"><Star size={12} className="text-amber-500 fill-amber-500"/> {project.stars}</span>}
+             </div>
+           )}
         </div>
       </div>
     </motion.div>
@@ -425,8 +350,8 @@ export default function ProjectsPage() {
       >
         {/* Ambient blobs */}
         <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-          <motion.div className="absolute rounded-full" style={{ width: 600, height: 600, left: "-10%", top: "5%", background: "radial-gradient(circle, rgba(var(--accent-cyan-rgb, 0,240,255),0.05) 0%, transparent 70%)", filter: "blur(50px)" }} animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }} />
-          <motion.div className="absolute rounded-full" style={{ width: 500, height: 500, right: "-8%", bottom: "15%", background: "radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%)", filter: "blur(40px)" }} animate={{ x: [0, -30, 0], y: [0, 40, 0] }} transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }} />
+          <motion.div className="absolute rounded-full" style={{ width: 600, height: 600, left: "-10%", top: "5%", background: resolvedTheme === 'light' ? "radial-gradient(circle, rgba(2,132,199,0.08) 0%, transparent 70%)" : "radial-gradient(circle, rgba(var(--accent-cyan-rgb, 0,240,255),0.05) 0%, transparent 70%)", filter: "blur(50px)" }} animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }} />
+          <motion.div className="absolute rounded-full" style={{ width: 500, height: 500, right: "-8%", bottom: "15%", background: resolvedTheme === 'light' ? "radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%)" : "radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%)", filter: "blur(40px)" }} animate={{ x: [0, -30, 0], y: [0, 40, 0] }} transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }} />
         </div>
 
         <div className="max-w-6xl mx-auto px-6 relative z-10">

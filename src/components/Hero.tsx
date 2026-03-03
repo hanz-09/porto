@@ -20,11 +20,13 @@ import Particles from "./Particles";
 const MARQUEE_TEXT = [
   "FRONTEND DEVELOPER",
   "—",
-  "FULLSTACK DEVELOPER WANNABE",
+  "MULTIMEDIA ENGINEERING TECH",
   "—",
   "UI ENTHUSIAST",
   "—",
   "WEB CRAFTSMAN",
+  "—",
+  "FULLSTACK DEV WANNA BE",
   "—",
 ];
 
@@ -180,7 +182,7 @@ export default function Hero() {
       {/* Interactive React Bits Particles Background */}
       <div className="absolute inset-0 z-0 opacity-40">
         <Particles
-          particleColors={resolvedTheme === 'light' ? ["#64748b", "#0284c7"] : ["var(--color-foreground)", "var(--accent-cyan)"]}
+          particleColors={resolvedTheme === 'light' ? ["#94a3b8", "#38bdf8"] : ["#ffffff", "#00f0ff"]}
           particleCount={200}
           particleSpread={10}
           speed={0.1}
@@ -301,7 +303,7 @@ export default function Hero() {
             transition={{ duration: 0.55 }}
             className="font-display text-base md:text-lg tracking-[0.25em] uppercase font-bold text-foreground/50"
           >
-            Frontend Developer &nbsp;·&nbsp; UI Enthusiast 
+            Frontend Developer &nbsp;·&nbsp; Multimedia Engineering Technology Student &nbsp;·&nbsp; UI Enthusiast
           </motion.p>
 
 

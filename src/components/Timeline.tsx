@@ -44,41 +44,41 @@ type TItem = {
 
 const items: TItem[] = [
   {
-    year: "2019",
-    title: "Bachelor of Computer Science",
-    place: "University Name",
+    year: "Aug 2022 – Present",
+    title: "Bachelor of Computer Engineering",
+    place: "Batam State Polytechnic · Multimedia Engineering Technology",
     description:
-      "Graduated with honours. Focused on Software Engineering and Human–Computer Interaction. GPA 3.8 / 4.0.",
+      "Focusing on UI/UX Design, Web Development, Multimedia Systems, and Human–Computer Interaction. Current GPA: 3.84 / 4.00.",
     type: "education",
   },
   {
-    year: "2021",
-    title: "Freelance Web Developer",
-    place: "Self-employed",
+    year: "Jul 2025 – Mar 2026",
+    title: "Front-End Developer Intern",
+    place: "Folxcode · On-Site",
     description:
-      "Delivered 10+ landing pages and company profiles for local businesses. Translated design mockups into responsive, production-ready code.",
-    type: "project",
-    techs: ["HTML", "CSS", "JavaScript"],
-  },
-  {
-    year: "2022",
-    title: "Junior Frontend Developer",
-    place: "Startup Name · Internship",
-    description:
-      "Built a B2B SaaS dashboard from scratch, integrated REST APIs, and improved page load performance by 30% through code splitting and lazy loading.",
+      "Developed scalable front-end features using Angular to build reusable UI components. Integrated REST APIs, improving overall performance, responsiveness, and user experience optimization.",
     type: "work",
-    techs: ["React", "JavaScript", "CSS Modules"],
-  },
-  {
-    year: "2024",
-    title: "Frontend Developer",
-    place: "Company Name · Full-time",
-    description:
-      "Building scalable web applications with React and Next.js. Collaborating closely with designers to ship pixel-perfect UIs at production scale.",
-    type: "work",
-    techs: ["Next.js", "TypeScript", "Tailwind CSS"],
+    techs: ["Angular", "REST API", "UI Components"],
     highlight: true,
   },
+  {
+    year: "Aug 2024 – Dec 2024",
+    title: "Web Developer & UI/UX Designer",
+    place: "Infinite Learning Indonesia · Remote",
+    description:
+      "Built backend architecture using Node.js, Express, Sequelize, and MySQL. Designed RESTful APIs, implemented authentication, and optimized database queries before converting the system cross-platform.",
+    type: "work",
+    techs: ["Node.js", "Express", "Sequelize", "MySQL"],
+  },
+  {
+    year: "Mar 2023 - Jan 2024",
+    title: "Freelance Front-End Developer",
+    place: "Freelance · Remote",
+    description:
+      "Worked independently to design and build custom landing pages and web applications for various clients. Ensured responsive design, optimal performance, and high-quality UI/UX tailored to client specifications.",
+    type: "work",
+    techs: ["ReactJS", "NextJS", "UI/UX", "Tailwind CSS"],
+  }
 ];
 
 const getCfg = (theme?: string): Record<

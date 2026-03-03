@@ -37,25 +37,26 @@ type Tech = {
   desc: string;
 };
 
-/** Row 1 */
+/** Row 1: Frontend & Design */
 const row1: Tech[] = [
-  { name: "React",      logo: cdn("react"),                         color: "#61DAFB", desc: "UI Library" },
+  { name: "React Js",   logo: cdn("react"),                         color: "#61DAFB", desc: "UI Library" },
   { name: "Next.js",    logo: cdn("nextjs", "original"),            color: "var(--color-foreground)", desc: "React Framework" },
-  { name: "TypeScript", logo: cdn("typescript"),                    color: "#3178C6", desc: "Type Safety" },
-  { name: "JavaScript", logo: cdn("javascript"),                    color: "#F7DF1E", desc: "Core Language" },
-  { name: "Tailwind",   logo: cdn("tailwindcss", "original-wordmark"), color: "#38BDF8", desc: "Utility CSS" },
-  { name: "HTML5",      logo: cdn("html5"),                         color: "#E34F26", desc: "Markup" },
-  { name: "CSS3",       logo: cdn("css3"),                          color: "#1572B6", desc: "Styling" },
-  { name: "Figma",      logo: cdn("figma"),                         color: "#F24E1E", desc: "Design & Proto" },
+  { name: "Angular",    logo: cdn("angularjs", "original"),         color: "#DD0031", desc: "Frontend Framework" },
+  { name: "Flutter",    logo: cdn("flutter", "original"),           color: "#02569B", desc: "Mobile Cross-Platform" },
+  { name: "Figma",      logo: cdn("figma"),                         color: "#F24E1E", desc: "UI/UX Design" },
+  { name: "Photoshop",  logo: cdn("photoshop", "plain"),            color: "#31A8FF", desc: "Image Editing" },
+  { name: "Premiere",   logo: cdn("premierepro", "plain"),          color: "#9999FF", desc: "Video Production" },
 ];
 
-/** Row 2 */
+/** Row 2: Backend & Databases */
 const row2: Tech[] = [
   { name: "Node.js",    logo: cdn("nodejs"),                        color: "#339933", desc: "Backend Runtime" },
-  { name: "Git",        logo: cdn("git"),                           color: "#F05032", desc: "Version Control" },
-  { name: "GitHub",     logo: cdn("github"),                        color: "var(--color-foreground)", desc: "Code Hosting" },
-  { name: "VS Code",    logo: cdn("vscode", "plain"),               color: "#007ACC", desc: "Code Editor" },
-  { name: "Angular",    logo: cdn("angularjs", "original"),         color: "#DD0031", desc: "Frontend Framework" },
+  { name: "Express",    logo: cdn("express", "original"),           color: "var(--color-foreground)", desc: "Node.js Framework" },
+  { name: "Sequelize",  logo: cdn("sequelize", "original"),         color: "#3B4252", desc: "Node ORM" },
+  { name: "MySQL",      logo: cdn("mysql", "original"),             color: "#4479A1", desc: "Relational DB" },
+  { name: "PHP",        logo: cdn("php", "original"),               color: "#777BB4", desc: "Backend Language" },
+  { name: "Laravel",    logo: cdn("laravel"),                       color: "#FF2D20", desc: "PHP Framework" },
+  { name: "Firebase",   logo: cdn("firebase", "plain"),             color: "#FFCA28", desc: "BaaS & Realtime DB" },
 ];
 
 /* ─────────────────────────────────────────────────────────
@@ -74,29 +75,29 @@ const featured: FeaturedSkill[] = [
     name: "React & Next.js",
     logo: cdn("react"),
     color: "#61DAFB",
-    level: 90,
-    desc: "Primary framework. From SSR/SSG to complex state management.",
+    level: 95,
+    desc: "Primary ecosystem for highly interactive web applications.",
   },
   {
-    name: "TypeScript",
-    logo: cdn("typescript"),
-    color: "#3178C6",
+    name: "Node.js & Express",
+    logo: cdn("nodejs"),
+    color: "#339933",
     level: 85,
-    desc: "Type-safe codebases, generics, strict modern patterns.",
+    desc: "Backend architecture, REST API design, and database integration.",
   },
   {
-    name: "Tailwind CSS",
-    logo: cdn("tailwindcss", "original-wordmark"),
-    color: "#38BDF8",
-    level: 92,
-    desc: "Utility-first styling — rapid, consistent, responsive.",
+    name: "Flutter",
+    logo: cdn("flutter", "original"),
+    color: "#02569B",
+    level: 80,
+    desc: "Building seamless cross-platform mobile apps for Android and iOS.",
   },
   {
-    name: "Figma",
+    name: "UI/UX & Multimedia",
     logo: cdn("figma"),
     color: "#F24E1E",
-    level: 84,
-    desc: "Design collaboration, prototyping and developer handoff.",
+    level: 90,
+    desc: "Figma design systems, Premiere Pro video editing, and Photoshop.",
   },
   {
     name: "Angular",

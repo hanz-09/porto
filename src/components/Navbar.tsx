@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, LayoutGrid } from "lucide-react";
+import { Home, LayoutGrid, User } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const navLinks = [
   { label: "Home",     href: "/",         icon: Home },
+  { label: "About",    href: "/about",    icon: User },
   { label: "Projects", href: "/projects", icon: LayoutGrid },
 ];
 

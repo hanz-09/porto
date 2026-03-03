@@ -20,7 +20,7 @@ const contactInfo = [
 
 const socials = [
   { icon: Github, label: "GitHub", href: "https://github.com/hanz-09", color: "var(--color-foreground)" },
-  { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com", color: "#0a66c2" },
+  { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/in/f4rh4n-zuhd1", color: "#0a66c2" },
   { icon: Instagram, label: "Instagram", href: "https://instagram.com", color: "#e1306c" },
 ];
 

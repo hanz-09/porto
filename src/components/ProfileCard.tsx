@@ -31,12 +31,12 @@ interface ProfileCardProps {
 export default function ProfileCard({
   name = "Farhan Zuhdi",
   title = "Frontend Developer",
-  bio = "Crafting pixel-perfect interfaces & delightful web experiences using React and modern tooling.",
+  bio = "Multimedia Engineering Technology student with a passion for creating scalable, responsive, and user-centered digital experiences.",
   avatarLetter = "F",
-  githubUrl = "https://github.com",
-  linkedinUrl = "https://linkedin.com",
+  githubUrl = "https://github.com/hanz-09",
+  linkedinUrl = "https://linkedin.com/in/f4rh4n-zuhd1",
   instagramUrl = "https://instagram.com",
-  emailUrl = "mailto:hello@farhan.dev",
+  emailUrl = "mailto:farhanzuhdi400@gmail.com",
 }: ProfileCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const glareRef = useRef<HTMLDivElement>(null);
@@ -106,6 +106,24 @@ export default function ProfileCard({
             : "radial-gradient(ellipse at 60% 40%, rgba(var(--accent-cyan-rgb, 0,240,255),0.35) 0%, rgba(37,99,235,0.25) 50%, transparent 75%)",
         }}
       />
+
+      {/* Floating Hover Indicator */}
+      <motion.div
+        className="absolute -top-3 -right-3 z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-full shadow-xl pointer-events-none"
+        style={{
+          background: resolvedTheme === 'light' ? "#ffffff" : "var(--bg-secondary)",
+          border: resolvedTheme === 'light' ? "1px solid rgba(15,23,42,0.1)" : "1px solid rgba(255,255,255,0.1)",
+          color: resolvedTheme === 'light' ? "#0f172a" : "var(--color-foreground)",
+        }}
+        animate={{ y: [0, -6, 0] }}
+        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+      >
+        <span className="text-[10px] font-bold tracking-wide uppercase">Hover Me</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="opacity-80">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+      </motion.div>
 
       {/* Card Shell */}
       <div

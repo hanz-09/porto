@@ -7,22 +7,13 @@ import {
   useTransform,
   useSpring,
 } from "framer-motion";
-import { Code2, Palette, Zap, Globe } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import ProfileCard from "./ProfileCard";
 import TextType from "./TextType";
 import { useTheme } from "next-themes";
 
 
-/* ─────────────────────────────────────────────────────────
-   Tech data
-───────────────────────────────────────────────────────── */
-const techs = [
-  { icon: Code2,   label: "React / Next.js",  desc: "Primary framework" },
-  { icon: Palette, label: "Tailwind CSS",      desc: "Styling system" },
-  { icon: Zap,     label: "TypeScript",        desc: "Type safety"},
-  { icon: Globe,   label: "Node.js / REST",    desc: "Backend basics" },
-];
-
+import Link from "next/link";
 /* ─────────────────────────────────────────────────────────
    Reveal — strong spring-physics scroll animation
    Each element fades in from 60px below and has a scale pop
@@ -170,10 +161,10 @@ export default function About() {
                 <TextType
                   words={[
                     "craft beautiful things.",
-                    "build for the web.",
-                    "solve hard problems.",
-                    "write clean code.",
-                    "create great UX.",
+                    "build scalable web apps.",
+                    "optimize user experiences.",
+                    "design intuitive UI/UX.",
+                    "develop cross-platform tech.",
                   ]}
                   typingSpeed={70}
                   deletingSpeed={40}
@@ -193,53 +184,38 @@ export default function About() {
             <Reveal fromRight delay={0.15}>
               <div className="space-y-4 text-[15px] leading-[1.8] text-foreground/70 dark:text-foreground/75">
                 <p>
-                  Hai! Aku Farhan, seorang <strong className="text-foreground/80">Frontend Developer</strong> berbasis di Batam, Indonesia. Aku suka mengubah ide-ide kreatif menjadi pengalaman web yang interaktif, cepat, dan memanjakan mata.
+                  Hello! I'm Farhan, a <strong className="text-foreground/80">Frontend Developer</strong> and Multimedia Engineering Technology student. I blend technical expertise with a keen eye for design to build scalable, responsive, and user-centered digital products.
                 </p>
                 <p>
-                  Spesialisiku ada di ekosistem <strong className="text-foreground/80">React & Next.js</strong> — dari membangun UI yang responsif hingga mengoptimasi performa dan aksesibilitas. Setiap piksel itu penting bagiku.
+                  My work spans across modern web applications, UI/UX design, and interactive multimedia. I focus on bridging the gap between aesthetics and engineering.
                 </p>
               </div>
             </Reveal>
 
-            {/* Tech stack chips */}
+            {/* View Full Profile Button */}
             <Reveal fromRight delay={0.2}>
-              <div className="space-y-3">
-                <p className="text-xs font-bold tracking-widest uppercase text-foreground/50">
-                  Tech I Work With
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  {techs.map(({ icon: Icon, label, desc }) => (
-                    <div
-                      key={label}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-default group"
-                      style={{
-                        background: resolvedTheme === 'light' ? "rgba(15,23,42, 0.02)" : "rgba(var(--foreground-rgb, 255,255,255), 0.03)",
-                        border: resolvedTheme === 'light' ? "1px solid rgba(15,23,42, 0.08)" : "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.07)",
-                      }}
-                      onMouseEnter={(e) => {
-                        const el = e.currentTarget as HTMLElement;
-                        el.style.borderColor = resolvedTheme === 'light' ? "rgba(37,99,235,0.25)" : "rgba(var(--accent-cyan-rgb, 0,240,255),0.25)";
-                        el.style.background = resolvedTheme === 'light' ? "rgba(37,99,235,0.05)" : "rgba(var(--accent-cyan-rgb, 0,240,255),0.05)";
-                      }}
-                      onMouseLeave={(e) => {
-                        const el = e.currentTarget as HTMLElement;
-                        el.style.borderColor = resolvedTheme === 'light' ? "rgba(15,23,42, 0.08)" : "rgba(var(--foreground-rgb, 255,255,255), 0.07)";
-                        el.style.background = resolvedTheme === 'light' ? "rgba(15,23,42, 0.02)" : "rgba(var(--foreground-rgb, 255,255,255), 0.03)";
-                      }}
-                    >
-                      <div
-                        className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                        style={{ background: resolvedTheme === 'light' ? "rgba(37,99,235,0.1)" : "rgba(var(--accent-cyan-rgb, 0,240,255),0.1)" }}
-                      >
-                        <Icon size={14} style={{ color: resolvedTheme === 'light' ? "#2563eb" : "var(--accent-cyan)" }} />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="text-xs font-bold text-foreground/80 truncate">{label}</div>
-                        <div className="text-[10px] text-foreground/50 dark:text-foreground/40 truncate">{desc}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div className="pt-2">
+                <Link href="/about">
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="group inline-flex items-center gap-3 px-6 py-3 rounded-full text-sm font-bold tracking-wide transition-all duration-300 relative overflow-hidden cursor-pointer"
+                    style={{
+                      background: resolvedTheme === 'light' ? "#2563eb" : "rgba(var(--accent-cyan-rgb, 0,240,255), 0.1)",
+                      color: resolvedTheme === 'light' ? "#ffffff" : "var(--accent-cyan)",
+                      border: resolvedTheme === 'light' ? "none" : "1px solid rgba(var(--accent-cyan-rgb, 0,240,255), 0.3)",
+                    }}
+                  >
+                    <span className="relative z-10">View Full Profile</span>
+                    <ArrowRight 
+                      size={16} 
+                      className="relative z-10 transition-transform duration-300 group-hover:translate-x-1" 
+                    />
+                    {resolvedTheme !== 'light' && (
+                      <div className="absolute inset-0 bg-(--accent-cyan) opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+                    )}
+                  </motion.div>
+                </Link>
               </div>
             </Reveal>
           </div>
