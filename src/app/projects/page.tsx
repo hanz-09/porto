@@ -64,10 +64,12 @@ function mapRepo(repo: GitHubRepo, index: number): Project {
       .slice(0, 4),
   ].slice(0, 5);
 
+  const title = repo.name.replace(/-/g, " ").replace(/_/g, " ");
+
   return {
     id: repo.id,
-    title: repo.name.replace(/-/g, " ").replace(/_/g, " "),
-    description: repo.description,
+    title,
+    description: repo.description || `Explore the source code, structure, and implementation details for the ${title} project.`,
     techs: techs.length > 0 ? techs : ["Code"],
     github: repo.html_url,
     live: repo.homepage || null,

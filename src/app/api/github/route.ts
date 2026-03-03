@@ -58,7 +58,7 @@ export async function GET() {
       .map((r) => ({
         id: r.id,
         name: r.name,
-        description: r.description ?? "No description provided.",
+        description: r.description,
         html_url: r.html_url,
         homepage: r.homepage ?? null,
         topics: r.topics ?? [],
