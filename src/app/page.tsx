@@ -9,28 +9,20 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Timeline from "@/components/Timeline";
 import Skills from "@/components/Skills";
-import Projects from "@/components/Projects";
+import Quote from "@/components/Quote";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import ChapterNav from "@/components/ChapterNav";
-
-// LoadingScreen uses WebGL + dynamic imports, load client-side only
-const LoadingScreen = dynamic(() => import("@/components/LoadingScreen"), {
-  ssr: false,
-});
+import { useAppState } from "@/components/AppStateProvider";
 
 export default function Home() {
-  const [loaded, setLoaded] = useState(false);
+  const { hasLoaded } = useAppState();
 
   return (
     <>
-      {/* Loading Overlay */}
-      <LoadingScreen onDone={() => setLoaded(true)} />
-
-      {/* Main Content — reveal after loader exits */}
       <AnimatePresence>
-        {loaded && (
+        {hasLoaded && (
           <motion.main
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -39,12 +31,11 @@ export default function Home() {
             {/* Global scroll-driven UI */}
             <ScrollProgressBar />
 
-            <Navbar />
             <Hero />
             <About />
             <Timeline />
             <Skills />
-            <Projects />
+            <Quote />
             <Contact />
             <Footer />
           </motion.main>

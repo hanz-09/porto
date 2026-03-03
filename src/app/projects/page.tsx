@@ -1,15 +1,4 @@
-﻿"use client";
-
-/**
- * Projects — GitHub API Integration
- *
- * Data flow:
- *  Client component fetches /api/github on mount → maps GitHub repo fields
- *  to the Project type → renders the same cinematic UI.
- *
- * Loading state: shimmer skeleton cards (no layout shift).
- * Error state: graceful fallback with retry.
- */
+"use client";
 
 import { useRef, useCallback, MouseEvent, useState, useEffect } from "react";
 import {
@@ -52,7 +41,7 @@ type Project = {
 };
 
 /* ─────────────────────────────────────────────────────────
-   Accent palette — cycles through these for visual variety
+   Accent palette
 ───────────────────────────────────────────────────────── */
 const ACCENTS = [
   { color: "var(--accent-cyan)", glow: "rgba(var(--accent-cyan-rgb, 0,240,255),0.12)" },
@@ -68,7 +57,6 @@ const ACCENTS = [
 function mapRepo(repo: GitHubRepo, index: number): Project {
   const { color, glow } = ACCENTS[index % ACCENTS.length];
   const year = new Date(repo.updatedAt).getFullYear().toString();
-  // Build techs: language first, then topics
   const techs = [
     ...(repo.language ? [repo.language] : []),
     ...repo.topics
@@ -124,13 +112,11 @@ function useTilt() {
 }
 
 /* ─────────────────────────────────────────────────────────
-   Shimmer skeleton card (loading state)
+   Shimmer skeleton card
 ───────────────────────────────────────────────────────── */
 function SkeletonCard({ resolvedTheme }: { resolvedTheme?: string }) {
   return (
-    <div
-      className={`h-64 rounded-2xl overflow-hidden relative ${resolvedTheme === 'light' ? 'bg-slate-100 border-slate-200' : 'bg-foreground/5 border-foreground/10'}`}
-    >
+    <div className={`h-64 rounded-2xl overflow-hidden relative ${resolvedTheme === 'light' ? 'bg-slate-100 border-slate-200' : 'bg-foreground/5 border-foreground/10'}`}>
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           className="absolute inset-0"
@@ -158,7 +144,7 @@ function SkeletonCard({ resolvedTheme }: { resolvedTheme?: string }) {
 }
 
 /* ─────────────────────────────────────────────────────────
-   Featured hero card (first / most-starred project)
+   Featured hero card
 ───────────────────────────────────────────────────────── */
 function FeaturedCard({ project, resolvedTheme }: { project: Project; resolvedTheme?: string }) {
   const ref = useRef(null);
@@ -347,7 +333,7 @@ function ProjectCard({ project, index, resolvedTheme }: { project: Project; inde
               {project.stars > 0 && (
                 <span className="flex items-center gap-1 text-[10px] font-semibold text-foreground/40 dark:text-foreground/25">
                   <Star size={10} style={{ fill: "#fbbf24", color: "#fbbf24" }} /> {project.stars}
-                </span>
+             </span>
               )}
               {project.language && (
                 <span className="text-[10px] font-semibold text-foreground/40 dark:text-foreground/20">
@@ -396,9 +382,9 @@ function ProjectCard({ project, index, resolvedTheme }: { project: Project; inde
 }
 
 /* ─────────────────────────────────────────────────────────
-   Main export
+   Main Projects Page Component
 ───────────────────────────────────────────────────────── */
-export default function Projects() {
+export default function ProjectsPage() {
   const sectionRef = useRef<HTMLElement>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -422,111 +408,97 @@ export default function Projects() {
 
   useEffect(() => { fetchProjects(); }, [fetchProjects]);
 
-  // Section scroll spring
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
-  const sOpacity = useTransform(scrollYProgress, [0, 0.07, 0.88, 1], [0, 1, 1, 0]);
-  const rawY     = useTransform(scrollYProgress, [0, 0.07, 0.92, 1], [80, 0, 0, -60]);
-  const rawScale = useTransform(scrollYProgress, [0, 0.07, 0.92, 1], [0.95, 1, 1, 0.96]);
-  const sY       = useSpring(rawY,     { stiffness: 55, damping: 20, mass: 0.8 });
-  const sScale   = useSpring(rawScale, { stiffness: 55, damping: 20, mass: 0.8 });
-
+  // Extract featured project (first in array)
   const featured = projects[0] ?? null;
-  const rest = projects.slice(1);
 
   return (
-    <motion.section
-      id="projects"
-      ref={sectionRef}
-      style={{ opacity: sOpacity, y: sY, scale: sScale }}
-      className="relative py-16 md:py-24 lg:py-36 overflow-hidden"
-    >
-      {/* Ambient blobs */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <motion.div className="absolute rounded-full" style={{ width: 600, height: 600, left: "-10%", top: "5%", background: "radial-gradient(circle, rgba(var(--accent-cyan-rgb, 0,240,255),0.05) 0%, transparent 70%)", filter: "blur(50px)" }} animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }} />
-        <motion.div className="absolute rounded-full" style={{ width: 500, height: 500, right: "-8%", bottom: "15%", background: "radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%)", filter: "blur(40px)" }} animate={{ x: [0, -30, 0], y: [0, 40, 0] }} transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }} />
-      </div>
-      <div aria-hidden className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06), transparent)" }} />
-
-      <div className="max-w-6xl mx-auto px-6 relative z-10">
-
-        {/* Heading */}
-        <div className="text-center mb-16">
-          <motion.span initial={{ opacity: 0, letterSpacing: "0.8em" }} whileInView={{ opacity: 1, letterSpacing: "0.4em" }} viewport={{ once: true }} transition={{ duration: 0.9 }} className="inline-block text-xs font-black uppercase mb-4" style={{ color: "#0ea5e9" }}>
-            — What I&apos;ve Built
-          </motion.span>
-          <motion.h2 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-foreground mb-4">
-            My{" "}
-            <span style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 55%, var(--accent-cyan) 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-              Projects
-            </span>
-          </motion.h2>
-          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3 }} className="text-sm text-foreground/50 dark:text-foreground/30">
-            Pulled live from GitHub. Hover the cards to explore.
-          </motion.p>
+    <main className="min-h-screen pt-12 pb-36 relative overflow-hidden bg-background">
+      <motion.section
+        id="projects-page-content"
+        ref={sectionRef}
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative py-12"
+      >
+        {/* Ambient blobs */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+          <motion.div className="absolute rounded-full" style={{ width: 600, height: 600, left: "-10%", top: "5%", background: "radial-gradient(circle, rgba(var(--accent-cyan-rgb, 0,240,255),0.05) 0%, transparent 70%)", filter: "blur(50px)" }} animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }} />
+          <motion.div className="absolute rounded-full" style={{ width: 500, height: 500, right: "-8%", bottom: "15%", background: "radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%)", filter: "blur(40px)" }} animate={{ x: [0, -30, 0], y: [0, 40, 0] }} transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }} />
         </div>
 
-        {/* Error state */}
-        {error && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-20">
-            <p className="text-sm mb-4" style={{ color: "rgba(255,100,100,0.8)" }}>Failed to load projects: {error}</p>
-            <button onClick={fetchProjects} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold" style={{ background: "rgba(var(--foreground-rgb, 255,255,255), 0.05)", border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.1)", color: "rgba(var(--foreground-rgb, 255,255,255), 0.6)" }}>
-              <RefreshCw size={14} /> Retry
-            </button>
-          </motion.div>
-        )}
-
-        {/* Loading skeletons */}
-        {loading && (
-          <div className="space-y-6">
-            <SkeletonCard resolvedTheme={resolvedTheme} />
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} resolvedTheme={resolvedTheme} />)}
-            </div>
+        <div className="max-w-6xl mx-auto px-6 relative z-10">
+          {/* Heading */}
+          <div className="text-center mb-20">
+            <motion.span initial={{ opacity: 0, letterSpacing: "0.8em" }} whileInView={{ opacity: 1, letterSpacing: "0.4em" }} viewport={{ once: true }} transition={{ duration: 0.9 }} className="inline-block text-xs font-black uppercase mb-4" style={{ color: "#0ea5e9" }}>
+              — Archive
+            </motion.span>
+            <motion.h1 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-5xl sm:text-7xl md:text-8xl leading-none tracking-tight text-foreground mb-6">
+              Full <span style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 55%, var(--accent-cyan) 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Portfolio</span>
+            </motion.h1>
+            <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3 }} className="text-xl max-w-2xl mx-auto text-foreground/50 dark:text-foreground/40">
+              A complete list of open-source work and side projects directly pulled from my GitHub repositories.
+            </motion.p>
           </div>
-        )}
 
-        {/* Content */}
-        {!loading && !error && projects.length > 0 && (
-          <>
-            {/* Featured */}
-            {featured && <FeaturedCard project={featured} resolvedTheme={resolvedTheme} />}
+          {/* Error state */}
+          {error && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-20">
+              <p className="text-sm mb-4" style={{ color: "rgba(255,100,100,0.8)" }}>Failed to load projects: {error}</p>
+              <button onClick={fetchProjects} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold" style={{ background: "rgba(var(--foreground-rgb, 255,255,255), 0.05)", border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.1)", color: "rgba(var(--foreground-rgb, 255,255,255), 0.6)" }}>
+                <RefreshCw size={14} /> Retry
+              </button>
+            </motion.div>
+          )}
 
-            {/* Grid */}
-            {rest.length > 0 && (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {rest.map((project, i) => (
-                  <ProjectCard key={project.id} project={project} index={i} resolvedTheme={resolvedTheme} />
-                ))}
+          {/* Loading skeletons */}
+          {loading && (
+            <div className="space-y-6">
+              <SkeletonCard resolvedTheme={resolvedTheme} />
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} resolvedTheme={resolvedTheme} />)}
               </div>
-            )}
-          </>
-        )}
+            </div>
+          )}
 
-        {/* Empty state */}
-        {!loading && !error && projects.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-sm" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.3)" }}>No public repositories found.</p>
-          </div>
-        )}
+          {/* Content */}
+          {!loading && !error && projects.length > 0 && (
+            <>
+              {featured && <FeaturedCard project={featured} resolvedTheme={resolvedTheme} />}
+              {projects.length > 1 && (
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-16">
+                  {projects.slice(1).map((project, i) => (
+                    <ProjectCard key={project.id} project={project} index={i} resolvedTheme={resolvedTheme} />
+                  ))}
+                </div>
+              )}
+            </>
+          )}
 
-        {/* GitHub CTA */}
-        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3 }} className="text-center mt-14">
-          <motion.a
-            href={`https://github.com/${process.env.NEXT_PUBLIC_GITHUB_USERNAME ?? ""}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            className={`inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full text-sm font-bold relative overflow-hidden border ${resolvedTheme === 'light' ? 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200' : 'bg-foreground/5 border-foreground/10 text-foreground/70'}`}
-          >
-            <motion.span className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 40%, rgba(var(--foreground-rgb, 255,255,255), 0.07) 50%, transparent 60%)" }} animate={{ x: ["-100%", "200%"] }} transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }} />
-            <Github size={16} />
-            <span className="relative z-10">View All Projects on GitHub</span>
-            <ArrowUpRight size={14} className="relative z-10" />
-          </motion.a>
-        </motion.div>
+          {/* Empty state */}
+          {!loading && !error && projects.length === 0 && (
+            <div className="text-center py-20">
+              <p className="text-sm" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.3)" }}>No public repositories found.</p>
+            </div>
+          )}
 
-      </div>
-    </motion.section>
+          {/* GitHub CTA */}
+          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3 }} className="text-center mt-24">
+            <motion.a
+              href={`https://github.com/${process.env.NEXT_PUBLIC_GITHUB_USERNAME ?? ""}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+              className={`inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full text-base font-bold relative overflow-hidden border ${resolvedTheme === 'light' ? 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200' : 'bg-foreground/5 border-foreground/10 text-foreground/70'}`}
+            >
+              <Github size={18} />
+              <span className="relative z-10">Follow me on GitHub</span>
+              <ArrowUpRight size={16} className="relative z-10" />
+            </motion.a>
+          </motion.div>
+        </div>
+      </motion.section>
+    </main>
   );
 }

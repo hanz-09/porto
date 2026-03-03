@@ -77,10 +77,20 @@ interface LoadingScreenProps {
 
 export default function LoadingScreen({ onDone }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0);
-  const [phase, setPhase] = useState<"loading" | "hello" | "exit">("loading");
+  const [phase, setPhase] = useState<"loading" | "hello" | "exit" | "bypass">("loading");
   const [helloIndex, setHelloIndex] = useState(0);
   const rafRef = useRef<number | null>(null);
   const startRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    // Check if we've already shown the loading screen this session.
+    // Attaching to `window` ensures it survives React component unmounts
+    // and tab switches, but cleanly resets on a hard browser reload (F5).
+    if (typeof window !== "undefined" && (window as any)._hasLoaded) {
+      setPhase("bypass");
+      onDone();
+    }
+  }, [onDone]);
 
   // Phase 1: animate progress bar
   useEffect(() => {
@@ -128,10 +138,15 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
   // Phase 3: trigger exit → parent removes this overlay
   useEffect(() => {
     if (phase === "exit") {
+      if (typeof window !== "undefined") {
+        (window as any)._hasLoaded = true;
+      }
       const t = setTimeout(onDone, 1000); // Wait 1s for the slide-up animation
       return () => clearTimeout(t);
     }
   }, [phase, onDone]);
+
+  if (phase === "bypass") return null;
 
   return (
     <AnimatePresence>
