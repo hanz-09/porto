@@ -34,7 +34,7 @@ export default function ThemeToggle() {
     const x = e.clientX;
     const y = e.clientY;
 
-    // Kalkulasi jarak terjauh ke ujung layar agar lingkarannya menutup penuh
+    // Kalkulasi jarak terjauh ke ujung layar
     const endRadius = Math.hypot(
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y)
@@ -46,15 +46,14 @@ export default function ThemeToggle() {
 
     transition.ready.then(() => {
       document.documentElement.animate(
+        [
+          // Membesar seperti percikan air (ripple impact) langsung dari tombol
+          { clipPath: `circle(0px at ${x}px ${y}px)` },
+          { clipPath: `circle(${endRadius}px at ${x}px ${y}px)` },
+        ],
         {
-          clipPath: [
-            `circle(0px at ${x}px ${y}px)`,
-            `circle(${endRadius}px at ${x}px ${y}px)`,
-          ],
-        },
-        {
-          duration: 800,
-          easing: "cubic-bezier(0.8, 0, 0.2, 1)", // Sangat mulus (cinematic ease)
+          duration: 800, // Ditingkatkan agar lebih santai dan mengalir
+          easing: "cubic-bezier(0.65, 0, 0.35, 1)", // Ease-in-out yang sangat mulus (seperti air membasahi permukaan)
           pseudoElement: "::view-transition-new(root)",
         }
       );

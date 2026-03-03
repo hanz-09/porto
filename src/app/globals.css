@@ -220,3 +220,16 @@ body {
   pointer-events: none;
   z-index: 0;
 }
+
+/* =========================================
+   CUSTOM VIEW TRANSITIONS (THEME TOGGLE)
+   ========================================= */
+::view-transition-old(root) {
+  animation: none;
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  animation: none;
+  z-index: 2;
+}
