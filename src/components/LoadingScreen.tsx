@@ -46,15 +46,11 @@ function SplitWord({ word, lang }: SplitWordProps) {
               delay: i * 0.022,
               ease: [0.33, 1, 0.68, 1],
             }}
-            className="font-display font-black inline-block"
+            className="font-display font-black inline-block text-foreground"
             style={{
               fontSize: "clamp(2.8rem, 10vw, 7rem)",
               lineHeight: 1.1,
               letterSpacing: "-0.02em",
-              background: "linear-gradient(135deg, #ffffff 0%, rgba(200,200,255,0.9) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
             }}
           >
             {char === " " ? "\u00A0" : char}
@@ -63,11 +59,11 @@ function SplitWord({ word, lang }: SplitWordProps) {
       </div>
       <motion.span
         initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 0.45 }}
+        animate={{ opacity: 0.6 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2, delay: chars.length * 0.022 }}
-        className="text-xs tracking-[0.35em] uppercase"
-        style={{ color: "rgba(160,180,255,0.7)", fontFamily: "inherit" }}
+        className="text-xs tracking-[0.35em] uppercase text-foreground"
+        style={{ fontFamily: "inherit" }}
       >
         {lang}
       </motion.span>
@@ -147,13 +143,13 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
           exit={{ y: "-100%", borderBottomLeftRadius: "100%", borderBottomRightRadius: "100%" }}
           transition={{ duration: 1.0, ease: [0.76, 0, 0.24, 1] }}
           className="fixed inset-0 z-9999 flex flex-col items-center justify-center overflow-hidden origin-top"
-          style={{ background: "#000000" }} // True black for max contrast during the slide-up reveal
+          style={{ background: "var(--bg-primary)" }} 
         >
           {/* Pure CSS Animated Mesh Gradient Background (Mobile Stable) */}
           <div className="absolute inset-0 opacity-40 overflow-hidden pointer-events-none">
             <motion.div
               className="absolute -top-[20%] -left-[10%] w-[70vw] h-[70vw] rounded-full mix-blend-screen filter blur-[100px]"
-              style={{ background: "#00f0ff" }}
+              style={{ background: "var(--accent-cyan)" }}
               animate={{
                 x: ["0%", "20%", "-10%", "0%"],
                 y: ["0%", "10%", "-20%", "0%"],
@@ -180,12 +176,12 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
             />
           </div>
 
-          {/* Dark vignette overlay */}
+          {/* Dark/Light vignette overlay */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "radial-gradient(ellipse at center, transparent 30%, rgba(5,5,8,0.85) 100%)",
+                "radial-gradient(ellipse at center, transparent 30%, var(--bg-primary) 100%)",
             }}
           />
 
@@ -206,20 +202,20 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
                   {/* Logo mark */}
                   <div className="relative">
                     <div className="w-20 h-20 rounded-2xl bg-linear-to-br from-cyan-400 to-violet-600 flex items-center justify-center shadow-2xl shadow-violet-500/30">
-                      <span className="font-display font-black text-4xl text-white">F</span>
+                      <span className="font-display font-black text-4xl text-foreground">F</span>
                     </div>
                     {/* Spinning ring */}
                     <div
                       className="absolute -inset-2 rounded-3xl border-2 border-transparent animate-spin-slow"
                       style={{
                         background:
-                          "linear-gradient(#050508, #050508) padding-box, linear-gradient(90deg, #00f0ff, #2563eb, #0ea5e9, #00f0ff) border-box",
+                          "linear-gradient(var(--bg-primary), var(--bg-primary)) padding-box, linear-gradient(90deg, var(--accent-cyan), #2563eb, #0ea5e9, var(--accent-cyan)) border-box",
                       }}
                     />
                   </div>
 
                   <div className="flex flex-col items-center gap-3">
-                    <p className="text-sm tracking-[0.25em] relative uppercase text-white font-bold h-5 flex items-center justify-center w-full">
+                    <p className="text-sm tracking-[0.25em] relative uppercase text-foreground font-bold h-5 flex items-center justify-center w-full">
                       <AnimatePresence mode="popLayout">
                         <motion.span
                           key={
@@ -253,18 +249,18 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
                     </p>
 
                     {/* Progress bar */}
-                    <div className="w-48 h-[2px] rounded-full bg-white/10 overflow-hidden">
+                    <div className="w-48 h-[2px] rounded-full bg-foreground/10 overflow-hidden">
                       <motion.div
                         className="h-full rounded-full"
                         style={{
                           width: `${progress}%`,
                           background:
-                            "linear-gradient(90deg, #00f0ff, #2563eb, #0ea5e9)",
+                            "linear-gradient(90deg, var(--accent-cyan), #2563eb, #0ea5e9)",
                         }}
                       />
                     </div>
 
-                    <p className="text-xs text-white/25 tabular-nums">
+                    <p className="text-xs text-foreground/25 tabular-nums">
                       {Math.round(progress)}%
                     </p>
                   </div>
@@ -296,7 +292,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
 
           {/* Floating orbs */}
           <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full animate-glow-pulse pointer-events-none"
-            style={{ background: "radial-gradient(circle, rgba(0,240,255,0.12) 0%, transparent 70%)" }} />
+            style={{ background: "radial-gradient(circle, rgba(var(--accent-cyan-rgb, 0,240,255),0.12) 0%, transparent 70%)" }} />
           <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full animate-glow-pulse pointer-events-none"
             style={{ background: "radial-gradient(circle, rgba(14,165,233,0.12) 0%, transparent 70%)", animationDelay: "1s" }} />
         </motion.div>

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User, Clock, Wrench, LayoutGrid, Mail, Rocket, Download } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const navLinks = [
   { label: "About",    href: "#about",    icon: User },
@@ -17,7 +18,7 @@ const navLinks = [
 ───────────────────────────────────────────────────────── */
 const liquidGlass = {
   /* Main pill glass surface */
-  background: "rgba(255,255,255,0.055)",
+  background: "rgba(var(--foreground-rgb, 255,255,255), 0.055)",
   backdropFilter: "blur(28px) saturate(160%) brightness(1.08)",
   WebkitBackdropFilter: "blur(28px) saturate(160%) brightness(1.08)",
   /* Prismatic/iridescent edge: top highlight is brighter */
@@ -25,22 +26,22 @@ const liquidGlass = {
   backgroundClip: "padding-box",
   /* Layered box shadows: inner highlight top + outer glow */
   boxShadow: [
-    "inset 0 1px 0 rgba(255,255,255,0.22)",   /* top inner shine */
-    "inset 0 -1px 0 rgba(255,255,255,0.06)",   /* bottom inner */
-    "inset 1px 0 0 rgba(255,255,255,0.1)",     /* left inner */
-    "inset -1px 0 0 rgba(255,255,255,0.1)",    /* right inner */
+    "inset 0 1px 0 rgba(var(--foreground-rgb, 255,255,255), 0.22)",   /* top inner shine */
+    "inset 0 -1px 0 rgba(var(--foreground-rgb, 255,255,255), 0.06)",   /* bottom inner */
+    "inset 1px 0 0 rgba(var(--foreground-rgb, 255,255,255), 0.1)",     /* left inner */
+    "inset -1px 0 0 rgba(var(--foreground-rgb, 255,255,255), 0.1)",    /* right inner */
     "0 8px 32px rgba(0,0,0,0.35)",             /* depth shadow */
-    "0 0 0 1px rgba(255,255,255,0.09)",        /* outer border */
-    "0 0 24px rgba(0,240,255,0.06)",           /* subtle cyan glow */
+    "0 0 0 1px rgba(var(--foreground-rgb, 255,255,255), 0.09)",        /* outer border */
+    "0 0 24px rgba(var(--accent-cyan-rgb, 0,240,255),0.06)",           /* subtle cyan glow */
   ].join(", "),
 } as React.CSSProperties;
 
 /* Active link pill */
 const activePillStyle: React.CSSProperties = {
-  background: "rgba(255,255,255,0.12)",
+  background: "rgba(var(--foreground-rgb, 255,255,255), 0.12)",
   backdropFilter: "blur(8px)",
   WebkitBackdropFilter: "blur(8px)",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), 0 0 8px rgba(0,240,255,0.15)",
+  boxShadow: "inset 0 1px 0 rgba(var(--foreground-rgb, 255,255,255), 0.2), 0 0 8px rgba(var(--accent-cyan-rgb, 0,240,255),0.15)",
 };
 
 /* ─────────────────────────────────────────────────────────
@@ -53,7 +54,7 @@ function IridescentEdge() {
       className="absolute top-0 left-4 right-4 h-px rounded-full pointer-events-none"
       style={{
         background:
-          "linear-gradient(90deg, transparent 0%, rgba(0,240,255,0.5) 20%, rgba(167,139,250,0.6) 40%, rgba(14,165,233,0.5) 60%, rgba(0,240,255,0.4) 80%, transparent 100%)",
+          "linear-gradient(90deg, transparent 0%, rgba(var(--accent-cyan-rgb, 0,240,255),0.5) 20%, rgba(167,139,250,0.6) 40%, rgba(14,165,233,0.5) 60%, rgba(var(--accent-cyan-rgb, 0,240,255),0.4) 80%, transparent 100%)",
         opacity: 0.7,
       }}
     />
@@ -76,7 +77,7 @@ function NavItem({ link, isActive, onClick }: { link: typeof navLinks[0]; isActi
       <button
         onClick={onClick}
         className="relative p-3 rounded-full flex items-center justify-center transition-colors duration-200"
-        style={{ color: isActive ? "#ffffff" : "rgba(255,255,255,0.55)" }}
+        style={{ color: isActive ? "var(--color-foreground)" : "rgba(var(--foreground-rgb, 255,255,255), 0.55)" }}
         aria-label={link.label}
       >
         {isActive && (
@@ -102,11 +103,11 @@ function NavItem({ link, isActive, onClick }: { link: typeof navLinks[0]; isActi
           >
             {/* Tooltip Body */}
             <div
-              className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-white whitespace-nowrap"
+              className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-foreground whitespace-nowrap"
               style={{
-                background: "rgba(30,30,35,0.9)",
+                background: "rgba(var(--background-rgb, 30,30,35), 0.9)",
                 backdropFilter: "blur(12px)",
-                border: "1px solid rgba(255,255,255,0.12)",
+                border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.12)",
                 boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
               }}
             >
@@ -116,9 +117,9 @@ function NavItem({ link, isActive, onClick }: { link: typeof navLinks[0]; isActi
             <div
               className="w-2.5 h-2.5 rotate-45 -mt-1.5 relative z-0"
               style={{
-                background: "rgba(30,30,35,0.9)",
-                borderBottom: "1px solid rgba(255,255,255,0.15)",
-                borderRight: "1px solid rgba(255,255,255,0.15)",
+                background: "rgba(var(--background-rgb, 30,30,35), 0.9)",
+                borderBottom: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.15)",
+                borderRight: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.15)",
               }}
             />
           </motion.div>
@@ -194,10 +195,13 @@ export default function Navbar() {
           ))}
 
           {/* Divider */}
-          <div className="w-px h-6 mx-2 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
+          <div className="w-px h-6 mx-2 rounded-full" style={{ background: "rgba(var(--foreground-rgb, 255,255,255), 0.15)" }} />
 
           {/* CTA Actions */}
           <div className="flex items-center gap-1.5">
+            {/* Theme Toggle */}
+            <ThemeToggle />
+
             {/* Resume CTA */}
             <motion.div
               className="relative flex items-center justify-center"
@@ -207,7 +211,7 @@ export default function Navbar() {
               <motion.a
                 href="/cv.pdf"
                 whileTap={{ scale: 0.96 }}
-                className="p-3 rounded-full text-white relative overflow-hidden transition-colors hover:bg-white/10"
+                className="p-3 rounded-full text-foreground relative overflow-hidden transition-colors hover:bg-foreground/10"
                 aria-label="Download Resume"
               >
                 <Download size={18} className="relative z-10" />
@@ -223,12 +227,12 @@ export default function Navbar() {
                 className="absolute bottom-full mb-4 flex flex-col items-center pointer-events-none z-50"
               >
                 <div
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-white whitespace-nowrap"
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-foreground whitespace-nowrap"
                   style={{
-                    background: "rgba(30,30,35,0.9)",
+                    background: "var(--bg-primary)",
                     backdropFilter: "blur(12px)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+                    border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.12)",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
                   }}
                 >
                   Resume
@@ -236,9 +240,9 @@ export default function Navbar() {
                 <div
                   className="w-2.5 h-2.5 rotate-45 -mt-1.5 relative z-0"
                   style={{
-                    background: "rgba(30,30,35,0.9)",
-                    borderBottom: "1px solid rgba(255,255,255,0.15)",
-                    borderRight: "1px solid rgba(255,255,255,0.15)",
+                    background: "var(--bg-primary)",
+                    borderBottom: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.15)",
+                    borderRight: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.15)",
                   }}
                 />
               </motion.div>
@@ -253,18 +257,18 @@ export default function Navbar() {
               <motion.button
                 whileTap={{ scale: 0.96 }}
                 onClick={() => scrollTo("#contact")}
-                className="p-3 rounded-full text-white relative overflow-hidden"
+                className="p-3 rounded-full text-foreground relative overflow-hidden"
                 aria-label="Hire Me"
                 style={{
-                  background: "linear-gradient(135deg, #00f0ff, #2563eb)",
-                  boxShadow: "0 0 14px rgba(0,240,255,0.3), inset 0 1px 0 rgba(255,255,255,0.25)",
+                  background: "linear-gradient(135deg, var(--accent-cyan), #2563eb)",
+                  boxShadow: "0 0 14px rgba(var(--accent-cyan-rgb, 0,240,255),0.3), inset 0 1px 0 rgba(var(--foreground-rgb, 255,255,255), 0.25)",
                 }}
               >
                 {/* Shine sweep on button */}
                 <motion.div
                   className="absolute inset-0 rounded-full opacity-0 hover:opacity-100"
                   style={{
-                    background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
+                    background: "linear-gradient(105deg, transparent 40%, rgba(var(--foreground-rgb, 255,255,255), 0.25) 50%, transparent 60%)",
                   }}
                   animate={{ x: ["-100%", "200%"] }}
                   transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 2 }}
@@ -282,11 +286,11 @@ export default function Navbar() {
                 className="absolute bottom-full mb-4 flex flex-col items-center pointer-events-none z-50"
               >
                 <div
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-white whitespace-nowrap"
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-foreground whitespace-nowrap"
                   style={{
-                    background: "rgba(30,30,35,0.9)",
+                    background: "rgba(var(--background-rgb, 30,30,35), 0.9)",
                     backdropFilter: "blur(12px)",
-                    border: "1px solid rgba(255,255,255,0.12)",
+                    border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.12)",
                     boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
                   }}
                 >
@@ -295,9 +299,9 @@ export default function Navbar() {
                 <div
                   className="w-2.5 h-2.5 rotate-45 -mt-1.5 relative z-0"
                   style={{
-                    background: "rgba(30,30,35,0.9)",
-                    borderBottom: "1px solid rgba(255,255,255,0.15)",
-                    borderRight: "1px solid rgba(255,255,255,0.15)",
+                    background: "rgba(var(--background-rgb, 30,30,35), 0.9)",
+                    borderBottom: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.15)",
+                    borderRight: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.15)",
                   }}
                 />
               </motion.div>

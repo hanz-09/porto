@@ -22,6 +22,7 @@ import {
   useInView,
 } from "framer-motion";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 
 /* ─────────────────────────────────────────────────────────
    Tech logo data  (devicon CDN)
@@ -39,7 +40,7 @@ type Tech = {
 /** Row 1 */
 const row1: Tech[] = [
   { name: "React",      logo: cdn("react"),                         color: "#61DAFB", desc: "UI Library" },
-  { name: "Next.js",    logo: cdn("nextjs", "original"),            color: "#ffffff", desc: "React Framework" },
+  { name: "Next.js",    logo: cdn("nextjs", "original"),            color: "var(--color-foreground)", desc: "React Framework" },
   { name: "TypeScript", logo: cdn("typescript"),                    color: "#3178C6", desc: "Type Safety" },
   { name: "JavaScript", logo: cdn("javascript"),                    color: "#F7DF1E", desc: "Core Language" },
   { name: "Tailwind",   logo: cdn("tailwindcss", "original-wordmark"), color: "#38BDF8", desc: "Utility CSS" },
@@ -52,7 +53,7 @@ const row1: Tech[] = [
 const row2: Tech[] = [
   { name: "Node.js",    logo: cdn("nodejs"),                        color: "#339933", desc: "Backend Runtime" },
   { name: "Git",        logo: cdn("git"),                           color: "#F05032", desc: "Version Control" },
-  { name: "GitHub",     logo: cdn("github"),                        color: "#ffffff", desc: "Code Hosting" },
+  { name: "GitHub",     logo: cdn("github"),                        color: "var(--color-foreground)", desc: "Code Hosting" },
   { name: "VS Code",    logo: cdn("vscode", "plain"),               color: "#007ACC", desc: "Code Editor" },
   { name: "Angular",    logo: cdn("angularjs", "original"),         color: "#DD0031", desc: "Frontend Framework" },
 ];
@@ -127,6 +128,7 @@ function MarqueeRow() {
   const doubled = [...allTech, ...allTech];
   const trackRef = useRef<HTMLDivElement>(null);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const { resolvedTheme } = useTheme();
 
   const slowDown = () => {
     if (trackRef.current) trackRef.current.style.animationPlayState = "paused";
@@ -157,9 +159,9 @@ function MarqueeRow() {
       >
         {/* Side fades */}
         <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-32 z-10"
-          style={{ background: "linear-gradient(to right, #050509, transparent)" }} />
+          style={{ background: resolvedTheme === 'light' ? "linear-gradient(to right, #f8fafc, transparent)" : "linear-gradient(to right, var(--bg-primary), transparent)" }} />
         <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-32 z-10"
-          style={{ background: "linear-gradient(to left, #050509, transparent)" }} />
+          style={{ background: resolvedTheme === 'light' ? "linear-gradient(to left, #f8fafc, transparent)" : "linear-gradient(to left, var(--bg-primary), transparent)" }} />
 
         <div
           ref={trackRef}
@@ -193,12 +195,14 @@ function MarqueeRow() {
                   <div
                     className="px-3 py-2 rounded-xl text-center whitespace-nowrap"
                     style={{
-                      background: "rgba(9,9,16,0.95)",
-                      border: `1px solid ${tech.color}40`,
-                      boxShadow: `0 8px 32px rgba(0,0,0,0.6), 0 0 20px ${tech.color}20`,
+                      background: resolvedTheme === 'light' ? "rgba(255,255,255, 0.9)" : "rgba(var(--background-rgb, 9,9,16), 0.95)",
+                      backdropFilter: "blur(12px)",
+                      WebkitBackdropFilter: "blur(12px)",
+                      border: resolvedTheme === 'light' ? `1px solid ${tech.color}50` : `1px solid ${tech.color}40`,
+                      boxShadow: resolvedTheme === 'light' ? `0 8px 32px rgba(15,23,42,0.1), 0 0 20px ${tech.color}30` : `0 8px 32px rgba(0,0,0,0.6), 0 0 20px ${tech.color}20`,
                     }}
                   >
-                    <p className="text-xs font-black text-white leading-tight">{tech.name}</p>
+                    <p className="text-xs font-black text-foreground leading-tight">{tech.name}</p>
                     <p className="text-[10px] font-semibold mt-0.5" style={{ color: tech.color }}>
                       {tech.desc}
                     </p>
@@ -241,6 +245,7 @@ function SkillCard({ skill, index }: { skill: FeaturedSkill; index: number }) {
   const glareRef = useRef<HTMLDivElement>(null);
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.25 });
+  const { resolvedTheme } = useTheme();
 
   const onMove = useCallback((e: MouseEvent<HTMLDivElement>) => {
     const card = cardRef.current;
@@ -252,9 +257,11 @@ function SkillCard({ skill, index }: { skill: FeaturedSkill; index: number }) {
     const rx = ((y - r.height / 2) / r.height) * -10;
     const ry = ((x - r.width  / 2) / r.width ) *  10;
     card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.04,1.04,1.04)`;
-    glare.style.background = `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(255,255,255,0.09) 0%, transparent 65%)`;
+    glare.style.background = resolvedTheme === 'light' 
+        ? `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(255,255,255, 0.8) 0%, transparent 65%)`
+        : `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(var(--foreground-rgb, 255,255,255), 0.09) 0%, transparent 65%)`;
     glare.style.opacity = "1";
-  }, []);
+  }, [resolvedTheme]);
 
   const onLeave = useCallback(() => {
     const card = cardRef.current;
@@ -289,9 +296,13 @@ function SkillCard({ skill, index }: { skill: FeaturedSkill; index: number }) {
         <div
           className="relative h-full p-6 rounded-2xl"
           style={{
-            background: "rgba(9,9,16,0.90)",
-            border: `1px solid ${skill.color}18`,
-            boxShadow: `0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)`,
+            background: resolvedTheme === 'light' ? "linear-gradient(145deg, rgba(255,255,255, 0.6) 0%, rgba(248,250,252, 0.3) 100%)" : "rgba(var(--background-rgb, 9,9,16), 0.90)",
+            backdropFilter: resolvedTheme === 'light' ? "blur(20px)" : "none",
+            WebkitBackdropFilter: resolvedTheme === 'light' ? "blur(20px)" : "none",
+            border: resolvedTheme === 'light' ? `1px solid ${skill.color}50` : `1px solid ${skill.color}18`,
+            boxShadow: resolvedTheme === 'light' 
+                ? `0 24px 48px -12px rgba(15,23,42,0.1), inset 0 1px 0 rgba(255,255,255,0.8)` 
+                : `0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(var(--foreground-rgb, 255,255,255), 0.04)`,
           }}
         >
           {/* Top accent line */}
@@ -313,9 +324,9 @@ function SkillCard({ skill, index }: { skill: FeaturedSkill; index: number }) {
             <div
               className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 relative"
               style={{
-                background: `${skill.color}12`,
-                border: `1px solid ${skill.color}25`,
-                boxShadow: `0 0 20px ${skill.color}20`,
+                background: resolvedTheme === 'light' ? `${skill.color}15` : `${skill.color}12`,
+                border: resolvedTheme === 'light' ? `1px solid ${skill.color}40` : `1px solid ${skill.color}25`,
+                boxShadow: resolvedTheme === 'light' ? `0 4px 14px ${skill.color}20` : `0 0 20px ${skill.color}20`,
               }}
             >
               <div className="w-7 h-7 relative">
@@ -329,26 +340,26 @@ function SkillCard({ skill, index }: { skill: FeaturedSkill; index: number }) {
               </div>
             </div>
             <div>
-              <h3 className="font-display font-bold text-base text-white leading-tight">{skill.name}</h3>
+              <h3 className="font-display font-bold text-base text-foreground leading-tight">{skill.name}</h3>
             </div>
           </div>
 
           {/* Description */}
-          <p className="text-sm leading-relaxed mb-5 relative z-10" style={{ color: "rgba(255,255,255,0.42)" }}>
+          <p className="text-sm leading-relaxed mb-5 relative z-10 text-foreground/70 dark:text-foreground/40">
             {skill.desc}
           </p>
 
           {/* Level bar */}
           <div className="space-y-1.5 relative z-10">
             <div className="flex justify-between items-center">
-              <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "rgba(255,255,255,0.2)" }}>
+              <span className="text-[10px] font-bold tracking-widest uppercase text-foreground/50 dark:text-foreground/20">
                 Proficiency
               </span>
               <span className="text-xs font-black" style={{ color: skill.color }}>
                 {skill.level}%
               </span>
             </div>
-            <div className="h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+            <div className="h-1 rounded-full overflow-hidden" style={{ background: "rgba(var(--foreground-rgb, 255,255,255), 0.06)" }}>
               <motion.div
                 initial={{ width: 0 }}
                 animate={inView ? { width: `${skill.level}%` } : {}}
@@ -369,6 +380,7 @@ function SkillCard({ skill, index }: { skill: FeaturedSkill; index: number }) {
 ───────────────────────────────────────────────────────── */
 export default function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
+  const { resolvedTheme } = useTheme();
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -393,7 +405,7 @@ export default function Skills() {
           className="absolute rounded-full"
           style={{
             width: 700, height: 700, right: "-15%", top: "10%",
-            background: "radial-gradient(circle, rgba(0,240,255,0.05) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(var(--accent-cyan-rgb, 0,240,255),0.05) 0%, transparent 70%)",
             filter: "blur(50px)",
           }}
           animate={{ x: [0, -50, 0], y: [0, 30, 0] }}
@@ -414,7 +426,7 @@ export default function Skills() {
       <div
         aria-hidden
         className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)" }}
+        style={{ background: "linear-gradient(90deg, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06), transparent)" }}
       />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
@@ -427,7 +439,7 @@ export default function Skills() {
             viewport={{ once: true }}
             transition={{ duration: 0.9 }}
             className="inline-block text-xs font-black uppercase mb-4"
-            style={{ color: "#00f0ff" }}
+            style={{ color: "var(--accent-cyan)" }}
           >
             — What I Work With
           </motion.span>
@@ -436,16 +448,11 @@ export default function Skills() {
             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-white mb-4"
+            className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-foreground mb-4"
           >
             My{" "}
             <span
-              style={{
-                background: "linear-gradient(135deg, #00f0ff 0%, #2563eb 55%, #0ea5e9 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
+              className="bg-clip-text text-transparent bg-linear-to-br from-(--accent-cyan) via-[#2563eb] to-[#0ea5e9]"
             >
               Skills
             </span>
@@ -455,8 +462,7 @@ export default function Skills() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="text-sm"
-            style={{ color: "rgba(255,255,255,0.3)" }}
+            className="text-sm text-foreground/60 dark:text-foreground/30"
           >
             Technologies I reach for every day — and some I'm still mastering.
           </motion.p>
@@ -482,8 +488,7 @@ export default function Skills() {
           className="mb-4"
         >
           <p
-            className="text-center text-xs font-black tracking-widest uppercase mb-10"
-            style={{ color: "rgba(255,255,255,0.2)" }}
+            className="text-center text-xs font-black tracking-widest uppercase mb-10 text-foreground/50 dark:text-foreground/20"
           >
             Featured Stack
           </p>

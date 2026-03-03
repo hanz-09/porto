@@ -97,7 +97,7 @@ export default function ChapterNav() {
               style={{
                 width: isActive ? 12 : 7,
                 height: isActive ? 12 : 7,
-                background: isActive ? ch.color : "rgba(255,255,255,0.2)",
+                background: isActive ? ch.color : "rgba(var(--foreground-rgb, 255,255,255), 0.2)",
                 boxShadow: isActive ? `0 0 10px ${ch.color}99` : "none",
               }}
             >

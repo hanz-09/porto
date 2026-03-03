@@ -4,14 +4,35 @@
    DESIGN TOKENS
    ========================================= */
 :root {
+  /* Light mode tokens */
+  --bg-primary: #f8fafc;
+  --background-rgb: 248, 250, 252;
+  --bg-secondary: #e2e8f0;
+  --bg-card: rgba(0, 0, 0, 0.04);
+  --border-card: rgba(0, 0, 0, 0.08);
+  --accent-cyan: #0284c7; /* Darker blue for light mode contrast instead of cyan */
+  --accent-cyan-rgb: 2, 132, 199;
+  --accent-violet: #4338ca;
+  --accent-pink: #0284c7;
+  --text-primary: #0f172a;
+  --foreground-rgb: 15, 23, 42;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+}
+
+:root.dark {
+  /* Dark mode tokens */
   --bg-primary: #050508;
+  --background-rgb: 5, 5, 8;
   --bg-secondary: #0d0d14;
   --bg-card: rgba(255, 255, 255, 0.04);
   --border-card: rgba(255, 255, 255, 0.08);
   --accent-cyan: #00f0ff;
+  --accent-cyan-rgb: 0, 240, 255;
   --accent-violet: #2563eb;
   --accent-pink: #0ea5e9;
   --text-primary: #f0f0f8;
+  --foreground-rgb: 240, 240, 248;
   --text-secondary: #8b8ba7;
   --text-muted: #4a4a6a;
 }
@@ -45,7 +66,7 @@ body {
 
 /* Custom Selection */
 ::selection {
-  background: rgba(0, 212, 255, 0.25);
+  background: rgba(var(--accent-cyan-rgb, 0,212,255), 0.25);
   color: var(--accent-cyan);
 }
 
@@ -163,7 +184,7 @@ body {
 }
 
 .glow-cyan {
-  box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+  box-shadow: 0 0 30px rgba(var(--accent-cyan-rgb, 0,212,255), 0.2);
 }
 
 .glow-violet {

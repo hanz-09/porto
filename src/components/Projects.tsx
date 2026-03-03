@@ -20,6 +20,7 @@ import {
   useInView,
 } from "framer-motion";
 import { Github, ExternalLink, ArrowUpRight, Star, RefreshCw } from "lucide-react";
+import { useTheme } from "next-themes";
 
 /* ─────────────────────────────────────────────────────────
    Types
@@ -54,7 +55,7 @@ type Project = {
    Accent palette — cycles through these for visual variety
 ───────────────────────────────────────────────────────── */
 const ACCENTS = [
-  { color: "#00f0ff", glow: "rgba(0,240,255,0.12)" },
+  { color: "var(--accent-cyan)", glow: "rgba(var(--accent-cyan-rgb, 0,240,255),0.12)" },
   { color: "#3b82f6", glow: "rgba(59,130,246,0.12)" },
   { color: "#0ea5e9", glow: "rgba(14,165,233,0.12)" },
   { color: "#2563eb", glow: "rgba(37,99,235,0.12)" },
@@ -107,7 +108,7 @@ function useTilt() {
     const rx = ((y - r.height / 2) / r.height) * -8;
     const ry = ((x - r.width  / 2) / r.width ) *  8;
     card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.02,1.02,1.02)`;
-    glare.style.background = `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(255,255,255,0.1) 0%, transparent 65%)`;
+    glare.style.background = `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(var(--foreground-rgb, 255,255,255), 0.1) 0%, transparent 65%)`;
     glare.style.opacity = "1";
   }, []);
 
@@ -125,31 +126,30 @@ function useTilt() {
 /* ─────────────────────────────────────────────────────────
    Shimmer skeleton card (loading state)
 ───────────────────────────────────────────────────────── */
-function SkeletonCard() {
+function SkeletonCard({ resolvedTheme }: { resolvedTheme?: string }) {
   return (
     <div
-      className="h-64 rounded-2xl overflow-hidden relative"
-      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+      className={`h-64 rounded-2xl overflow-hidden relative ${resolvedTheme === 'light' ? 'bg-slate-100 border-slate-200' : 'bg-foreground/5 border-foreground/10'}`}
     >
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           className="absolute inset-0"
-          style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%)" }}
+          style={{ background: "linear-gradient(105deg, transparent 40%, rgba(var(--foreground-rgb, 255,255,255), 0.04) 50%, transparent 60%)" }}
           animate={{ x: ["-100%", "200%"] }}
           transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 0.5 }}
         />
       </div>
       <div className="p-6 space-y-3">
-        <div className="h-2 w-16 rounded-full bg-white/5" />
-        <div className="h-5 w-3/4 rounded-full bg-white/5" />
+        <div className="h-2 w-16 rounded-full bg-foreground/5" />
+        <div className="h-5 w-3/4 rounded-full bg-foreground/5" />
         <div className="space-y-2 pt-1">
-          <div className="h-3 w-full rounded-full bg-white/3" />
-          <div className="h-3 w-5/6 rounded-full bg-white/3" />
-          <div className="h-3 w-4/6 rounded-full bg-white/3" />
+          <div className="h-3 w-full rounded-full bg-foreground/3" />
+          <div className="h-3 w-5/6 rounded-full bg-foreground/3" />
+          <div className="h-3 w-4/6 rounded-full bg-foreground/3" />
         </div>
         <div className="flex gap-2 pt-2">
           {[48, 64, 40].map((w, i) => (
-            <div key={i} className="h-5 rounded-full bg-white/3" style={{ width: w }} />
+            <div key={i} className="h-5 rounded-full bg-foreground/3" style={{ width: w }} />
           ))}
         </div>
       </div>
@@ -160,7 +160,7 @@ function SkeletonCard() {
 /* ─────────────────────────────────────────────────────────
    Featured hero card (first / most-starred project)
 ───────────────────────────────────────────────────────── */
-function FeaturedCard({ project }: { project: Project }) {
+function FeaturedCard({ project, resolvedTheme }: { project: Project; resolvedTheme?: string }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
   const { cardRef, glareRef, onMove, onLeave } = useTilt();
@@ -189,9 +189,10 @@ function FeaturedCard({ project }: { project: Project }) {
         <div
           className="relative min-h-[300px] md:min-h-[360px] flex flex-col md:flex-row items-stretch overflow-hidden"
           style={{
-            background: "rgba(8,8,16,0.94)",
+            background: resolvedTheme === 'light' ? "rgba(255,255,255, 0.7)" : "rgba(var(--background-rgb, 8,8,16), 0.94)",
+            backdropFilter: resolvedTheme === 'light' ? "blur(20px)" : "none",
             border: `1px solid ${project.accent}22`,
-            boxShadow: `0 40px 80px rgba(0,0,0,0.7), 0 0 60px ${project.glow}`,
+            boxShadow: resolvedTheme === 'light' ? `0 40px 80px rgba(15,23,42,0.1), inset 0 1px 0 rgba(255,255,255,1)` : `0 40px 80px rgba(0,0,0,0.7), 0 0 60px ${project.glow}`,
           }}
         >
           {/* Left art panel */}
@@ -236,22 +237,22 @@ function FeaturedCard({ project }: { project: Project }) {
                   ★ Top Project
                 </span>
                 {project.stars > 0 && (
-                  <span className="flex items-center gap-1 text-xs font-semibold" style={{ color: "rgba(255,255,255,0.3)" }}>
+                  <span className="flex items-center gap-1 text-xs font-semibold text-foreground/50 dark:text-foreground/30">
                     <Star size={12} className="fill-current" style={{ color: "#fbbf24" }} />
                     {project.stars}
                   </span>
                 )}
                 {project.language && (
-                  <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.3)" }}>
+                  <span className="text-xs font-semibold text-foreground/70 dark:text-foreground/60">
                     {project.language}
                   </span>
                 )}
               </div>
 
-              <h3 className="font-display font-black text-3xl md:text-4xl leading-tight text-white mb-4 capitalize" style={{ textShadow: `0 0 40px ${project.accent}40` }}>
+              <h3 className="font-display font-black text-3xl md:text-4xl leading-tight text-foreground mb-4 capitalize" style={{ textShadow: resolvedTheme === 'light' ? "none" : `0 0 40px ${project.accent}40` }}>
                 {project.title}
               </h3>
-              <p className="text-sm leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
+              <p className="text-sm leading-relaxed mb-6 text-foreground/80 dark:text-foreground/80">
                 {project.description}
               </p>
 
@@ -269,15 +270,14 @@ function FeaturedCard({ project }: { project: Project }) {
               {project.live && (
                 <motion.a href={project.live} target="_blank" rel="noopener noreferrer"
                   whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-foreground"
                   style={{ background: `linear-gradient(135deg, ${project.accent}cc, #2563eb)` }}>
                   <ExternalLink size={14} /> Live Demo <ArrowUpRight size={14} />
                 </motion.a>
               )}
               <motion.a href={project.github} target="_blank" rel="noopener noreferrer"
                 whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold"
-                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}>
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border ${resolvedTheme === 'light' ? 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200' : 'bg-foreground/5 border-foreground/10 text-foreground/70 hover:bg-foreground/10'}`}>
                 <Github size={14} /> View Code
               </motion.a>
             </div>
@@ -291,7 +291,7 @@ function FeaturedCard({ project }: { project: Project }) {
 /* ─────────────────────────────────────────────────────────
    Regular project card
 ───────────────────────────────────────────────────────── */
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectCard({ project, index, resolvedTheme }: { project: Project; index: number; resolvedTheme?: string }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.15 });
   const { cardRef, glareRef, onMove, onLeave } = useTilt();
@@ -322,9 +322,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         <div
           className="relative h-full flex flex-col p-6 rounded-2xl"
           style={{
-            background: "rgba(9,9,18,0.9)",
-            border: `1px solid ${hovered ? project.accent + "30" : "rgba(255,255,255,0.07)"}`,
-            boxShadow: hovered ? `0 20px 50px rgba(0,0,0,0.5), 0 0 30px ${project.glow}` : "0 10px 30px rgba(0,0,0,0.3)",
+            background: resolvedTheme === 'light' ? "linear-gradient(145deg, rgba(255,255,255, 0.6) 0%, rgba(248,250,252, 0.3) 100%)" : "rgba(var(--background-rgb, 9,9,18), 0.9)",
+            backdropFilter: resolvedTheme === 'light' ? "blur(20px)" : "none",
+            border: resolvedTheme === 'light' ? `1px solid ${hovered ? project.accent + "50" : "rgba(15,23,42,0.06)"}` : `1px solid ${hovered ? project.accent + "30" : "rgba(var(--foreground-rgb, 255,255,255), 0.07)"}`,
+            boxShadow: resolvedTheme === 'light' && hovered ? `0 24px 64px -12px rgba(15,23,42, 0.1), inset 0 1px 0 rgba(255,255,255,0.8)` : hovered ? `0 20px 50px rgba(0,0,0,0.5), 0 0 30px ${project.glow}` : resolvedTheme === 'light' ? '0 10px 30px rgba(15,23,42,0.05)' : "0 10px 30px rgba(0,0,0,0.3)",
             transition: "border-color 0.3s, box-shadow 0.3s",
           }}
         >
@@ -344,30 +345,29 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             </span>
             <div className="flex items-center gap-2">
               {project.stars > 0 && (
-                <span className="flex items-center gap-1 text-[10px] font-semibold" style={{ color: "rgba(255,255,255,0.25)" }}>
+                <span className="flex items-center gap-1 text-[10px] font-semibold text-foreground/40 dark:text-foreground/25">
                   <Star size={10} style={{ fill: "#fbbf24", color: "#fbbf24" }} /> {project.stars}
                 </span>
               )}
               {project.language && (
-                <span className="text-[10px] font-semibold" style={{ color: "rgba(255,255,255,0.2)" }}>
+                <span className="text-[10px] font-semibold text-foreground/40 dark:text-foreground/20">
                   {project.language}
                 </span>
               )}
             </div>
           </div>
 
-          <h3 className="font-display font-bold text-base leading-tight mb-3 capitalize transition-colors duration-300" style={{ color: hovered ? project.accent : "#ffffff" }}>
+          <h3 className="font-display font-bold text-base leading-tight mb-3 capitalize transition-colors duration-300" style={{ color: hovered ? project.accent : "var(--color-foreground)" }}>
             {project.title}
           </h3>
 
-          <p className="text-sm leading-relaxed flex-1 mb-4 line-clamp-3" style={{ color: "rgba(255,255,255,0.38)" }}>
+          <p className="text-sm leading-relaxed flex-1 mb-4 line-clamp-3 text-foreground/60 dark:text-foreground/40">
             {project.description}
           </p>
 
           <div className="flex flex-wrap gap-1.5 mb-4">
             {project.techs.slice(0, 4).map((t) => (
-              <span key={t} className="text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.38)" }}>
+              <span key={t} className={`text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize border ${resolvedTheme === 'light' ? 'bg-slate-100 border-slate-200 text-slate-600' : 'bg-foreground/5 border-foreground/10 text-foreground/40'}`}>
                 {t}
               </span>
             ))}
@@ -376,14 +376,14 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           <div className="flex items-center gap-3 relative z-10">
             <a href={project.github} target="_blank" rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-xs font-semibold transition-colors duration-200"
-              style={{ color: hovered ? project.accent : "rgba(255,255,255,0.3)" }}
+              style={{ color: hovered ? project.accent : (resolvedTheme === 'light' ? "rgba(15,23,42, 0.5)" : "rgba(var(--foreground-rgb, 255,255,255), 0.3)") }}
               onClick={(e) => e.stopPropagation()}>
               <Github size={12} /> Code
             </a>
             {project.live && (
               <a href={project.live} target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-xs font-semibold transition-colors duration-200"
-                style={{ color: hovered ? project.accent : "rgba(255,255,255,0.3)" }}
+                style={{ color: hovered ? project.accent : (resolvedTheme === 'light' ? "rgba(15,23,42, 0.5)" : "rgba(var(--foreground-rgb, 255,255,255), 0.3)") }}
                 onClick={(e) => e.stopPropagation()}>
                 <ExternalLink size={12} /> Demo
               </a>
@@ -403,6 +403,7 @@ export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { resolvedTheme } = useTheme();
 
   const fetchProjects = useCallback(async () => {
     setLoading(true);
@@ -441,10 +442,10 @@ export default function Projects() {
     >
       {/* Ambient blobs */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <motion.div className="absolute rounded-full" style={{ width: 600, height: 600, left: "-10%", top: "5%", background: "radial-gradient(circle, rgba(0,240,255,0.05) 0%, transparent 70%)", filter: "blur(50px)" }} animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }} />
+        <motion.div className="absolute rounded-full" style={{ width: 600, height: 600, left: "-10%", top: "5%", background: "radial-gradient(circle, rgba(var(--accent-cyan-rgb, 0,240,255),0.05) 0%, transparent 70%)", filter: "blur(50px)" }} animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }} />
         <motion.div className="absolute rounded-full" style={{ width: 500, height: 500, right: "-8%", bottom: "15%", background: "radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%)", filter: "blur(40px)" }} animate={{ x: [0, -30, 0], y: [0, 40, 0] }} transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }} />
       </div>
-      <div aria-hidden className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)" }} />
+      <div aria-hidden className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06), transparent)" }} />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
 
@@ -453,13 +454,13 @@ export default function Projects() {
           <motion.span initial={{ opacity: 0, letterSpacing: "0.8em" }} whileInView={{ opacity: 1, letterSpacing: "0.4em" }} viewport={{ once: true }} transition={{ duration: 0.9 }} className="inline-block text-xs font-black uppercase mb-4" style={{ color: "#0ea5e9" }}>
             — What I&apos;ve Built
           </motion.span>
-          <motion.h2 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-white mb-4">
+          <motion.h2 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-foreground mb-4">
             My{" "}
-            <span style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 55%, #00f0ff 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+            <span style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 55%, var(--accent-cyan) 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
               Projects
             </span>
           </motion.h2>
-          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3 }} className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>
+          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3 }} className="text-sm text-foreground/50 dark:text-foreground/30">
             Pulled live from GitHub. Hover the cards to explore.
           </motion.p>
         </div>
@@ -468,7 +469,7 @@ export default function Projects() {
         {error && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-20">
             <p className="text-sm mb-4" style={{ color: "rgba(255,100,100,0.8)" }}>Failed to load projects: {error}</p>
-            <button onClick={fetchProjects} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
+            <button onClick={fetchProjects} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold" style={{ background: "rgba(var(--foreground-rgb, 255,255,255), 0.05)", border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.1)", color: "rgba(var(--foreground-rgb, 255,255,255), 0.6)" }}>
               <RefreshCw size={14} /> Retry
             </button>
           </motion.div>
@@ -477,9 +478,9 @@ export default function Projects() {
         {/* Loading skeletons */}
         {loading && (
           <div className="space-y-6">
-            <SkeletonCard />
+            <SkeletonCard resolvedTheme={resolvedTheme} />
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+              {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} resolvedTheme={resolvedTheme} />)}
             </div>
           </div>
         )}
@@ -488,13 +489,13 @@ export default function Projects() {
         {!loading && !error && projects.length > 0 && (
           <>
             {/* Featured */}
-            {featured && <FeaturedCard project={featured} />}
+            {featured && <FeaturedCard project={featured} resolvedTheme={resolvedTheme} />}
 
             {/* Grid */}
             {rest.length > 0 && (
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {rest.map((project, i) => (
-                  <ProjectCard key={project.id} project={project} index={i} />
+                  <ProjectCard key={project.id} project={project} index={i} resolvedTheme={resolvedTheme} />
                 ))}
               </div>
             )}
@@ -504,7 +505,7 @@ export default function Projects() {
         {/* Empty state */}
         {!loading && !error && projects.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No public repositories found.</p>
+            <p className="text-sm" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.3)" }}>No public repositories found.</p>
           </div>
         )}
 
@@ -516,10 +517,9 @@ export default function Projects() {
             rel="noopener noreferrer"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full text-sm font-bold relative overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}
+            className={`inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full text-sm font-bold relative overflow-hidden border ${resolvedTheme === 'light' ? 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200' : 'bg-foreground/5 border-foreground/10 text-foreground/70'}`}
           >
-            <motion.span className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.07) 50%, transparent 60%)" }} animate={{ x: ["-100%", "200%"] }} transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }} />
+            <motion.span className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 40%, rgba(var(--foreground-rgb, 255,255,255), 0.07) 50%, transparent 60%)" }} animate={{ x: ["-100%", "200%"] }} transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }} />
             <Github size={16} />
             <span className="relative z-10">View All Projects on GitHub</span>
             <ArrowUpRight size={14} className="relative z-10" />

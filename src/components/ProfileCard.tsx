@@ -15,6 +15,7 @@ import { useRef, useCallback, MouseEvent } from "react";
 import { motion } from "framer-motion";
 import { Github, Linkedin, Instagram, Mail } from "lucide-react";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 
 interface ProfileCardProps {
   name?: string;
@@ -61,7 +62,7 @@ export default function ProfileCard({
       // Glare position
       const glareX = (x / rect.width) * 100;
       const glareY = (y / rect.height) * 100;
-      glare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.12) 0%, transparent 65%)`;
+      glare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(var(--foreground-rgb, 255,255,255), 0.12) 0%, transparent 65%)`;
       glare.style.opacity = "1";
     },
     []
@@ -82,6 +83,11 @@ export default function ProfileCard({
     { icon: Mail,      label: "Email",     href: emailUrl },
   ];
 
+  /* ─────────────────────────────────────────────────────────
+     Light & dark mode check
+  ───────────────────────────────────────────────────────── */
+  const { resolvedTheme } = useTheme();
+
   return (
     <div
       ref={cardRef}
@@ -95,7 +101,9 @@ export default function ProfileCard({
         aria-hidden
         className="absolute -inset-4 rounded-[44px] opacity-40 blur-2xl pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse at 60% 40%, rgba(0,240,255,0.35) 0%, rgba(37,99,235,0.25) 50%, transparent 75%)",
+          background: resolvedTheme === 'light' 
+            ? "radial-gradient(ellipse at 60% 40%, rgba(37,99,235,0.4) 0%, rgba(14,165,233,0.3) 50%, transparent 75%)"
+            : "radial-gradient(ellipse at 60% 40%, rgba(var(--accent-cyan-rgb, 0,240,255),0.35) 0%, rgba(37,99,235,0.25) 50%, transparent 75%)",
         }}
       />
 
@@ -103,9 +111,17 @@ export default function ProfileCard({
       <div
         className="relative rounded-[32px] overflow-hidden"
         style={{
-          background: "linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          boxShadow: "0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)",
+          background: resolvedTheme === 'light'
+            ? "linear-gradient(145deg, rgba(255,255,255, 0.7) 0%, rgba(248,250,252, 0.4) 100%)"
+            : "linear-gradient(145deg, rgba(var(--foreground-rgb, 255,255,255), 0.05) 0%, rgba(var(--foreground-rgb, 255,255,255), 0.01) 100%)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          border: resolvedTheme === 'light'
+            ? "1px solid rgba(255,255,255, 0.6)"
+            : "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.08)",
+          boxShadow: resolvedTheme === 'light'
+            ? "0 32px 64px -12px rgba(15,23,42, 0.15), inset 0 1px 0 rgba(255,255,255, 0.8), 0 0 0 1px rgba(15,23,42, 0.02)"
+            : "0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(var(--foreground-rgb, 255,255,255), 0.08)",
         }}
       >
         {/* Glare overlay */}
@@ -120,17 +136,21 @@ export default function ProfileCard({
         <div
           className="relative h-28 w-full"
           style={{
-            background: "linear-gradient(135deg, #0c0c18 0%, #0a0a14 100%)",
+            background: resolvedTheme === 'light'
+              ? "linear-gradient(135deg, rgba(2,132,199,0.1) 0%, rgba(37,99,235,0.05) 100%)"
+              : "linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%)",
           }}
         >
           {/* Grid lines texture */}
           <div
             aria-hidden
-            className="absolute inset-0 opacity-[0.04]"
+            className="absolute inset-0"
             style={{
-              backgroundImage:
-                "linear-gradient(rgba(255,255,255,.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.8) 1px, transparent 1px)",
+              backgroundImage: resolvedTheme === 'light'
+                ? "linear-gradient(rgba(15,23,42,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.04) 1px, transparent 1px)"
+                : "linear-gradient(rgba(255,255,255,.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.8) 1px, transparent 1px)",
               backgroundSize: "32px 32px",
+              opacity: resolvedTheme === 'light' ? 1 : 0.04,
             }}
           />
           {/* Cyan accent bar at the top */}
@@ -149,28 +169,33 @@ export default function ProfileCard({
               <div
                 className="absolute -inset-[3px] rounded-full opacity-80"
                 style={{
-                  background: "linear-gradient(135deg, #00f0ff, #2563eb, #0ea5e9)",
+                  background: resolvedTheme === 'light'
+                    ? "linear-gradient(135deg, #0ea5e9, #2563eb, #3b82f6)"
+                    : "linear-gradient(135deg, #00f0ff, #2563eb, #0ea5e9)",
                   filter: "blur(4px)",
                 }}
               />
               <div
                 className="relative w-24 h-24 rounded-full overflow-hidden"
                 style={{
-                  border: "2px solid rgba(255,255,255,0.08)",
+                  border: resolvedTheme === 'light'
+                    ? "4px solid #ffffff"
+                    : "2px solid rgba(var(--foreground-rgb, 255,255,255), 0.08)",
+                  boxShadow: resolvedTheme === 'light' ? "0 4px 14px rgba(0,0,0,0.1)" : "none",
                 }}
               >
                 <Image
-                  src="/images/ProfilePicture.webp"
+                  src={resolvedTheme === 'light' ? "/images/ProfilePictureLight.webp" : "/images/ProfilePicture.webp"}
                   alt="Farhan Zuhdi"
                   fill
                   unoptimized
-                  className="object-cover object-center"
+                  className="object-cover object-center pointer-events-none"
                   priority
                 />
                 {/* Gloss */}
                 <div
                   className="absolute inset-0 pointer-events-none rounded-full"
-                  style={{ background: "linear-gradient(145deg, rgba(255,255,255,0.08) 0%, transparent 60%)" }}
+                  style={{ background: resolvedTheme === 'light' ? "linear-gradient(145deg, rgba(255,255,255, 0.4) 0%, transparent 60%)" : "linear-gradient(145deg, rgba(var(--foreground-rgb, 255,255,255), 0.08) 0%, transparent 60%)" }}
                 />
               </div>
 
@@ -182,11 +207,11 @@ export default function ProfileCard({
 
             {/* "Open to Work" badge (top-right of the body section) */}
             <div
-              className="mb-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase"
+              className={`mb-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase transition-colors`}
               style={{
-                background: "rgba(0,240,255,0.1)",
-                border: "1px solid rgba(0,240,255,0.25)",
-                color: "#00f0ff",
+                background: resolvedTheme === 'light' ? "rgba(37,99,235,0.1)" : "rgba(var(--accent-cyan-rgb, 0,240,255),0.1)",
+                border: resolvedTheme === 'light' ? "1px solid rgba(37,99,235,0.3)" : "1px solid rgba(var(--accent-cyan-rgb, 0,240,255),0.25)",
+                color: resolvedTheme === 'light' ? "#2563eb" : "#00f0ff",
               }}
             >
               Open to Work
@@ -194,25 +219,25 @@ export default function ProfileCard({
           </div>
 
           {/* Name + Title */}
-          <h3 className="text-xl font-display font-bold text-white leading-tight mb-0.5">
+          <h3 className="text-xl font-display font-bold text-foreground leading-tight mb-0.5">
             {name}
           </h3>
           <p
             className="text-xs font-bold tracking-widest uppercase mb-4"
-            style={{ color: "#00f0ff" }}
+            style={{ color: resolvedTheme === 'light' ? "var(--foreground-rgb)" : "#00f0ff" }}
           >
             {title}
           </p>
 
           {/* Bio */}
-          <p className="text-sm leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.45)" }}>
+          <p className="text-sm leading-relaxed mb-6" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.45)" }}>
             {bio}
           </p>
 
           {/* Divider */}
           <div
             className="h-px w-full mb-6"
-            style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)" }}
+            style={{ background: "linear-gradient(90deg, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.08), transparent)" }}
           />
 
           {/* Social Row */}
@@ -226,19 +251,21 @@ export default function ProfileCard({
                 aria-label={label}
                 whileHover={{ scale: 1.15, y: -3 }}
                 whileTap={{ scale: 0.9 }}
-                className="w-10 h-10 rounded-full flex items-center justify-center text-white/50 transition-colors"
+                className="w-10 h-10 rounded-full flex items-center justify-center text-foreground/50 transition-colors"
                 style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.08)",
+                  background: resolvedTheme === 'light' ? "rgba(15,23,42, 0.03)" : "rgba(var(--foreground-rgb, 255,255,255), 0.04)",
+                  border: resolvedTheme === 'light' ? "1px solid rgba(15,23,42, 0.08)" : "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.08)",
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "#00f0ff";
-                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,240,255,0.4)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "0 0 14px rgba(0,240,255,0.2)";
+                  (e.currentTarget as HTMLElement).style.color = resolvedTheme === 'light' ? "#2563eb" : "#00f0ff";
+                  (e.currentTarget as HTMLElement).style.borderColor = resolvedTheme === 'light' ? "rgba(37,99,235,0.4)" : "rgba(var(--accent-cyan-rgb, 0,240,255),0.4)";
+                  (e.currentTarget as HTMLElement).style.background = resolvedTheme === 'light' ? "rgba(37,99,235,0.05)" : "rgba(var(--accent-cyan-rgb, 0,240,255),0.05)";
+                  (e.currentTarget as HTMLElement).style.boxShadow = resolvedTheme === 'light' ? "0 0 14px rgba(37,99,235,0.2)" : "0 0 14px rgba(var(--accent-cyan-rgb, 0,240,255),0.2)";
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.5)";
-                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)";
+                  (e.currentTarget as HTMLElement).style.color = "rgba(var(--foreground-rgb, 255,255,255), 0.5)";
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(var(--foreground-rgb, 255,255,255), 0.08)";
+                  (e.currentTarget as HTMLElement).style.background = "rgba(var(--foreground-rgb, 255,255,255), 0.04)";
                   (e.currentTarget as HTMLElement).style.boxShadow = "none";
                 }}
               >
@@ -253,17 +280,20 @@ export default function ProfileCard({
             onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="block w-full text-center py-3 rounded-xl text-sm font-bold text-white relative overflow-hidden"
+            className={`block w-full text-center py-3 rounded-xl text-sm font-bold relative overflow-hidden transition-shadow ${resolvedTheme === 'light' ? 'text-white' : 'text-foreground'}`}
             style={{
-              background: "linear-gradient(135deg, rgba(0,240,255,0.15), rgba(37,99,235,0.15))",
-              border: "1px solid rgba(255,255,255,0.1)",
+              background: resolvedTheme === 'light' 
+                ? "linear-gradient(135deg, #2563eb, #0ea5e9)" 
+                : "linear-gradient(135deg, rgba(var(--accent-cyan-rgb, 0,240,255),0.15), rgba(37,99,235,0.15))",
+              border: resolvedTheme === 'light' ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.1)",
+              boxShadow: resolvedTheme === 'light' ? "0 8px 20px rgba(37,99,235,0.25), inset 0 1px 0 rgba(255,255,255,0.2)" : "none",
             }}
           >
             {/* Shimmer sweep */}
             <motion.span
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%)",
+                background: "linear-gradient(105deg, transparent 40%, rgba(var(--foreground-rgb, 255,255,255), 0.1) 50%, transparent 60%)",
               }}
               animate={{ x: ["-100%", "200%"] }}
               transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 2.5 }}

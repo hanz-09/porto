@@ -27,6 +27,7 @@ import {
   useInView,
 } from "framer-motion";
 import { Briefcase, GraduationCap, Award, Code2, ChevronRight } from "lucide-react";
+import { useTheme } from "next-themes";
 
 /* ─────────────────────────────────────────────────────────
    Data
@@ -80,14 +81,57 @@ const items: TItem[] = [
   },
 ];
 
-const cfg: Record<
+const getCfg = (theme?: string): Record<
   TItem["type"],
-  { icon: typeof Briefcase; label: string; color: string; gradient: string; glow: string }
-> = {
-  work:      { icon: Briefcase,     label: "Work",      color: "#00f0ff", gradient: "from-[#00f0ff] to-[#0ea5e9]", glow: "rgba(0,240,255,0.35)" },
-  education: { icon: GraduationCap, label: "Education", color: "#3b82f6", gradient: "from-[#3b82f6] to-[#2563eb]", glow: "rgba(59,130,246,0.35)" },
-  award:     { icon: Award,         label: "Award",     color: "#06b6d4", gradient: "from-[#06b6d4] to-[#0891b2]", glow: "rgba(6,182,212,0.35)" },
-  project:   { icon: Code2,         label: "Project",   color: "#60a5fa", gradient: "from-[#60a5fa] to-[#3b82f6]", glow: "rgba(96,165,250,0.35)" },
+  { icon: typeof Briefcase; label: string; color: string; bg: string; border: string; gradient: string; glow: string; centerBg: string; lineGlow: string }
+> => {
+  const isLight = theme === 'light';
+  return {
+    work:      { 
+      icon: Briefcase,     
+      label: "Work",      
+      color: isLight ? "#2563eb" : "#00f0ff", 
+      bg: isLight ? "rgba(37,99,235,0.12)" : "#00f0ff12",
+      border: isLight ? "rgba(37,99,235,0.3)" : "#00f0ff30",
+      gradient: isLight ? "from-[#2563eb] to-[#0ea5e9]" : "from-[#00f0ff] to-[#0ea5e9]", 
+      glow: isLight ? "rgba(37,99,235,0.35)" : "rgba(var(--accent-cyan-rgb, 0,240,255),0.35)",
+      centerBg: isLight ? "radial-gradient(circle, rgba(37,99,235,0.15) 0%, rgba(37,99,235,0.05) 100%)" : "radial-gradient(circle, #00f0ff22 0%, #00f0ff08 100%)",
+      lineGlow: isLight ? "rgba(37,99,235,0.4)" : "#00f0ff40"
+    },
+    education: { 
+      icon: GraduationCap, 
+      label: "Education", 
+      color: isLight ? "#1d4ed8" : "#3b82f6", 
+      bg: isLight ? "rgba(29,78,216,0.12)" : "#3b82f612",
+      border: isLight ? "rgba(29,78,216,0.3)" : "#3b82f630",
+      gradient: isLight ? "from-[#1d4ed8] to-[#3b82f6]" : "from-[#3b82f6] to-[#2563eb]", 
+      glow: isLight ? "rgba(29,78,216,0.35)" : "rgba(59,130,246,0.35)",
+      centerBg: isLight ? "radial-gradient(circle, rgba(29,78,216,0.15) 0%, rgba(29,78,216,0.05) 100%)" : "radial-gradient(circle, #3b82f622 0%, #3b82f608 100%)",
+      lineGlow: isLight ? "rgba(29,78,216,0.4)" : "#3b82f640"
+    },
+    award:     { 
+      icon: Award,         
+      label: "Award",     
+      color: isLight ? "#0369a1" : "#06b6d4", 
+      bg: isLight ? "rgba(3,105,161,0.12)" : "#06b6d412",
+      border: isLight ? "rgba(3,105,161,0.3)" : "#06b6d430",
+      gradient: isLight ? "from-[#0369a1] to-[#0891b2]" : "from-[#06b6d4] to-[#0891b2]", 
+      glow: isLight ? "rgba(3,105,161,0.35)" : "rgba(6,182,212,0.35)",
+      centerBg: isLight ? "radial-gradient(circle, rgba(3,105,161,0.15) 0%, rgba(3,105,161,0.05) 100%)" : "radial-gradient(circle, #06b6d422 0%, #06b6d408 100%)",
+      lineGlow: isLight ? "rgba(3,105,161,0.4)" : "#06b6d440"
+    },
+    project:   { 
+      icon: Code2,         
+      label: "Project",   
+      color: isLight ? "#2563eb" : "#60a5fa", 
+      bg: isLight ? "rgba(37,99,235,0.12)" : "#60a5fa12",
+      border: isLight ? "rgba(37,99,235,0.3)" : "#60a5fa30",
+      gradient: isLight ? "from-[#2563eb] to-[#3b82f6]" : "from-[#60a5fa] to-[#3b82f6]", 
+      glow: isLight ? "rgba(37,99,235,0.35)" : "rgba(96,165,250,0.35)",
+      centerBg: isLight ? "radial-gradient(circle, rgba(37,99,235,0.15) 0%, rgba(37,99,235,0.05) 100%)" : "radial-gradient(circle, #60a5fa22 0%, #60a5fa08 100%)",
+      lineGlow: isLight ? "rgba(37,99,235,0.4)" : "#60a5fa40"
+    },
+  };
 };
 
 /* ─────────────────────────────────────────────────────────
@@ -107,7 +151,7 @@ function ParallaxCard({ children, className = "" }: { children: React.ReactNode;
     const rx = ((y - r.height / 2) / r.height) * -14;
     const ry = ((x - r.width  / 2) / r.width ) *  14;
     card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.03,1.03,1.03)`;
-    glare.style.background = `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(255,255,255,0.1) 0%, transparent 65%)`;
+    glare.style.background = `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(var(--foreground-rgb, 255,255,255), 0.1) 0%, transparent 65%)`;
     glare.style.opacity = "1";
   }, []);
 
@@ -143,6 +187,7 @@ function ParallaxCard({ children, className = "" }: { children: React.ReactNode;
 function TimelineItem({ item, index }: { item: TItem; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
+  const { resolvedTheme } = useTheme();
 
   // Scroll-spotlight: track distance from viewport center to scale/dim
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
@@ -151,7 +196,7 @@ function TimelineItem({ item, index }: { item: TItem; index: number }) {
   const scale = useSpring(rawScale, { stiffness: 55, damping: 20 });
   const opacity = useSpring(rawDim, { stiffness: 55, damping: 20 });
 
-  const { color, gradient, glow, icon: Icon, label } = cfg[item.type];
+  const { color, bg, border, gradient, glow, centerBg, lineGlow, icon: Icon, label } = getCfg(resolvedTheme)[item.type];
   const isEven = index % 2 === 0;
 
   return (
@@ -171,9 +216,17 @@ function TimelineItem({ item, index }: { item: TItem; index: number }) {
             <div
               className="relative rounded-2xl overflow-hidden"
               style={{
-                background: "rgba(9,9,16,0.92)",
-                border: "1px solid rgba(255,255,255,0.07)",
-                boxShadow: `0 20px 60px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.04) inset`,
+                background: resolvedTheme === 'light'
+                  ? "linear-gradient(145deg, rgba(255,255,255, 0.75) 0%, rgba(248,250,252, 0.5) 100%)"
+                  : "linear-gradient(145deg, rgba(var(--foreground-rgb, 255,255,255), 0.03) 0%, rgba(var(--foreground-rgb, 255,255,255), 0.01) 100%)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                border: resolvedTheme === 'light'
+                  ? "1px solid rgba(15,23,42, 0.06)"
+                  : "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.07)",
+                boxShadow: resolvedTheme === 'light'
+                  ? "0 24px 64px -12px rgba(15,23,42, 0.1), inset 0 1px 0 rgba(255,255,255, 1)"
+                  : "0 20px 60px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(var(--foreground-rgb, 255,255,255), 0.04) inset",
               }}
             >
               {/* Colored left accent bar */}
@@ -187,7 +240,7 @@ function TimelineItem({ item, index }: { item: TItem; index: number }) {
                 className="absolute -right-3 -top-4 font-display font-black select-none pointer-events-none leading-none z-0"
                 style={{
                   fontSize: "8rem",
-                  color: `${color}06`,
+                  color: resolvedTheme === 'light' ? `${color}15` : `${color}06`,
                   lineHeight: 1,
                 }}
               >
@@ -200,8 +253,8 @@ function TimelineItem({ item, index }: { item: TItem; index: number }) {
                   <span
                     className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase"
                     style={{
-                      background: `${color}12`,
-                      border: `1px solid ${color}30`,
+                      background: bg,
+                      border: `1px solid ${border}`,
                       color,
                     }}
                   >
@@ -216,22 +269,22 @@ function TimelineItem({ item, index }: { item: TItem; index: number }) {
                   </span>
                   <span
                     className="font-display font-black text-xl"
-                    style={{ color: `${color}50` }}
+                    style={{ color: resolvedTheme === 'light' ? `${color}` : `${color}50`, opacity: resolvedTheme === 'light' ? 0.6 : 1 }}
                   >
                     {item.year}
                   </span>
                 </div>
 
                 {/* Title + place */}
-                <h3 className="font-display font-bold text-xl md:text-2xl text-white mb-1 leading-tight">
+                <h3 className="font-display font-bold text-xl md:text-2xl text-foreground mb-1 leading-tight">
                   {item.title}
                 </h3>
-                <p className="text-sm mb-4 font-medium" style={{ color: "rgba(255,255,255,0.3)" }}>
+                <p className="text-sm mb-4 font-medium" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.6)" }}>
                   {item.place}
                 </p>
 
                 {/* Description */}
-                <p className="text-sm leading-[1.8]" style={{ color: "rgba(255,255,255,0.5)" }}>
+                <p className="text-sm leading-[1.8]" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.8)" }}>
                   {item.description}
                 </p>
 
@@ -243,8 +296,8 @@ function TimelineItem({ item, index }: { item: TItem; index: number }) {
                         key={t}
                         className="text-[10px] px-3 py-1 rounded-full font-bold"
                         style={{
-                          background: `${color}10`,
-                          border: `1px solid ${color}25`,
+                          background: bg,
+                          border: `1px solid ${border}`,
                           color,
                         }}
                       >
@@ -267,7 +320,7 @@ function TimelineItem({ item, index }: { item: TItem; index: number }) {
             className="absolute bottom-full w-px"
             style={{
               top: -80,
-              background: `linear-gradient(to bottom, transparent, ${color}40)`,
+              background: `linear-gradient(to bottom, transparent, ${lineGlow})`,
             }}
           />
         )}
@@ -290,9 +343,9 @@ function TimelineItem({ item, index }: { item: TItem; index: number }) {
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center"
             style={{
-              background: `radial-gradient(circle, ${color}22 0%, ${color}08 100%)`,
+              background: centerBg,
               border: `1.5px solid ${color}`,
-              boxShadow: `0 0 20px ${glow}, inset 0 1px 0 rgba(255,255,255,0.15)`,
+              boxShadow: `0 0 20px ${glow}, inset 0 1px 0 rgba(var(--foreground-rgb, 255,255,255), ${resolvedTheme === 'light' ? 0.8 : 0.15})`,
             }}
           >
             <Icon size={18} style={{ color }} />
@@ -304,7 +357,7 @@ function TimelineItem({ item, index }: { item: TItem; index: number }) {
           <div
             className="w-px flex-1 min-h-[60px]"
             style={{
-              background: `linear-gradient(to bottom, ${color}40, transparent)`,
+              background: `linear-gradient(to bottom, ${lineGlow}, transparent)`,
             }}
           />
         )}
@@ -325,6 +378,7 @@ function TimelineItem({ item, index }: { item: TItem; index: number }) {
 ───────────────────────────────────────────────────────── */
 export default function Timeline() {
   const sectionRef = useRef<HTMLElement>(null);
+  const { resolvedTheme } = useTheme();
 
   // Section-level scroll enter/exit
   const { scrollYProgress } = useScroll({
@@ -348,7 +402,9 @@ export default function Timeline() {
           className="absolute rounded-full"
           style={{
             width: 600, height: 600, left: "-10%", top: "15%",
-            background: "radial-gradient(circle, rgba(0,240,255,0.06) 0%, transparent 70%)",
+            background: resolvedTheme === 'light'
+              ? "radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 70%)"
+              : "radial-gradient(circle, rgba(var(--accent-cyan-rgb, 0,240,255),0.06) 0%, transparent 70%)",
             filter: "blur(50px)",
           }}
           animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
@@ -358,7 +414,9 @@ export default function Timeline() {
           className="absolute rounded-full"
           style={{
             width: 500, height: 500, right: "-8%", bottom: "20%",
-            background: "radial-gradient(circle, rgba(37,99,235,0.07) 0%, transparent 70%)",
+            background: resolvedTheme === 'light'
+              ? "radial-gradient(circle, rgba(14,165,233,0.15) 0%, transparent 70%)"
+              : "radial-gradient(circle, rgba(37,99,235,0.07) 0%, transparent 70%)",
             filter: "blur(40px)",
           }}
           animate={{ x: [0, -40, 0], y: [0, 40, 0] }}
@@ -369,7 +427,7 @@ export default function Timeline() {
       <div
         aria-hidden
         className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)" }}
+        style={{ background: "linear-gradient(90deg, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06), transparent)" }}
       />
 
       <div className="max-w-5xl mx-auto px-6 relative z-10">
@@ -392,7 +450,7 @@ export default function Timeline() {
             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="font-display font-black text-5xl md:text-7xl leading-none tracking-tight text-white mb-4"
+            className="font-display font-black text-5xl md:text-7xl leading-none tracking-tight text-foreground mb-4"
           >
             Experience
           </motion.h2>
@@ -403,7 +461,7 @@ export default function Timeline() {
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.35 }}
             className="text-sm"
-            style={{ color: "rgba(255,255,255,0.3)" }}
+            style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.3)" }}
           >
             Scroll to trace my journey. Hover the cards — they respond.
           </motion.p>
@@ -418,7 +476,7 @@ export default function Timeline() {
 
         {/* ── End cap ── */}
         <div className="flex items-center justify-center mt-16 gap-4">
-          <div className="flex-1 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(255,255,255,0.06))" }} />
+          <div className="flex-1 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06))" }} />
           <motion.div
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
@@ -426,15 +484,15 @@ export default function Timeline() {
             transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
             className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold"
             style={{
-              background: "rgba(0,240,255,0.08)",
-              border: "1px solid rgba(0,240,255,0.2)",
-              color: "#00f0ff",
+              background: resolvedTheme === 'light' ? "rgba(37,99,235,0.08)" : "rgba(var(--accent-cyan-rgb, 0,240,255),0.08)",
+              border: resolvedTheme === 'light' ? "1px solid rgba(37,99,235,0.25)" : "1px solid rgba(var(--accent-cyan-rgb, 0,240,255),0.2)",
+              color: resolvedTheme === 'light' ? "#2563eb" : "#00f0ff",
             }}
           >
             <ChevronRight size={12} />
             <span>More ahead</span>
           </motion.div>
-          <div className="flex-1 h-px" style={{ background: "linear-gradient(to left, transparent, rgba(255,255,255,0.06))" }} />
+          <div className="flex-1 h-px" style={{ background: "linear-gradient(to left, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06))" }} />
         </div>
 
       </div>

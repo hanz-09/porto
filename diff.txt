@@ -1,0 +1,1535 @@
+diff --git a/src/components/About.tsx b/src/components/About.tsx
+index 1ff6c46..e3993ba 100644
+--- a/src/components/About.tsx
++++ b/src/components/About.tsx
+@@ -10,6 +10,8 @@ import {
+ import { Code2, Palette, Zap, Globe } from "lucide-react";
+ import ProfileCard from "./ProfileCard";
+ import TextType from "./TextType";
++import { useTheme } from "next-themes";
++
+ 
+ /* ---------------------------------------------------------
+    Tech data
+@@ -76,6 +78,7 @@ function Reveal({
+ --------------------------------------------------------- */
+ export default function About() {
+   const sectionRef = useRef<HTMLElement>(null);
++  const { resolvedTheme } = useTheme();
+ 
+   // Section-level scroll-in / scroll-out — large transforms so it's very noticeable
+   const { scrollYProgress } = useScroll({
+@@ -119,7 +122,7 @@ export default function About() {
+       <div
+         aria-hidden
+         className="absolute top-0 left-0 right-0 h-px"
+-        style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)" }}
++        style={{ background: "linear-gradient(90deg, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06), transparent)" }}
+       />
+ 
+       <div className="max-w-6xl mx-auto px-6 relative z-10">
+@@ -128,18 +131,17 @@ export default function About() {
+         <Reveal className="text-center mb-16 md:mb-24">
+           <span
+             className="inline-block text-xs font-bold tracking-[0.35em] uppercase mb-4"
+-            style={{ color: "#00f0ff" }}
++            style={{ color: resolvedTheme === 'light' ? "#2563eb" : "var(--accent-cyan)" }}
+           >
+             — Get to know me
+           </span>
+           <h2
+-            className="font-display font-black text-4xl sm:text-5xl md:text-6xl leading-none tracking-tight"
+-            style={{ color: "#ffffff" }}
++            className="font-display font-black text-4xl sm:text-5xl md:text-6xl leading-none tracking-tight text-foreground"
+           >
+             About{" "}
+             <span
+               style={{
+-                background: "linear-gradient(135deg, #00f0ff 0%, #2563eb 50%, #0ea5e9 100%)",
++                background: "linear-gradient(135deg, var(--accent-cyan) 0%, #2563eb 50%, #0ea5e9 100%)",
+                 WebkitBackgroundClip: "text",
+                 WebkitTextFillColor: "transparent",
+                 backgroundClip: "text",
+@@ -162,8 +164,7 @@ export default function About() {
+           <div className="space-y-8">
+             <Reveal fromRight delay={0.1}>
+               <h3
+-                className="font-display font-bold text-2xl md:text-3xl leading-snug"
+-                style={{ color: "#ffffff" }}
++                className="font-display font-bold text-2xl md:text-3xl leading-snug text-foreground"
+               >
+                 A passionate developer who loves to{" "}
+                 <TextType
+@@ -179,23 +180,23 @@ export default function About() {
+                   pauseAfterType={2000}
+                   className="font-display font-bold"
+                   textStyle={{
+-                    background: "linear-gradient(90deg, #00f0ff, #2563eb)",
++                    background: "linear-gradient(90deg, var(--accent-cyan), #2563eb)",
+                     WebkitBackgroundClip: "text",
+                     WebkitTextFillColor: "transparent",
+                     backgroundClip: "text",
+                   }}
+-                  cursorClassName="bg-[#00f0ff] mx-[2px]"
++                  cursorClassName="bg-[var(--accent-cyan)] mx-[2px]"
+                 />
+               </h3>
+             </Reveal>
+ 
+             <Reveal fromRight delay={0.15}>
+-              <div className="space-y-4 text-[15px] leading-[1.8]" style={{ color: "rgba(255,255,255,0.5)" }}>
++              <div className="space-y-4 text-[15px] leading-[1.8]" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.75)" }}>
+                 <p>
+-                  Hai! Aku Farhan, seorang <strong className="text-white/80">Frontend Developer</strong> berbasis di Malang, Indonesia. Aku suka mengubah ide-ide kreatif menjadi pengalaman web yang interaktif, cepat, dan memanjakan mata.
++                  Hai! Aku Farhan, seorang <strong className="text-foreground/80">Frontend Developer</strong> berbasis di Malang, Indonesia. Aku suka mengubah ide-ide kreatif menjadi pengalaman web yang interaktif, cepat, dan memanjakan mata.
+                 </p>
+                 <p>
+-                  Spesialisiku ada di ekosistem <strong className="text-white/80">React & Next.js</strong> — dari membangun UI yang responsif hingga mengoptimasi performa dan aksesibilitas. Setiap piksel itu penting bagiku.
++                  Spesialisiku ada di ekosistem <strong className="text-foreground/80">React & Next.js</strong> — dari membangun UI yang responsif hingga mengoptimasi performa dan aksesibilitas. Setiap piksel itu penting bagiku.
+                 </p>
+               </div>
+             </Reveal>
+@@ -203,7 +204,7 @@ export default function About() {
+             {/* Tech stack chips */}
+             <Reveal fromRight delay={0.2}>
+               <div className="space-y-3">
+-                <p className="text-xs font-bold tracking-widest uppercase" style={{ color: "rgba(255,255,255,0.25)" }}>
++                <p className="text-xs font-bold tracking-widest uppercase" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.5)" }}>
+                   Tech I Work With
+                 </p>
+                 <div className="grid grid-cols-2 gap-3">
+@@ -212,29 +213,29 @@ export default function About() {
+                       key={label}
+                       className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-default"
+                       style={{
+-                        background: "rgba(255,255,255,0.03)",
+-                        border: "1px solid rgba(255,255,255,0.07)",
++                        background: "rgba(var(--foreground-rgb, 255,255,255), 0.03)",
++                        border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.07)",
+                       }}
+                       onMouseEnter={(e) => {
+                         const el = e.currentTarget as HTMLElement;
+-                        el.style.borderColor = "rgba(0,240,255,0.25)";
+-                        el.style.background = "rgba(0,240,255,0.05)";
++                        el.style.borderColor = resolvedTheme === 'light' ? "rgba(37,99,235,0.25)" : "rgba(0,240,255,0.25)";
++                        el.style.background = resolvedTheme === 'light' ? "rgba(37,99,235,0.05)" : "rgba(0,240,255,0.05)";
+                       }}
+                       onMouseLeave={(e) => {
+                         const el = e.currentTarget as HTMLElement;
+-                        el.style.borderColor = "rgba(255,255,255,0.07)";
+-                        el.style.background = "rgba(255,255,255,0.03)";
++                        el.style.borderColor = "rgba(var(--foreground-rgb, 255,255,255), 0.07)";
++                        el.style.background = "rgba(var(--foreground-rgb, 255,255,255), 0.03)";
+                       }}
+                     >
+                       <div
+                         className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+-                        style={{ background: "rgba(0,240,255,0.1)" }}
++                        style={{ background: resolvedTheme === 'light' ? "rgba(37,99,235,0.1)" : "rgba(0,240,255,0.1)" }}
+                       >
+-                        <Icon size={14} style={{ color: "#00f0ff" }} />
++                        <Icon size={14} style={{ color: resolvedTheme === 'light' ? "#2563eb" : "var(--accent-cyan)" }} />
+                       </div>
+                       <div className="min-w-0">
+-                        <div className="text-xs font-bold text-white/80 truncate">{label}</div>
+-                        <div className="text-[10px] text-white/30 truncate">{desc}</div>
++                        <div className="text-xs font-bold text-foreground/80 truncate">{label}</div>
++                        <div className="text-[10px] text-foreground/30 truncate">{desc}</div>
+                       </div>
+                     </div>
+                   ))}
+diff --git a/src/components/ChapterNav.tsx b/src/components/ChapterNav.tsx
+index ea1353b..3835311 100644
+--- a/src/components/ChapterNav.tsx
++++ b/src/components/ChapterNav.tsx
+@@ -97,7 +97,7 @@ export default function ChapterNav() {
+               style={{
+                 width: isActive ? 12 : 7,
+                 height: isActive ? 12 : 7,
+-                background: isActive ? ch.color : "rgba(255,255,255,0.2)",
++                background: isActive ? ch.color : "rgba(var(--foreground-rgb, 255,255,255), 0.2)",
+                 boxShadow: isActive ? `0 0 10px ${ch.color}99` : "none",
+               }}
+             >
+diff --git a/src/components/Contact.tsx b/src/components/Contact.tsx
+index aac8615..f84fe58 100644
+--- a/src/components/Contact.tsx
++++ b/src/components/Contact.tsx
+@@ -13,12 +13,12 @@ import { Mail, MapPin, Send, CheckCircle2, Loader2, Sparkles, Github, Linkedin,
+ import Magnet from "./Magnet";
+ 
+ const contactInfo = [
+-  { icon: Mail, label: "Email", value: "farhanzuhdi400@gmail.com", href: "mailto:farhanzuhdi400@gmail.com", color: "#00f0ff" },
++  { icon: Mail, label: "Email", value: "farhanzuhdi400@gmail.com", href: "mailto:farhanzuhdi400@gmail.com", color: "var(--accent-cyan)" },
+   { icon: MapPin, label: "Location", value: "Batam, Indonesia ????", href: "#", color: "#2563eb" },
+ ];
+ 
+ const socials = [
+-  { icon: Github, label: "GitHub", href: "https://github.com/hanz-09", color: "#ffffff" },
++  { icon: Github, label: "GitHub", href: "https://github.com/hanz-09", color: "var(--color-foreground)" },
+   { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com", color: "#0a66c2" },
+   { icon: Instagram, label: "Instagram", href: "https://instagram.com", color: "#e1306c" },
+ ];
+@@ -36,7 +36,7 @@ function GlowingCard({ children, className = "" }: { children: React.ReactNode;
+ 
+   return (
+     <div
+-      className={`relative overflow-hidden rounded-2xl border border-white/10 bg-white/2 transition-colors hover:bg-white/4 ${className} group`}
++      className={`relative overflow-hidden rounded-2xl border border-foreground/10 bg-foreground/2 transition-colors hover:bg-foreground/4 ${className} group`}
+       onMouseMove={handleMouseMove}
+     >
+       <motion.div
+@@ -96,21 +96,21 @@ export default function Contact() {
+         <motion.div className="absolute rounded-full" style={{ width: 600, height: 600, right: "-10%", top: "5%", background: "radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%)", filter: "blur(50px)" }} animate={{ x: [0, -30, 0], y: [0, 40, 0] }} transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }} />
+         <motion.div className="absolute rounded-full" style={{ width: 500, height: 500, left: "-8%", bottom: "5%", background: "radial-gradient(circle, rgba(0,240,255,0.05) 0%, transparent 70%)", filter: "blur(40px)" }} animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }} />
+       </div>
+-      <div aria-hidden className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)" }} />
++      <div aria-hidden className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06), transparent)" }} />
+ 
+       <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
+         {/* -- Heading -- */}
+         <div className="text-center mb-16">
+-          <motion.span initial={{ opacity: 0, letterSpacing: "0.8em" }} whileInView={{ opacity: 1, letterSpacing: "0.4em" }} viewport={{ once: true }} transition={{ duration: 0.9 }} className="inline-flex items-center gap-2 text-xs font-black uppercase mb-4" style={{ color: "#00f0ff" }}>
++          <motion.span initial={{ opacity: 0, letterSpacing: "0.8em" }} whileInView={{ opacity: 1, letterSpacing: "0.4em" }} viewport={{ once: true }} transition={{ duration: 0.9 }} className="inline-flex items-center gap-2 text-xs font-black uppercase mb-4" style={{ color: "var(--accent-cyan)" }}>
+             <Sparkles size={12} /> Let&apos;s Connect
+           </motion.span>
+-          <motion.h2 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-white mb-4">
++          <motion.h2 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-foreground mb-4">
+             Get in{" "}
+-            <span style={{ background: "linear-gradient(135deg, #00f0ff 0%, #2563eb 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
++            <span style={{ background: "linear-gradient(135deg, var(--accent-cyan) 0%, #2563eb 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+               Touch
+             </span>
+           </motion.h2>
+-          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3 }} className="text-sm max-w-md mx-auto" style={{ color: "rgba(255,255,255,0.4)" }}>
++          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3 }} className="text-sm max-w-md mx-auto" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.4)" }}>
+             Have a project in mind, want to hire me, or just want to chat? Reach out via the form or find me on my social networks.
+           </motion.p>
+         </div>
+@@ -130,12 +130,12 @@ export default function Contact() {
+               {contactInfo.map(({ icon: Icon, label, value, href, color }) => (
+                 <a key={label} href={href} className="block outline-none">
+                   <GlowingCard className="p-6 h-full flex flex-col justify-center gap-4">
+-                    <div className="w-12 h-12 rounded-full flex items-center justify-center border border-white/5 bg-white/5" style={{ color }}>
++                    <div className="w-12 h-12 rounded-full flex items-center justify-center border border-foreground/5 bg-foreground/5" style={{ color }}>
+                       <Icon size={20} />
+                     </div>
+                     <div>
+-                      <span className="text-[10px] font-black uppercase tracking-widest text-white/40 block mb-1">{label}</span>
+-                      <span className="text-sm font-bold text-white group-hover:text-(--accent) transition-colors" style={{ '--accent': color } as React.CSSProperties}>{value}</span>
++                      <span className="text-[10px] font-black uppercase tracking-widest text-foreground/40 block mb-1">{label}</span>
++                      <span className="text-sm font-bold text-foreground group-hover:text-(--accent) transition-colors" style={{ '--accent': color } as React.CSSProperties}>{value}</span>
+                     </div>
+                   </GlowingCard>
+                 </a>
+@@ -144,7 +144,7 @@ export default function Contact() {
+ 
+             {/* Social Links Panel */}
+             <GlowingCard className="p-8 mt-2">
+-              <h3 className="text-xs font-black uppercase tracking-widest text-white/40 mb-6 flex items-center gap-2">
++              <h3 className="text-xs font-black uppercase tracking-widest text-foreground/40 mb-6 flex items-center gap-2">
+                 <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+                 Social Profiles
+               </h3>
+@@ -155,15 +155,15 @@ export default function Contact() {
+                     href={social.href}
+                     target="_blank"
+                     rel="noreferrer"
+-                    className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/1 hover:bg-white/5 transition-all group/social"
++                    className="flex items-center justify-between p-4 rounded-xl border border-foreground/5 bg-foreground/1 hover:bg-foreground/5 transition-all group/social"
+                   >
+                     <div className="flex items-center gap-4">
+-                      <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5 group-hover/social:scale-110 transition-transform" style={{ color: social.color }}>
++                      <div className="w-10 h-10 rounded-full flex items-center justify-center bg-foreground/5 group-hover/social:scale-110 transition-transform" style={{ color: social.color }}>
+                         <social.icon size={18} />
+                       </div>
+-                      <span className="text-sm font-semibold text-white">{social.label}</span>
++                      <span className="text-sm font-semibold text-foreground">{social.label}</span>
+                     </div>
+-                    <div className="w-8 h-8 rounded-full flex items-center justify-center border border-white/10 text-white/30 group-hover/social:text-white group-hover/social:bg-white/10 transition-all -rotate-45 group-hover/social:rotate-[-30deg]">
++                    <div className="w-8 h-8 rounded-full flex items-center justify-center border border-foreground/10 text-foreground/30 group-hover/social:text-foreground group-hover/social:bg-foreground/10 transition-all -rotate-45 group-hover/social:rotate-[-30deg]">
+                       ?
+                     </div>
+                   </a>
+@@ -190,7 +190,7 @@ export default function Contact() {
+               <span className="text-xs font-bold text-green-400 uppercase tracking-widest">Available for hire</span>
+             </div>
+ 
+-            <div className="relative rounded-3xl p-8 md:p-10 border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl">
++            <div className="relative rounded-3xl p-8 md:p-10 border border-foreground/10 bg-background/40 backdrop-blur-xl shadow-2xl">
+               {status === "sent" ? (
+                 <motion.div
+                   initial={{ scale: 0.85, opacity: 0 }}
+@@ -200,13 +200,13 @@ export default function Contact() {
+                   <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6 border border-cyan-400/30 bg-cyan-400/10 text-cyan-400">
+                     <CheckCircle2 size={40} />
+                   </div>
+-                  <h3 className="font-display font-black text-3xl text-white mb-3">Message Sent!</h3>
+-                  <p className="text-sm mb-8 text-white/60">
++                  <h3 className="font-display font-black text-3xl text-foreground mb-3">Message Sent!</h3>
++                  <p className="text-sm mb-8 text-foreground/60">
+                     Thanks for reaching out. I&apos;ll get back to you within 24 hours.
+                   </p>
+                   <button
+                     onClick={() => { setStatus("idle"); setForm({ name: "", email: "", message: "" }); }}
+-                    className="px-6 py-3 rounded-full text-sm font-bold text-white transition-all hover:-translate-y-1 bg-white/5 border border-white/10"
++                    className="px-6 py-3 rounded-full text-sm font-bold text-foreground transition-all hover:-translate-y-1 bg-foreground/5 border border-foreground/10"
+                   >
+                     Send another message
+                   </button>
+@@ -216,7 +216,7 @@ export default function Contact() {
+                   <div className="grid sm:grid-cols-2 gap-6">
+                     {/* Name */}
+                     <div className="space-y-2 relative">
+-                      <label htmlFor="name" className="block text-[10px] font-black uppercase tracking-widest transition-colors duration-300" style={{ color: focusedField === "name" ? "#00f0ff" : "rgba(255,255,255,0.4)" }}>
++                      <label htmlFor="name" className="block text-[10px] font-black uppercase tracking-widest transition-colors duration-300" style={{ color: focusedField === "name" ? "var(--accent-cyan)" : "rgba(var(--foreground-rgb, 255,255,255), 0.4)" }}>
+                         Your Name
+                       </label>
+                       <input
+@@ -229,12 +229,12 @@ export default function Contact() {
+                         onFocus={() => setFocusedField("name")}
+                         onBlur={() => setFocusedField(null)}
+                         placeholder="Input Your Name"
+-                        className="w-full bg-transparent border-b border-white/10 px-0 py-3 text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-0 placeholder-white/20 transition-colors rounded-none"
++                        className="w-full bg-transparent border-b border-foreground/10 px-0 py-3 text-sm text-foreground focus:outline-none focus:border-cyan-400 focus:ring-0 placeholder-foreground/50 transition-colors rounded-none"
+                       />
+                     </div>
+                     {/* Email */}
+                     <div className="space-y-2 relative">
+-                      <label htmlFor="email" className="block text-[10px] font-black uppercase tracking-widest transition-colors duration-300" style={{ color: focusedField === "email" ? "#00f0ff" : "rgba(255,255,255,0.4)" }}>
++                      <label htmlFor="email" className="block text-[10px] font-black uppercase tracking-widest transition-colors duration-300" style={{ color: focusedField === "email" ? "var(--accent-cyan)" : "rgba(var(--foreground-rgb, 255,255,255), 0.4)" }}>
+                         Your Email
+                       </label>
+                       <input
+@@ -247,14 +247,14 @@ export default function Contact() {
+                         onFocus={() => setFocusedField("email")}
+                         onBlur={() => setFocusedField(null)}
+                         placeholder="Input Your Email"
+-                        className="w-full bg-transparent border-b border-white/10 px-0 py-3 text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-0 placeholder-white/20 transition-colors rounded-none"
++                        className="w-full bg-transparent border-b border-foreground/10 px-0 py-3 text-sm text-foreground focus:outline-none focus:border-cyan-400 focus:ring-0 placeholder-foreground/50 transition-colors rounded-none"
+                       />
+                     </div>
+                   </div>
+ 
+                   {/* Message */}
+                   <div className="space-y-2 relative mt-4">
+-                    <label htmlFor="message" className="block text-[10px] font-black uppercase tracking-widest transition-colors duration-300" style={{ color: focusedField === "message" ? "#00f0ff" : "rgba(255,255,255,0.4)" }}>
++                    <label htmlFor="message" className="block text-[10px] font-black uppercase tracking-widest transition-colors duration-300" style={{ color: focusedField === "message" ? "var(--accent-cyan)" : "rgba(var(--foreground-rgb, 255,255,255), 0.4)" }}>
+                       Message
+                     </label>
+                     <textarea
+@@ -267,13 +267,13 @@ export default function Contact() {
+                       onFocus={() => setFocusedField("message")}
+                       onBlur={() => setFocusedField(null)}
+                       placeholder="Input Your Message"
+-                      className="w-full bg-transparent border-b border-white/10 px-0 py-3 text-sm text-white focus:outline-none focus:border-cyan-400 focus:ring-0 placeholder-white/20 transition-colors resize-none rounded-none"
++                      className="w-full bg-transparent border-b border-foreground/10 px-0 py-3 text-sm text-foreground focus:outline-none focus:border-cyan-400 focus:ring-0 placeholder-foreground/50 transition-colors resize-none rounded-none"
+                     />
+                   </div>
+ 
+                   {/* Submit Button */}
+-                  <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
+-                    <p className="text-[10px] uppercase font-bold tracking-widest text-white/30 hidden sm:block">
++                  <div className="mt-8 pt-6 border-t border-foreground/5 flex items-center justify-between">
++                    <p className="text-[10px] uppercase font-bold tracking-widest text-foreground/30 hidden sm:block">
+                       Secure connection
+                     </p>
+                     <Magnet strength={15}>
+@@ -282,11 +282,11 @@ export default function Contact() {
+                         whileHover={{ scale: 1.05 }}
+                         whileTap={{ scale: 0.95 }}
+                         disabled={status === "loading"}
+-                        className="flex items-center gap-3 px-8 py-4 rounded-full font-bold text-white overflow-hidden group disabled:opacity-70 transition-shadow hover:shadow-[0_0_40px_rgba(0,240,255,0.4)] relative"
+-                        style={{ background: "linear-gradient(135deg, #00f0ff, #2563eb)" }}
++                        className="flex items-center gap-3 px-8 py-4 rounded-full font-bold text-foreground overflow-hidden group disabled:opacity-70 transition-shadow hover:shadow-[0_0_40px_rgba(0,240,255,0.4)] relative"
++                        style={{ background: "linear-gradient(135deg, var(--accent-cyan), #2563eb)" }}
+                       >
+                         {/* Shimmer on hover */}
+-                        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)" }} />
++                        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" style={{ background: "linear-gradient(90deg, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.2), transparent)" }} />
+                         
+                         {status === "loading" ? (
+                           <><Loader2 size={18} className="animate-spin" /> Transmitting</>
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 8a3db83..0bdd020 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -32,7 +32,7 @@ export default function Footer() {
+   }, []);
+ 
+   return (
+-    <footer className="relative w-full border-t border-white/10 bg-black/50 backdrop-blur-lg">
++    <footer className="relative w-full border-t border-foreground/10 bg-background/50 backdrop-blur-lg">
+       {/* Subtle top glow line */}
+       <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-cyan-500/20 to-transparent" />
+ 
+@@ -47,8 +47,8 @@ export default function Footer() {
+         >
+           
+           {/* Left: Branding & Time */}
+-          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 text-xs font-semibold tracking-widest uppercase text-white/50">
+-            <div className="flex items-center gap-1.5 transition-colors hover:text-white/80">
++          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 text-xs font-semibold tracking-widest uppercase text-foreground/50">
++            <div className="flex items-center gap-1.5 transition-colors hover:text-foreground/80">
+               <span>&copy; {new Date().getFullYear()}</span>
+               <span className="w-1 h-1 rounded-full bg-white/20 mx-2" />
+               <span>Built with <Heart size={12} className="inline text-pink-500 fill-pink-500 animate-pulse" /> by Han</span>
+@@ -69,7 +69,7 @@ export default function Footer() {
+                   whileInView={{ opacity: 1, y: 0 }}
+                   viewport={{ once: true }}
+                   transition={{ delay: 0.2 + (i * 0.1), duration: 0.5 }}
+-                  className="group flex items-center gap-2 text-xs font-semibold text-white/50 hover:text-white transition-colors"
++                  className="group flex items-center gap-2 text-xs font-semibold text-foreground/50 hover:text-foreground transition-colors"
+                 >
+                   <Icon size={14} className="group-hover:text-cyan-400 transition-colors" />
+                   <span className="uppercase tracking-widest">{link.label}</span>
+diff --git a/src/components/Hero.tsx b/src/components/Hero.tsx
+index 0221bc3..d4c09f4 100644
+--- a/src/components/Hero.tsx
++++ b/src/components/Hero.tsx
+@@ -10,6 +10,7 @@ import {
+   AnimatePresence,
+ } from "framer-motion";
+ import { ArrowDown, Mail, Download } from "lucide-react";
++import { useTheme } from "next-themes";
+ import Magnet from "./Magnet";
+ import Particles from "./Particles";
+ 
+@@ -50,12 +51,12 @@ function Marquee({ reverse = false }: { reverse?: boolean }) {
+             style={{
+               fontSize: "clamp(3.5rem, 10vw, 9rem)",
+               /* Alternating solid / outline style per word */
+-              color: word === "—" ? "rgba(255,255,255,0.2)" : "transparent",
++              color: word === "—" ? "rgba(var(--foreground-rgb, 255,255,255), 0.2)" : "transparent",
+               WebkitTextStroke:
+                 word === "—"
+                   ? "none"
+                   : i % 2 === 0
+-                  ? "1px rgba(255,255,255,0.18)"
++                  ? "1px rgba(var(--foreground-rgb, 255,255,255), 0.18)"
+                   : "1px rgba(0,240,255,0.35)",
+               textShadow:
+                 i % 2 !== 0 && word !== "—"
+@@ -96,7 +97,7 @@ function LiveClock() {
+ 
+   return (
+     <span className="font-mono text-xs tracking-widest tabular-nums"
+-      style={{ color: "rgba(255,255,255,0.35)" }}>
++      style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.35)" }}>
+       WIB {time}
+     </span>
+   );
+@@ -146,6 +147,7 @@ function MouseSpotlight() {
+    Hero
+ --------------------------------------------------------- */
+ export default function Hero() {
++  const { resolvedTheme } = useTheme();
+   const sectionRef = useRef<HTMLElement>(null);
+ 
+   // Scroll-driven exit
+@@ -172,7 +174,6 @@ export default function Hero() {
+       id="hero"
+       ref={sectionRef}
+       className="relative min-h-dvh flex flex-col overflow-hidden"
+-      style={{ background: "#060608" }}
+     >
+       {/* Global mouse spotlight */}
+       <MouseSpotlight />
+@@ -180,7 +181,7 @@ export default function Hero() {
+       {/* Interactive React Bits Particles Background */}
+       <div className="absolute inset-0 z-0 opacity-40">
+         <Particles
+-          particleColors={["#ffffff", "#00f0ff"]}
++          particleColors={resolvedTheme === 'light' ? ["#64748b", "#0284c7"] : ["var(--color-foreground)", "var(--accent-cyan)"]}
+           particleCount={200}
+           particleSpread={10}
+           speed={0.1}
+@@ -196,14 +197,16 @@ export default function Hero() {
+       <div className="noise absolute inset-0 pointer-events-none z-0 opacity-40" aria-hidden />
+ 
+       {/* Edge vignette */}
+-      <div
+-        className="absolute inset-0 pointer-events-none z-0"
+-        style={{
+-          background:
+-            "radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(6,6,8,0.92) 100%)",
+-        }}
+-        aria-hidden
+-      />
++      {resolvedTheme !== 'light' && (
++        <div
++          className="absolute inset-0 pointer-events-none z-0"
++          style={{
++            background:
++              "radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(6,6,8,0.92) 100%)",
++          }}
++          aria-hidden
++        />
++      )}
+ 
+       {/* Blue-edge glow */}
+       <div
+@@ -231,12 +234,12 @@ export default function Hero() {
+           >
+             <div
+               className="w-7 h-7 rounded-lg flex items-center justify-center"
+-              style={{ background: "linear-gradient(135deg, #00f0ff, #2563eb)" }}
++              style={{ background: "linear-gradient(135deg, var(--accent-cyan), #2563eb)" }}
+             >
+-              <span className="font-display font-black text-white text-xs">F</span>
++              <span className="font-display font-black text-foreground text-xs">F</span>
+             </div>
+             <span className="font-display font-bold text-sm tracking-wide"
+-              style={{ color: "rgba(255,255,255,0.7)" }}>
++              style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.7)" }}>
+               farhan.dev
+             </span>
+           </motion.div>
+@@ -266,26 +269,29 @@ export default function Hero() {
+         >
+           {/* Available badge */}
+           <motion.div variants={enter} transition={{ duration: 0.55 }}>
+-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase"
++            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase transition-colors"
+               style={{
+-                background: "rgba(0,240,255,0.07)",
+-                border: "1px solid rgba(0,240,255,0.3)",
+-                color: "#00f0ff",
++                background: resolvedTheme === 'light' ? "rgba(37,99,235,0.08)" : "rgba(0,240,255,0.07)",
++                border: resolvedTheme === 'light' ? "1px solid rgba(37,99,235,0.2)" : "1px solid rgba(0,240,255,0.3)",
++                color: resolvedTheme === 'light' ? "#2563eb" : "var(--accent-cyan)",
+               }}>
+-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
++              <span 
++                className="w-1.5 h-1.5 rounded-full animate-pulse" 
++                style={{ background: resolvedTheme === 'light' ? "#3b82f6" : "#22d3ee" }}
++              />
+               Available for work
+             </span>
+           </motion.div>
+ 
+           {/* Name */}
+           <motion.div variants={enter} transition={{ duration: 0.65 }}>
+-            <h1 className="font-display font-black leading-none tracking-tight"
+-              style={{ fontSize: "clamp(4rem, 12vw, 10rem)", color: "#ffffff" }}>
++            <h1 className="font-display font-black leading-none tracking-tight text-foreground"
++              style={{ fontSize: "clamp(4rem, 12vw, 10rem)" }}>
+               Farhan 
+               <br />
+               <span
+                 style={{
+-                  background: "linear-gradient(135deg, #00f0ff 0%, #2563eb 50%, #0ea5e9 100%)",
++                  background: "linear-gradient(135deg, var(--accent-cyan) 0%, #2563eb 50%, #0ea5e9 100%)",
+                   WebkitBackgroundClip: "text",
+                   WebkitTextFillColor: "transparent",
+                   backgroundClip: "text",
+@@ -301,7 +307,7 @@ export default function Hero() {
+             variants={enter}
+             transition={{ duration: 0.55 }}
+             className="font-display text-base md:text-lg tracking-[0.25em] uppercase font-medium"
+-            style={{ color: "rgba(255,255,255,0.35)" }}
++            style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.35)" }}
+           >
+             Frontend Developer &nbsp;·&nbsp; UI Enthusiast 
+           </motion.p>
+@@ -321,7 +327,7 @@ export default function Hero() {
+           >
+             <span 
+               className="text-[10px] font-bold tracking-[0.3em] uppercase transition-colors duration-300"
+-              style={{ color: "rgba(255,255,255,0.3)" }}
++              style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.3)" }}
+             >
+             </span>
+ 
+@@ -329,7 +335,7 @@ export default function Hero() {
+             <div className="relative w-14 h-14 rounded-full flex items-center justify-center">
+               {/* Outer dashed spinning ring that only spins on hover */}
+               <motion.div
+-                className="absolute inset-0 rounded-full border border-dashed border-white/20 group-hover:border-[#00f0ff]/60 transition-colors duration-500"
++                className={`absolute inset-0 rounded-full border border-dashed border-foreground/20 transition-colors duration-500 hover:border-transparent ${resolvedTheme === 'light' ? 'group-hover:border-[#2563eb]/60' : 'group-hover:border-[var(--accent-cyan)]/60'}`}
+                 variants={{
+                   idle: { rotate: 0 },
+                   hover: { rotate: 360, transition: { repeat: Infinity, duration: 8, ease: "linear" } }
+@@ -337,11 +343,11 @@ export default function Hero() {
+               />
+               
+               {/* Inner glowing core that appears on hover */}
+-              <div className="absolute inset-1 rounded-full bg-transparent group-hover:bg-[#00f0ff]/10 blur-md transition-colors duration-500" />
++              <div className={`absolute inset-1 rounded-full bg-transparent blur-md transition-colors duration-500 ${resolvedTheme === 'light' ? 'group-hover:bg-[#2563eb]/10' : 'group-hover:bg-[var(--accent-cyan)]/10'}`} />
+ 
+               {/* Bouncing Arrow inside */}
+               <motion.div 
+-                className="text-white/40 group-hover:text-[#00f0ff] z-10 transition-colors duration-300"
++                className={`text-foreground/40 z-10 transition-colors duration-300 ${resolvedTheme === 'light' ? 'group-hover:text-[#2563eb]' : 'group-hover:text-[var(--accent-cyan)]'}`}
+                 variants={{
+                   idle: { y: 0, opacity: 1 },
+                   hover: { 
+diff --git a/src/components/LoadingScreen.tsx b/src/components/LoadingScreen.tsx
+index b8506b8..aae52ab 100644
+--- a/src/components/LoadingScreen.tsx
++++ b/src/components/LoadingScreen.tsx
+@@ -46,15 +46,11 @@ function SplitWord({ word, lang }: SplitWordProps) {
+               delay: i * 0.022,
+               ease: [0.33, 1, 0.68, 1],
+             }}
+-            className="font-display font-black inline-block"
++            className="font-display font-black inline-block text-foreground"
+             style={{
+               fontSize: "clamp(2.8rem, 10vw, 7rem)",
+               lineHeight: 1.1,
+               letterSpacing: "-0.02em",
+-              background: "linear-gradient(135deg, #ffffff 0%, rgba(200,200,255,0.9) 100%)",
+-              WebkitBackgroundClip: "text",
+-              WebkitTextFillColor: "transparent",
+-              backgroundClip: "text",
+             }}
+           >
+             {char === " " ? "\u00A0" : char}
+@@ -63,11 +59,11 @@ function SplitWord({ word, lang }: SplitWordProps) {
+       </div>
+       <motion.span
+         initial={{ opacity: 0, y: 8 }}
+-        animate={{ opacity: 0.45 }}
++        animate={{ opacity: 0.6 }}
+         exit={{ opacity: 0 }}
+         transition={{ duration: 0.2, delay: chars.length * 0.022 }}
+-        className="text-xs tracking-[0.35em] uppercase"
+-        style={{ color: "rgba(160,180,255,0.7)", fontFamily: "inherit" }}
++        className="text-xs tracking-[0.35em] uppercase text-foreground"
++        style={{ fontFamily: "inherit" }}
+       >
+         {lang}
+       </motion.span>
+@@ -147,13 +143,13 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
+           exit={{ y: "-100%", borderBottomLeftRadius: "100%", borderBottomRightRadius: "100%" }}
+           transition={{ duration: 1.0, ease: [0.76, 0, 0.24, 1] }}
+           className="fixed inset-0 z-9999 flex flex-col items-center justify-center overflow-hidden origin-top"
+-          style={{ background: "#000000" }} // True black for max contrast during the slide-up reveal
++          style={{ background: "var(--bg-primary)" }} 
+         >
+           {/* Pure CSS Animated Mesh Gradient Background (Mobile Stable) */}
+           <div className="absolute inset-0 opacity-40 overflow-hidden pointer-events-none">
+             <motion.div
+               className="absolute -top-[20%] -left-[10%] w-[70vw] h-[70vw] rounded-full mix-blend-screen filter blur-[100px]"
+-              style={{ background: "#00f0ff" }}
++              style={{ background: "var(--accent-cyan)" }}
+               animate={{
+                 x: ["0%", "20%", "-10%", "0%"],
+                 y: ["0%", "10%", "-20%", "0%"],
+@@ -180,12 +176,12 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
+             />
+           </div>
+ 
+-          {/* Dark vignette overlay */}
++          {/* Dark/Light vignette overlay */}
+           <div
+             className="absolute inset-0 pointer-events-none"
+             style={{
+               background:
+-                "radial-gradient(ellipse at center, transparent 30%, rgba(5,5,8,0.85) 100%)",
++                "radial-gradient(ellipse at center, transparent 30%, var(--bg-primary) 100%)",
+             }}
+           />
+ 
+@@ -206,20 +202,20 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
+                   {/* Logo mark */}
+                   <div className="relative">
+                     <div className="w-20 h-20 rounded-2xl bg-linear-to-br from-cyan-400 to-violet-600 flex items-center justify-center shadow-2xl shadow-violet-500/30">
+-                      <span className="font-display font-black text-4xl text-white">F</span>
++                      <span className="font-display font-black text-4xl text-foreground">F</span>
+                     </div>
+                     {/* Spinning ring */}
+                     <div
+                       className="absolute -inset-2 rounded-3xl border-2 border-transparent animate-spin-slow"
+                       style={{
+                         background:
+-                          "linear-gradient(#050508, #050508) padding-box, linear-gradient(90deg, #00f0ff, #2563eb, #0ea5e9, #00f0ff) border-box",
++                          "linear-gradient(var(--bg-primary), var(--bg-primary)) padding-box, linear-gradient(90deg, var(--accent-cyan), #2563eb, #0ea5e9, var(--accent-cyan)) border-box",
+                       }}
+                     />
+                   </div>
+ 
+                   <div className="flex flex-col items-center gap-3">
+-                    <p className="text-sm tracking-[0.25em] relative uppercase text-white font-bold h-5 flex items-center justify-center w-full">
++                    <p className="text-sm tracking-[0.25em] relative uppercase text-foreground font-bold h-5 flex items-center justify-center w-full">
+                       <AnimatePresence mode="popLayout">
+                         <motion.span
+                           key={
+@@ -253,18 +249,18 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
+                     </p>
+ 
+                     {/* Progress bar */}
+-                    <div className="w-48 h-[2px] rounded-full bg-white/10 overflow-hidden">
++                    <div className="w-48 h-[2px] rounded-full bg-foreground/10 overflow-hidden">
+                       <motion.div
+                         className="h-full rounded-full"
+                         style={{
+                           width: `${progress}%`,
+                           background:
+-                            "linear-gradient(90deg, #00f0ff, #2563eb, #0ea5e9)",
++                            "linear-gradient(90deg, var(--accent-cyan), #2563eb, #0ea5e9)",
+                         }}
+                       />
+                     </div>
+ 
+-                    <p className="text-xs text-white/25 tabular-nums">
++                    <p className="text-xs text-foreground/25 tabular-nums">
+                       {Math.round(progress)}%
+                     </p>
+                   </div>
+diff --git a/src/components/Navbar.tsx b/src/components/Navbar.tsx
+index bf964ee..c6dda95 100644
+--- a/src/components/Navbar.tsx
++++ b/src/components/Navbar.tsx
+@@ -3,6 +3,7 @@
+ import { useState, useEffect, useCallback } from "react";
+ import { motion, AnimatePresence } from "framer-motion";
+ import { Menu, X, User, Clock, Wrench, LayoutGrid, Mail, Rocket, Download } from "lucide-react";
++import ThemeToggle from "@/components/ThemeToggle";
+ 
+ const navLinks = [
+   { label: "About",    href: "#about",    icon: User },
+@@ -17,7 +18,7 @@ const navLinks = [
+ --------------------------------------------------------- */
+ const liquidGlass = {
+   /* Main pill glass surface */
+-  background: "rgba(255,255,255,0.055)",
++  background: "rgba(var(--foreground-rgb, 255,255,255), 0.055)",
+   backdropFilter: "blur(28px) saturate(160%) brightness(1.08)",
+   WebkitBackdropFilter: "blur(28px) saturate(160%) brightness(1.08)",
+   /* Prismatic/iridescent edge: top highlight is brighter */
+@@ -25,22 +26,22 @@ const liquidGlass = {
+   backgroundClip: "padding-box",
+   /* Layered box shadows: inner highlight top + outer glow */
+   boxShadow: [
+-    "inset 0 1px 0 rgba(255,255,255,0.22)",   /* top inner shine */
+-    "inset 0 -1px 0 rgba(255,255,255,0.06)",   /* bottom inner */
+-    "inset 1px 0 0 rgba(255,255,255,0.1)",     /* left inner */
+-    "inset -1px 0 0 rgba(255,255,255,0.1)",    /* right inner */
++    "inset 0 1px 0 rgba(var(--foreground-rgb, 255,255,255), 0.22)",   /* top inner shine */
++    "inset 0 -1px 0 rgba(var(--foreground-rgb, 255,255,255), 0.06)",   /* bottom inner */
++    "inset 1px 0 0 rgba(var(--foreground-rgb, 255,255,255), 0.1)",     /* left inner */
++    "inset -1px 0 0 rgba(var(--foreground-rgb, 255,255,255), 0.1)",    /* right inner */
+     "0 8px 32px rgba(0,0,0,0.35)",             /* depth shadow */
+-    "0 0 0 1px rgba(255,255,255,0.09)",        /* outer border */
++    "0 0 0 1px rgba(var(--foreground-rgb, 255,255,255), 0.09)",        /* outer border */
+     "0 0 24px rgba(0,240,255,0.06)",           /* subtle cyan glow */
+   ].join(", "),
+ } as React.CSSProperties;
+ 
+ /* Active link pill */
+ const activePillStyle: React.CSSProperties = {
+-  background: "rgba(255,255,255,0.12)",
++  background: "rgba(var(--foreground-rgb, 255,255,255), 0.12)",
+   backdropFilter: "blur(8px)",
+   WebkitBackdropFilter: "blur(8px)",
+-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), 0 0 8px rgba(0,240,255,0.15)",
++  boxShadow: "inset 0 1px 0 rgba(var(--foreground-rgb, 255,255,255), 0.2), 0 0 8px rgba(0,240,255,0.15)",
+ };
+ 
+ /* ---------------------------------------------------------
+@@ -76,7 +77,7 @@ function NavItem({ link, isActive, onClick }: { link: typeof navLinks[0]; isActi
+       <button
+         onClick={onClick}
+         className="relative p-3 rounded-full flex items-center justify-center transition-colors duration-200"
+-        style={{ color: isActive ? "#ffffff" : "rgba(255,255,255,0.55)" }}
++        style={{ color: isActive ? "var(--color-foreground)" : "rgba(var(--foreground-rgb, 255,255,255), 0.55)" }}
+         aria-label={link.label}
+       >
+         {isActive && (
+@@ -102,11 +103,11 @@ function NavItem({ link, isActive, onClick }: { link: typeof navLinks[0]; isActi
+           >
+             {/* Tooltip Body */}
+             <div
+-              className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-white whitespace-nowrap"
++              className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-foreground whitespace-nowrap"
+               style={{
+-                background: "rgba(30,30,35,0.9)",
++                background: "rgba(var(--background-rgb, 30,30,35), 0.9)",
+                 backdropFilter: "blur(12px)",
+-                border: "1px solid rgba(255,255,255,0.12)",
++                border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.12)",
+                 boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+               }}
+             >
+@@ -116,9 +117,9 @@ function NavItem({ link, isActive, onClick }: { link: typeof navLinks[0]; isActi
+             <div
+               className="w-2.5 h-2.5 rotate-45 -mt-1.5 relative z-0"
+               style={{
+-                background: "rgba(30,30,35,0.9)",
+-                borderBottom: "1px solid rgba(255,255,255,0.15)",
+-                borderRight: "1px solid rgba(255,255,255,0.15)",
++                background: "rgba(var(--background-rgb, 30,30,35), 0.9)",
++                borderBottom: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.15)",
++                borderRight: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.15)",
+               }}
+             />
+           </motion.div>
+@@ -194,10 +195,13 @@ export default function Navbar() {
+           ))}
+ 
+           {/* Divider */}
+-          <div className="w-px h-6 mx-2 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
++          <div className="w-px h-6 mx-2 rounded-full" style={{ background: "rgba(var(--foreground-rgb, 255,255,255), 0.15)" }} />
+ 
+           {/* CTA Actions */}
+           <div className="flex items-center gap-1.5">
++            {/* Theme Toggle */}
++            <ThemeToggle />
++
+             {/* Resume CTA */}
+             <motion.div
+               className="relative flex items-center justify-center"
+@@ -207,7 +211,7 @@ export default function Navbar() {
+               <motion.a
+                 href="/cv.pdf"
+                 whileTap={{ scale: 0.96 }}
+-                className="p-3 rounded-full text-white relative overflow-hidden transition-colors hover:bg-white/10"
++                className="p-3 rounded-full text-foreground relative overflow-hidden transition-colors hover:bg-foreground/10"
+                 aria-label="Download Resume"
+               >
+                 <Download size={18} className="relative z-10" />
+@@ -223,12 +227,12 @@ export default function Navbar() {
+                 className="absolute bottom-full mb-4 flex flex-col items-center pointer-events-none z-50"
+               >
+                 <div
+-                  className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-white whitespace-nowrap"
++                  className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-foreground whitespace-nowrap"
+                   style={{
+-                    background: "rgba(30,30,35,0.9)",
++                    background: "var(--bg-primary)",
+                     backdropFilter: "blur(12px)",
+-                    border: "1px solid rgba(255,255,255,0.12)",
+-                    boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
++                    border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.12)",
++                    boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+                   }}
+                 >
+                   Resume
+@@ -236,9 +240,9 @@ export default function Navbar() {
+                 <div
+                   className="w-2.5 h-2.5 rotate-45 -mt-1.5 relative z-0"
+                   style={{
+-                    background: "rgba(30,30,35,0.9)",
+-                    borderBottom: "1px solid rgba(255,255,255,0.15)",
+-                    borderRight: "1px solid rgba(255,255,255,0.15)",
++                    background: "var(--bg-primary)",
++                    borderBottom: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.15)",
++                    borderRight: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.15)",
+                   }}
+                 />
+               </motion.div>
+@@ -253,18 +257,18 @@ export default function Navbar() {
+               <motion.button
+                 whileTap={{ scale: 0.96 }}
+                 onClick={() => scrollTo("#contact")}
+-                className="p-3 rounded-full text-white relative overflow-hidden"
++                className="p-3 rounded-full text-foreground relative overflow-hidden"
+                 aria-label="Hire Me"
+                 style={{
+-                  background: "linear-gradient(135deg, #00f0ff, #2563eb)",
+-                  boxShadow: "0 0 14px rgba(0,240,255,0.3), inset 0 1px 0 rgba(255,255,255,0.25)",
++                  background: "linear-gradient(135deg, var(--accent-cyan), #2563eb)",
++                  boxShadow: "0 0 14px rgba(0,240,255,0.3), inset 0 1px 0 rgba(var(--foreground-rgb, 255,255,255), 0.25)",
+                 }}
+               >
+                 {/* Shine sweep on button */}
+                 <motion.div
+                   className="absolute inset-0 rounded-full opacity-0 hover:opacity-100"
+                   style={{
+-                    background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
++                    background: "linear-gradient(105deg, transparent 40%, rgba(var(--foreground-rgb, 255,255,255), 0.25) 50%, transparent 60%)",
+                   }}
+                   animate={{ x: ["-100%", "200%"] }}
+                   transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 2 }}
+@@ -282,11 +286,11 @@ export default function Navbar() {
+                 className="absolute bottom-full mb-4 flex flex-col items-center pointer-events-none z-50"
+               >
+                 <div
+-                  className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-white whitespace-nowrap"
++                  className="px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide text-foreground whitespace-nowrap"
+                   style={{
+-                    background: "rgba(30,30,35,0.9)",
++                    background: "rgba(var(--background-rgb, 30,30,35), 0.9)",
+                     backdropFilter: "blur(12px)",
+-                    border: "1px solid rgba(255,255,255,0.12)",
++                    border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.12)",
+                     boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+                   }}
+                 >
+@@ -295,9 +299,9 @@ export default function Navbar() {
+                 <div
+                   className="w-2.5 h-2.5 rotate-45 -mt-1.5 relative z-0"
+                   style={{
+-                    background: "rgba(30,30,35,0.9)",
+-                    borderBottom: "1px solid rgba(255,255,255,0.15)",
+-                    borderRight: "1px solid rgba(255,255,255,0.15)",
++                    background: "rgba(var(--background-rgb, 30,30,35), 0.9)",
++                    borderBottom: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.15)",
++                    borderRight: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.15)",
+                   }}
+                 />
+               </motion.div>
+diff --git a/src/components/ProfileCard.tsx b/src/components/ProfileCard.tsx
+index fc1df1d..4a69577 100644
+--- a/src/components/ProfileCard.tsx
++++ b/src/components/ProfileCard.tsx
+@@ -15,6 +15,7 @@ import { useRef, useCallback, MouseEvent } from "react";
+ import { motion } from "framer-motion";
+ import { Github, Linkedin, Instagram, Mail } from "lucide-react";
+ import Image from "next/image";
++import { useTheme } from "next-themes";
+ 
+ interface ProfileCardProps {
+   name?: string;
+@@ -61,7 +62,7 @@ export default function ProfileCard({
+       // Glare position
+       const glareX = (x / rect.width) * 100;
+       const glareY = (y / rect.height) * 100;
+-      glare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.12) 0%, transparent 65%)`;
++      glare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(var(--foreground-rgb, 255,255,255), 0.12) 0%, transparent 65%)`;
+       glare.style.opacity = "1";
+     },
+     []
+@@ -82,6 +83,11 @@ export default function ProfileCard({
+     { icon: Mail,      label: "Email",     href: emailUrl },
+   ];
+ 
++  /* ---------------------------------------------------------
++     Light & dark mode check
++  --------------------------------------------------------- */
++  const { resolvedTheme } = useTheme();
++
+   return (
+     <div
+       ref={cardRef}
+@@ -103,9 +109,9 @@ export default function ProfileCard({
+       <div
+         className="relative rounded-[32px] overflow-hidden"
+         style={{
+-          background: "linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)",
+-          border: "1px solid rgba(255,255,255,0.08)",
+-          boxShadow: "0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)",
++          background: "linear-gradient(145deg, rgba(var(--foreground-rgb, 255,255,255), 0.05) 0%, rgba(var(--foreground-rgb, 255,255,255), 0.01) 100%)",
++          border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.08)",
++          boxShadow: "0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(var(--foreground-rgb, 255,255,255), 0.08)",
+         }}
+       >
+         {/* Glare overlay */}
+@@ -120,7 +126,7 @@ export default function ProfileCard({
+         <div
+           className="relative h-28 w-full"
+           style={{
+-            background: "linear-gradient(135deg, #0c0c18 0%, #0a0a14 100%)",
++            background: "linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%)",
+           }}
+         >
+           {/* Grid lines texture */}
+@@ -156,21 +162,21 @@ export default function ProfileCard({
+               <div
+                 className="relative w-24 h-24 rounded-full overflow-hidden"
+                 style={{
+-                  border: "2px solid rgba(255,255,255,0.08)",
++                  border: "2px solid rgba(var(--foreground-rgb, 255,255,255), 0.08)",
+                 }}
+               >
+                 <Image
+-                  src="/images/ProfilePicture.webp"
++                  src={resolvedTheme === 'light' ? "/images/ProfilePictureLight.webp" : "/images/ProfilePicture.webp"}
+                   alt="Farhan Zuhdi"
+                   fill
+                   unoptimized
+-                  className="object-cover object-center"
++                  className="object-cover object-center pointer-events-none"
+                   priority
+                 />
+                 {/* Gloss */}
+                 <div
+                   className="absolute inset-0 pointer-events-none rounded-full"
+-                  style={{ background: "linear-gradient(145deg, rgba(255,255,255,0.08) 0%, transparent 60%)" }}
++                  style={{ background: "linear-gradient(145deg, rgba(var(--foreground-rgb, 255,255,255), 0.08) 0%, transparent 60%)" }}
+                 />
+               </div>
+ 
+@@ -182,11 +188,11 @@ export default function ProfileCard({
+ 
+             {/* "Open to Work" badge (top-right of the body section) */}
+             <div
+-              className="mb-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase"
++              className={`mb-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase transition-colors`}
+               style={{
+-                background: "rgba(0,240,255,0.1)",
+-                border: "1px solid rgba(0,240,255,0.25)",
+-                color: "#00f0ff",
++                background: resolvedTheme === 'light' ? "rgba(37,99,235,0.1)" : "rgba(0,240,255,0.1)",
++                border: resolvedTheme === 'light' ? "1px solid rgba(37,99,235,0.3)" : "1px solid rgba(0,240,255,0.25)",
++                color: resolvedTheme === 'light' ? "#2563eb" : "#00f0ff",
+               }}
+             >
+               Open to Work
+@@ -194,25 +200,25 @@ export default function ProfileCard({
+           </div>
+ 
+           {/* Name + Title */}
+-          <h3 className="text-xl font-display font-bold text-white leading-tight mb-0.5">
++          <h3 className="text-xl font-display font-bold text-foreground leading-tight mb-0.5">
+             {name}
+           </h3>
+           <p
+             className="text-xs font-bold tracking-widest uppercase mb-4"
+-            style={{ color: "#00f0ff" }}
++            style={{ color: resolvedTheme === 'light' ? "var(--foreground-rgb)" : "#00f0ff" }}
+           >
+             {title}
+           </p>
+ 
+           {/* Bio */}
+-          <p className="text-sm leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.45)" }}>
++          <p className="text-sm leading-relaxed mb-6" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.45)" }}>
+             {bio}
+           </p>
+ 
+           {/* Divider */}
+           <div
+             className="h-px w-full mb-6"
+-            style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)" }}
++            style={{ background: "linear-gradient(90deg, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.08), transparent)" }}
+           />
+ 
+           {/* Social Row */}
+@@ -226,19 +232,21 @@ export default function ProfileCard({
+                 aria-label={label}
+                 whileHover={{ scale: 1.15, y: -3 }}
+                 whileTap={{ scale: 0.9 }}
+-                className="w-10 h-10 rounded-full flex items-center justify-center text-white/50 transition-colors"
++                className="w-10 h-10 rounded-full flex items-center justify-center text-foreground/50 transition-colors"
+                 style={{
+-                  background: "rgba(255,255,255,0.04)",
+-                  border: "1px solid rgba(255,255,255,0.08)",
++                  background: "rgba(var(--foreground-rgb, 255,255,255), 0.04)",
++                  border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.08)",
+                 }}
+                 onMouseEnter={(e) => {
+-                  (e.currentTarget as HTMLElement).style.color = "#00f0ff";
+-                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,240,255,0.4)";
+-                  (e.currentTarget as HTMLElement).style.boxShadow = "0 0 14px rgba(0,240,255,0.2)";
++                  (e.currentTarget as HTMLElement).style.color = resolvedTheme === 'light' ? "#2563eb" : "#00f0ff";
++                  (e.currentTarget as HTMLElement).style.borderColor = resolvedTheme === 'light' ? "rgba(37,99,235,0.4)" : "rgba(0,240,255,0.4)";
++                  (e.currentTarget as HTMLElement).style.background = resolvedTheme === 'light' ? "rgba(37,99,235,0.05)" : "rgba(0,240,255,0.05)";
++                  (e.currentTarget as HTMLElement).style.boxShadow = resolvedTheme === 'light' ? "0 0 14px rgba(37,99,235,0.2)" : "0 0 14px rgba(0,240,255,0.2)";
+                 }}
+                 onMouseLeave={(e) => {
+-                  (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.5)";
+-                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)";
++                  (e.currentTarget as HTMLElement).style.color = "rgba(var(--foreground-rgb, 255,255,255), 0.5)";
++                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(var(--foreground-rgb, 255,255,255), 0.08)";
++                  (e.currentTarget as HTMLElement).style.background = "rgba(var(--foreground-rgb, 255,255,255), 0.04)";
+                   (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                 }}
+               >
+@@ -253,17 +261,17 @@ export default function ProfileCard({
+             onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }}
+             whileHover={{ scale: 1.03 }}
+             whileTap={{ scale: 0.97 }}
+-            className="block w-full text-center py-3 rounded-xl text-sm font-bold text-white relative overflow-hidden"
++            className="block w-full text-center py-3 rounded-xl text-sm font-bold text-foreground relative overflow-hidden"
+             style={{
+               background: "linear-gradient(135deg, rgba(0,240,255,0.15), rgba(37,99,235,0.15))",
+-              border: "1px solid rgba(255,255,255,0.1)",
++              border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.1)",
+             }}
+           >
+             {/* Shimmer sweep */}
+             <motion.span
+               className="absolute inset-0 pointer-events-none"
+               style={{
+-                background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%)",
++                background: "linear-gradient(105deg, transparent 40%, rgba(var(--foreground-rgb, 255,255,255), 0.1) 50%, transparent 60%)",
+               }}
+               animate={{ x: ["-100%", "200%"] }}
+               transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 2.5 }}
+diff --git a/src/components/Projects.tsx b/src/components/Projects.tsx
+index e158aeb..c43686b 100644
+--- a/src/components/Projects.tsx
++++ b/src/components/Projects.tsx
+@@ -54,7 +54,7 @@ type Project = {
+    Accent palette — cycles through these for visual variety
+ --------------------------------------------------------- */
+ const ACCENTS = [
+-  { color: "#00f0ff", glow: "rgba(0,240,255,0.12)" },
++  { color: "var(--accent-cyan)", glow: "rgba(0,240,255,0.12)" },
+   { color: "#3b82f6", glow: "rgba(59,130,246,0.12)" },
+   { color: "#0ea5e9", glow: "rgba(14,165,233,0.12)" },
+   { color: "#2563eb", glow: "rgba(37,99,235,0.12)" },
+@@ -107,7 +107,7 @@ function useTilt() {
+     const rx = ((y - r.height / 2) / r.height) * -8;
+     const ry = ((x - r.width  / 2) / r.width ) *  8;
+     card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.02,1.02,1.02)`;
+-    glare.style.background = `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(255,255,255,0.1) 0%, transparent 65%)`;
++    glare.style.background = `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(var(--foreground-rgb, 255,255,255), 0.1) 0%, transparent 65%)`;
+     glare.style.opacity = "1";
+   }, []);
+ 
+@@ -129,27 +129,27 @@ function SkeletonCard() {
+   return (
+     <div
+       className="h-64 rounded-2xl overflow-hidden relative"
+-      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
++      style={{ background: "rgba(var(--foreground-rgb, 255,255,255), 0.03)", border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.06)" }}
+     >
+       <div className="absolute inset-0 overflow-hidden">
+         <motion.div
+           className="absolute inset-0"
+-          style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.04) 50%, transparent 60%)" }}
++          style={{ background: "linear-gradient(105deg, transparent 40%, rgba(var(--foreground-rgb, 255,255,255), 0.04) 50%, transparent 60%)" }}
+           animate={{ x: ["-100%", "200%"] }}
+           transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 0.5 }}
+         />
+       </div>
+       <div className="p-6 space-y-3">
+-        <div className="h-2 w-16 rounded-full bg-white/5" />
+-        <div className="h-5 w-3/4 rounded-full bg-white/5" />
++        <div className="h-2 w-16 rounded-full bg-foreground/5" />
++        <div className="h-5 w-3/4 rounded-full bg-foreground/5" />
+         <div className="space-y-2 pt-1">
+-          <div className="h-3 w-full rounded-full bg-white/3" />
+-          <div className="h-3 w-5/6 rounded-full bg-white/3" />
+-          <div className="h-3 w-4/6 rounded-full bg-white/3" />
++          <div className="h-3 w-full rounded-full bg-foreground/3" />
++          <div className="h-3 w-5/6 rounded-full bg-foreground/3" />
++          <div className="h-3 w-4/6 rounded-full bg-foreground/3" />
+         </div>
+         <div className="flex gap-2 pt-2">
+           {[48, 64, 40].map((w, i) => (
+-            <div key={i} className="h-5 rounded-full bg-white/3" style={{ width: w }} />
++            <div key={i} className="h-5 rounded-full bg-foreground/3" style={{ width: w }} />
+           ))}
+         </div>
+       </div>
+@@ -189,7 +189,7 @@ function FeaturedCard({ project }: { project: Project }) {
+         <div
+           className="relative min-h-[300px] md:min-h-[360px] flex flex-col md:flex-row items-stretch overflow-hidden"
+           style={{
+-            background: "rgba(8,8,16,0.94)",
++            background: "rgba(var(--background-rgb, 8,8,16), 0.94)",
+             border: `1px solid ${project.accent}22`,
+             boxShadow: `0 40px 80px rgba(0,0,0,0.7), 0 0 60px ${project.glow}`,
+           }}
+@@ -236,22 +236,22 @@ function FeaturedCard({ project }: { project: Project }) {
+                   ? Top Project
+                 </span>
+                 {project.stars > 0 && (
+-                  <span className="flex items-center gap-1 text-xs font-semibold" style={{ color: "rgba(255,255,255,0.3)" }}>
++                  <span className="flex items-center gap-1 text-xs font-semibold" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.3)" }}>
+                     <Star size={12} className="fill-current" style={{ color: "#fbbf24" }} />
+                     {project.stars}
+                   </span>
+                 )}
+                 {project.language && (
+-                  <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.3)" }}>
++                  <span className="text-xs font-semibold" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.6)" }}>
+                     {project.language}
+                   </span>
+                 )}
+               </div>
+ 
+-              <h3 className="font-display font-black text-3xl md:text-4xl leading-tight text-white mb-4 capitalize" style={{ textShadow: `0 0 40px ${project.accent}40` }}>
++              <h3 className="font-display font-black text-3xl md:text-4xl leading-tight text-foreground mb-4 capitalize" style={{ textShadow: `0 0 40px ${project.accent}40` }}>
+                 {project.title}
+               </h3>
+-              <p className="text-sm leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
++              <p className="text-sm leading-relaxed mb-6" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.8)" }}>
+                 {project.description}
+               </p>
+ 
+@@ -269,7 +269,7 @@ function FeaturedCard({ project }: { project: Project }) {
+               {project.live && (
+                 <motion.a href={project.live} target="_blank" rel="noopener noreferrer"
+                   whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white"
++                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-foreground"
+                   style={{ background: `linear-gradient(135deg, ${project.accent}cc, #2563eb)` }}>
+                   <ExternalLink size={14} /> Live Demo <ArrowUpRight size={14} />
+                 </motion.a>
+@@ -277,7 +277,7 @@ function FeaturedCard({ project }: { project: Project }) {
+               <motion.a href={project.github} target="_blank" rel="noopener noreferrer"
+                 whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold"
+-                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}>
++                style={{ background: "rgba(var(--foreground-rgb, 255,255,255), 0.05)", border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.1)", color: "rgba(var(--foreground-rgb, 255,255,255), 0.7)" }}>
+                 <Github size={14} /> View Code
+               </motion.a>
+             </div>
+@@ -322,8 +322,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
+         <div
+           className="relative h-full flex flex-col p-6 rounded-2xl"
+           style={{
+-            background: "rgba(9,9,18,0.9)",
+-            border: `1px solid ${hovered ? project.accent + "30" : "rgba(255,255,255,0.07)"}`,
++            background: "rgba(var(--background-rgb, 9,9,18), 0.9)",
++            border: `1px solid ${hovered ? project.accent + "30" : "rgba(var(--foreground-rgb, 255,255,255), 0.07)"}`,
+             boxShadow: hovered ? `0 20px 50px rgba(0,0,0,0.5), 0 0 30px ${project.glow}` : "0 10px 30px rgba(0,0,0,0.3)",
+             transition: "border-color 0.3s, box-shadow 0.3s",
+           }}
+@@ -344,30 +344,30 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
+             </span>
+             <div className="flex items-center gap-2">
+               {project.stars > 0 && (
+-                <span className="flex items-center gap-1 text-[10px] font-semibold" style={{ color: "rgba(255,255,255,0.25)" }}>
++                <span className="flex items-center gap-1 text-[10px] font-semibold" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.25)" }}>
+                   <Star size={10} style={{ fill: "#fbbf24", color: "#fbbf24" }} /> {project.stars}
+                 </span>
+               )}
+               {project.language && (
+-                <span className="text-[10px] font-semibold" style={{ color: "rgba(255,255,255,0.2)" }}>
++                <span className="text-[10px] font-semibold" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.2)" }}>
+                   {project.language}
+                 </span>
+               )}
+             </div>
+           </div>
+ 
+-          <h3 className="font-display font-bold text-base leading-tight mb-3 capitalize transition-colors duration-300" style={{ color: hovered ? project.accent : "#ffffff" }}>
++          <h3 className="font-display font-bold text-base leading-tight mb-3 capitalize transition-colors duration-300" style={{ color: hovered ? project.accent : "var(--color-foreground)" }}>
+             {project.title}
+           </h3>
+ 
+-          <p className="text-sm leading-relaxed flex-1 mb-4 line-clamp-3" style={{ color: "rgba(255,255,255,0.38)" }}>
++          <p className="text-sm leading-relaxed flex-1 mb-4 line-clamp-3" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.38)" }}>
+             {project.description}
+           </p>
+ 
+           <div className="flex flex-wrap gap-1.5 mb-4">
+             {project.techs.slice(0, 4).map((t) => (
+               <span key={t} className="text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize"
+-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.38)" }}>
++                style={{ background: "rgba(var(--foreground-rgb, 255,255,255), 0.04)", border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.07)", color: "rgba(var(--foreground-rgb, 255,255,255), 0.38)" }}>
+                 {t}
+               </span>
+             ))}
+@@ -376,14 +376,14 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
+           <div className="flex items-center gap-3 relative z-10">
+             <a href={project.github} target="_blank" rel="noopener noreferrer"
+               className="flex items-center gap-1.5 text-xs font-semibold transition-colors duration-200"
+-              style={{ color: hovered ? project.accent : "rgba(255,255,255,0.3)" }}
++              style={{ color: hovered ? project.accent : "rgba(var(--foreground-rgb, 255,255,255), 0.3)" }}
+               onClick={(e) => e.stopPropagation()}>
+               <Github size={12} /> Code
+             </a>
+             {project.live && (
+               <a href={project.live} target="_blank" rel="noopener noreferrer"
+                 className="flex items-center gap-1.5 text-xs font-semibold transition-colors duration-200"
+-                style={{ color: hovered ? project.accent : "rgba(255,255,255,0.3)" }}
++                style={{ color: hovered ? project.accent : "rgba(var(--foreground-rgb, 255,255,255), 0.3)" }}
+                 onClick={(e) => e.stopPropagation()}>
+                 <ExternalLink size={12} /> Demo
+               </a>
+@@ -444,7 +444,7 @@ export default function Projects() {
+         <motion.div className="absolute rounded-full" style={{ width: 600, height: 600, left: "-10%", top: "5%", background: "radial-gradient(circle, rgba(0,240,255,0.05) 0%, transparent 70%)", filter: "blur(50px)" }} animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ repeat: Infinity, duration: 18, ease: "easeInOut" }} />
+         <motion.div className="absolute rounded-full" style={{ width: 500, height: 500, right: "-8%", bottom: "15%", background: "radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%)", filter: "blur(40px)" }} animate={{ x: [0, -30, 0], y: [0, 40, 0] }} transition={{ repeat: Infinity, duration: 22, ease: "easeInOut" }} />
+       </div>
+-      <div aria-hidden className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)" }} />
++      <div aria-hidden className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06), transparent)" }} />
+ 
+       <div className="max-w-6xl mx-auto px-6 relative z-10">
+ 
+@@ -453,13 +453,13 @@ export default function Projects() {
+           <motion.span initial={{ opacity: 0, letterSpacing: "0.8em" }} whileInView={{ opacity: 1, letterSpacing: "0.4em" }} viewport={{ once: true }} transition={{ duration: 0.9 }} className="inline-block text-xs font-black uppercase mb-4" style={{ color: "#0ea5e9" }}>
+             — What I&apos;ve Built
+           </motion.span>
+-          <motion.h2 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-white mb-4">
++          <motion.h2 initial={{ opacity: 0, y: 40, filter: "blur(12px)" }} whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }} className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-foreground mb-4">
+             My{" "}
+-            <span style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 55%, #00f0ff 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
++            <span style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 55%, var(--accent-cyan) 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+               Projects
+             </span>
+           </motion.h2>
+-          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3 }} className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>
++          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3 }} className="text-sm" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.3)" }}>
+             Pulled live from GitHub. Hover the cards to explore.
+           </motion.p>
+         </div>
+@@ -468,7 +468,7 @@ export default function Projects() {
+         {error && (
+           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-20">
+             <p className="text-sm mb-4" style={{ color: "rgba(255,100,100,0.8)" }}>Failed to load projects: {error}</p>
+-            <button onClick={fetchProjects} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
++            <button onClick={fetchProjects} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold" style={{ background: "rgba(var(--foreground-rgb, 255,255,255), 0.05)", border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.1)", color: "rgba(var(--foreground-rgb, 255,255,255), 0.6)" }}>
+               <RefreshCw size={14} /> Retry
+             </button>
+           </motion.div>
+@@ -504,7 +504,7 @@ export default function Projects() {
+         {/* Empty state */}
+         {!loading && !error && projects.length === 0 && (
+           <div className="text-center py-20">
+-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>No public repositories found.</p>
++            <p className="text-sm" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.3)" }}>No public repositories found.</p>
+           </div>
+         )}
+ 
+@@ -517,9 +517,9 @@ export default function Projects() {
+             whileHover={{ scale: 1.04 }}
+             whileTap={{ scale: 0.97 }}
+             className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full text-sm font-bold relative overflow-hidden"
+-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}
++            style={{ background: "rgba(var(--foreground-rgb, 255,255,255), 0.04)", border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.1)", color: "rgba(var(--foreground-rgb, 255,255,255), 0.7)" }}
+           >
+-            <motion.span className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.07) 50%, transparent 60%)" }} animate={{ x: ["-100%", "200%"] }} transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }} />
++            <motion.span className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 40%, rgba(var(--foreground-rgb, 255,255,255), 0.07) 50%, transparent 60%)" }} animate={{ x: ["-100%", "200%"] }} transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }} />
+             <Github size={16} />
+             <span className="relative z-10">View All Projects on GitHub</span>
+             <ArrowUpRight size={14} className="relative z-10" />
+diff --git a/src/components/Skills.tsx b/src/components/Skills.tsx
+index 8e63d3f..d01adab 100644
+--- a/src/components/Skills.tsx
++++ b/src/components/Skills.tsx
+@@ -39,7 +39,7 @@ type Tech = {
+ /** Row 1 */
+ const row1: Tech[] = [
+   { name: "React",      logo: cdn("react"),                         color: "#61DAFB", desc: "UI Library" },
+-  { name: "Next.js",    logo: cdn("nextjs", "original"),            color: "#ffffff", desc: "React Framework" },
++  { name: "Next.js",    logo: cdn("nextjs", "original"),            color: "var(--color-foreground)", desc: "React Framework" },
+   { name: "TypeScript", logo: cdn("typescript"),                    color: "#3178C6", desc: "Type Safety" },
+   { name: "JavaScript", logo: cdn("javascript"),                    color: "#F7DF1E", desc: "Core Language" },
+   { name: "Tailwind",   logo: cdn("tailwindcss", "original-wordmark"), color: "#38BDF8", desc: "Utility CSS" },
+@@ -52,7 +52,7 @@ const row1: Tech[] = [
+ const row2: Tech[] = [
+   { name: "Node.js",    logo: cdn("nodejs"),                        color: "#339933", desc: "Backend Runtime" },
+   { name: "Git",        logo: cdn("git"),                           color: "#F05032", desc: "Version Control" },
+-  { name: "GitHub",     logo: cdn("github"),                        color: "#ffffff", desc: "Code Hosting" },
++  { name: "GitHub",     logo: cdn("github"),                        color: "var(--color-foreground)", desc: "Code Hosting" },
+   { name: "VS Code",    logo: cdn("vscode", "plain"),               color: "#007ACC", desc: "Code Editor" },
+   { name: "Angular",    logo: cdn("angularjs", "original"),         color: "#DD0031", desc: "Frontend Framework" },
+ ];
+@@ -157,9 +157,9 @@ function MarqueeRow() {
+       >
+         {/* Side fades */}
+         <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-32 z-10"
+-          style={{ background: "linear-gradient(to right, #050509, transparent)" }} />
++          style={{ background: "linear-gradient(to right, var(--bg-primary), transparent)" }} />
+         <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-32 z-10"
+-          style={{ background: "linear-gradient(to left, #050509, transparent)" }} />
++          style={{ background: "linear-gradient(to left, var(--bg-primary), transparent)" }} />
+ 
+         <div
+           ref={trackRef}
+@@ -193,12 +193,12 @@ function MarqueeRow() {
+                   <div
+                     className="px-3 py-2 rounded-xl text-center whitespace-nowrap"
+                     style={{
+-                      background: "rgba(9,9,16,0.95)",
++                      background: "rgba(var(--background-rgb, 9,9,16), 0.95)",
+                       border: `1px solid ${tech.color}40`,
+                       boxShadow: `0 8px 32px rgba(0,0,0,0.6), 0 0 20px ${tech.color}20`,
+                     }}
+                   >
+-                    <p className="text-xs font-black text-white leading-tight">{tech.name}</p>
++                    <p className="text-xs font-black text-foreground leading-tight">{tech.name}</p>
+                     <p className="text-[10px] font-semibold mt-0.5" style={{ color: tech.color }}>
+                       {tech.desc}
+                     </p>
+@@ -252,7 +252,7 @@ function SkillCard({ skill, index }: { skill: FeaturedSkill; index: number }) {
+     const rx = ((y - r.height / 2) / r.height) * -10;
+     const ry = ((x - r.width  / 2) / r.width ) *  10;
+     card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.04,1.04,1.04)`;
+-    glare.style.background = `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(255,255,255,0.09) 0%, transparent 65%)`;
++    glare.style.background = `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(var(--foreground-rgb, 255,255,255), 0.09) 0%, transparent 65%)`;
+     glare.style.opacity = "1";
+   }, []);
+ 
+@@ -289,9 +289,9 @@ function SkillCard({ skill, index }: { skill: FeaturedSkill; index: number }) {
+         <div
+           className="relative h-full p-6 rounded-2xl"
+           style={{
+-            background: "rgba(9,9,16,0.90)",
++            background: "rgba(var(--background-rgb, 9,9,16), 0.90)",
+             border: `1px solid ${skill.color}18`,
+-            boxShadow: `0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)`,
++            boxShadow: `0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(var(--foreground-rgb, 255,255,255), 0.04)`,
+           }}
+         >
+           {/* Top accent line */}
+@@ -329,26 +329,26 @@ function SkillCard({ skill, index }: { skill: FeaturedSkill; index: number }) {
+               </div>
+             </div>
+             <div>
+-              <h3 className="font-display font-bold text-base text-white leading-tight">{skill.name}</h3>
++              <h3 className="font-display font-bold text-base text-foreground leading-tight">{skill.name}</h3>
+             </div>
+           </div>
+ 
+           {/* Description */}
+-          <p className="text-sm leading-relaxed mb-5 relative z-10" style={{ color: "rgba(255,255,255,0.42)" }}>
++          <p className="text-sm leading-relaxed mb-5 relative z-10" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.42)" }}>
+             {skill.desc}
+           </p>
+ 
+           {/* Level bar */}
+           <div className="space-y-1.5 relative z-10">
+             <div className="flex justify-between items-center">
+-              <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "rgba(255,255,255,0.2)" }}>
++              <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.2)" }}>
+                 Proficiency
+               </span>
+               <span className="text-xs font-black" style={{ color: skill.color }}>
+                 {skill.level}%
+               </span>
+             </div>
+-            <div className="h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
++            <div className="h-1 rounded-full overflow-hidden" style={{ background: "rgba(var(--foreground-rgb, 255,255,255), 0.06)" }}>
+               <motion.div
+                 initial={{ width: 0 }}
+                 animate={inView ? { width: `${skill.level}%` } : {}}
+@@ -414,7 +414,7 @@ export default function Skills() {
+       <div
+         aria-hidden
+         className="absolute top-0 left-0 right-0 h-px"
+-        style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)" }}
++        style={{ background: "linear-gradient(90deg, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06), transparent)" }}
+       />
+ 
+       <div className="max-w-6xl mx-auto px-6 relative z-10">
+@@ -427,7 +427,7 @@ export default function Skills() {
+             viewport={{ once: true }}
+             transition={{ duration: 0.9 }}
+             className="inline-block text-xs font-black uppercase mb-4"
+-            style={{ color: "#00f0ff" }}
++            style={{ color: "var(--accent-cyan)" }}
+           >
+             — What I Work With
+           </motion.span>
+@@ -436,12 +436,12 @@ export default function Skills() {
+             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+-            className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-white mb-4"
++            className="font-display font-black text-4xl sm:text-5xl md:text-7xl leading-none tracking-tight text-foreground mb-4"
+           >
+             My{" "}
+             <span
+               style={{
+-                background: "linear-gradient(135deg, #00f0ff 0%, #2563eb 55%, #0ea5e9 100%)",
++                background: "linear-gradient(135deg, var(--accent-cyan) 0%, #2563eb 55%, #0ea5e9 100%)",
+                 WebkitBackgroundClip: "text",
+                 WebkitTextFillColor: "transparent",
+                 backgroundClip: "text",
+@@ -456,7 +456,7 @@ export default function Skills() {
+             viewport={{ once: true }}
+             transition={{ duration: 0.7, delay: 0.3 }}
+             className="text-sm"
+-            style={{ color: "rgba(255,255,255,0.3)" }}
++            style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.3)" }}
+           >
+             Technologies I reach for every day — and some I'm still mastering.
+           </motion.p>
+@@ -483,7 +483,7 @@ export default function Skills() {
+         >
+           <p
+             className="text-center text-xs font-black tracking-widest uppercase mb-10"
+-            style={{ color: "rgba(255,255,255,0.2)" }}
++            style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.2)" }}
+           >
+             Featured Stack
+           </p>
+diff --git a/src/components/Timeline.tsx b/src/components/Timeline.tsx
+index 8088903..6866217 100644
+--- a/src/components/Timeline.tsx
++++ b/src/components/Timeline.tsx
+@@ -107,7 +107,7 @@ function ParallaxCard({ children, className = "" }: { children: React.ReactNode;
+     const rx = ((y - r.height / 2) / r.height) * -14;
+     const ry = ((x - r.width  / 2) / r.width ) *  14;
+     card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.03,1.03,1.03)`;
+-    glare.style.background = `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(255,255,255,0.1) 0%, transparent 65%)`;
++    glare.style.background = `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(var(--foreground-rgb, 255,255,255), 0.1) 0%, transparent 65%)`;
+     glare.style.opacity = "1";
+   }, []);
+ 
+@@ -169,11 +169,10 @@ function TimelineItem({ item, index }: { item: TItem; index: number }) {
+         >
+           <ParallaxCard>
+             <div
+-              className="relative rounded-2xl overflow-hidden"
++              className="relative rounded-2xl overflow-hidden bg-background/90 backdrop-blur-md"
+               style={{
+-                background: "rgba(9,9,16,0.92)",
+-                border: "1px solid rgba(255,255,255,0.07)",
+-                boxShadow: `0 20px 60px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.04) inset`,
++                border: "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.07)",
++                boxShadow: `0 20px 60px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(var(--foreground-rgb, 255,255,255), 0.04) inset`,
+               }}
+             >
+               {/* Colored left accent bar */}
+@@ -223,15 +222,15 @@ function TimelineItem({ item, index }: { item: TItem; index: number }) {
+                 </div>
+ 
+                 {/* Title + place */}
+-                <h3 className="font-display font-bold text-xl md:text-2xl text-white mb-1 leading-tight">
++                <h3 className="font-display font-bold text-xl md:text-2xl text-foreground mb-1 leading-tight">
+                   {item.title}
+                 </h3>
+-                <p className="text-sm mb-4 font-medium" style={{ color: "rgba(255,255,255,0.3)" }}>
++                <p className="text-sm mb-4 font-medium" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.6)" }}>
+                   {item.place}
+                 </p>
+ 
+                 {/* Description */}
+-                <p className="text-sm leading-[1.8]" style={{ color: "rgba(255,255,255,0.5)" }}>
++                <p className="text-sm leading-[1.8]" style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.8)" }}>
+                   {item.description}
+                 </p>
+ 
+@@ -292,7 +291,7 @@ function TimelineItem({ item, index }: { item: TItem; index: number }) {
+             style={{
+               background: `radial-gradient(circle, ${color}22 0%, ${color}08 100%)`,
+               border: `1.5px solid ${color}`,
+-              boxShadow: `0 0 20px ${glow}, inset 0 1px 0 rgba(255,255,255,0.15)`,
++              boxShadow: `0 0 20px ${glow}, inset 0 1px 0 rgba(var(--foreground-rgb, 255,255,255), 0.15)`,
+             }}
+           >
+             <Icon size={18} style={{ color }} />
+@@ -369,7 +368,7 @@ export default function Timeline() {
+       <div
+         aria-hidden
+         className="absolute top-0 left-0 right-0 h-px"
+-        style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)" }}
++        style={{ background: "linear-gradient(90deg, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06), transparent)" }}
+       />
+ 
+       <div className="max-w-5xl mx-auto px-6 relative z-10">
+@@ -392,7 +391,7 @@ export default function Timeline() {
+             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+-            className="font-display font-black text-5xl md:text-7xl leading-none tracking-tight text-white mb-4"
++            className="font-display font-black text-5xl md:text-7xl leading-none tracking-tight text-foreground mb-4"
+           >
+             Experience
+           </motion.h2>
+@@ -403,7 +402,7 @@ export default function Timeline() {
+             viewport={{ once: true }}
+             transition={{ duration: 0.7, delay: 0.35 }}
+             className="text-sm"
+-            style={{ color: "rgba(255,255,255,0.3)" }}
++            style={{ color: "rgba(var(--foreground-rgb, 255,255,255), 0.3)" }}
+           >
+             Scroll to trace my journey. Hover the cards — they respond.
+           </motion.p>
+@@ -418,7 +417,7 @@ export default function Timeline() {
+ 
+         {/* -- End cap -- */}
+         <div className="flex items-center justify-center mt-16 gap-4">
+-          <div className="flex-1 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(255,255,255,0.06))" }} />
++          <div className="flex-1 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06))" }} />
+           <motion.div
+             initial={{ scale: 0 }}
+             whileInView={{ scale: 1 }}
+@@ -434,7 +433,7 @@ export default function Timeline() {
+             <ChevronRight size={12} />
+             <span>More ahead</span>
+           </motion.div>
+-          <div className="flex-1 h-px" style={{ background: "linear-gradient(to left, transparent, rgba(255,255,255,0.06))" }} />
++          <div className="flex-1 h-px" style={{ background: "linear-gradient(to left, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06))" }} />
+         </div>
+ 
+       </div>

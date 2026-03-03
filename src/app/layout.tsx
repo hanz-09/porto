@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -33,11 +34,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body className={`${inter.variable} ${spaceGrotesk.variable} antialiased max-w-[100vw] overflow-x-hidden`}>
-        <div className="flex min-h-screen w-full flex-col overflow-x-hidden relative">
-          {children}
-        </div>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <div className="flex min-h-screen w-full flex-col overflow-x-hidden relative">
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

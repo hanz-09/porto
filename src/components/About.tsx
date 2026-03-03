@@ -10,6 +10,8 @@ import {
 import { Code2, Palette, Zap, Globe } from "lucide-react";
 import ProfileCard from "./ProfileCard";
 import TextType from "./TextType";
+import { useTheme } from "next-themes";
+
 
 /* ─────────────────────────────────────────────────────────
    Tech data
@@ -76,6 +78,7 @@ function Reveal({
 ───────────────────────────────────────────────────────── */
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
+  const { resolvedTheme } = useTheme();
 
   // Section-level scroll-in / scroll-out — large transforms so it's very noticeable
   const { scrollYProgress } = useScroll({
@@ -112,14 +115,14 @@ export default function About() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 70% 50% at 20% 60%, rgba(0,240,255,0.04) 0%, transparent 70%), " +
+            "radial-gradient(ellipse 70% 50% at 20% 60%, rgba(var(--accent-cyan-rgb, 0,240,255),0.04) 0%, transparent 70%), " +
             "radial-gradient(ellipse 60% 50% at 80% 30%, rgba(37,99,235,0.05) 0%, transparent 70%)",
         }}
       />
       <div
         aria-hidden
         className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)" }}
+        style={{ background: "linear-gradient(90deg, transparent, rgba(var(--foreground-rgb, 255,255,255), 0.06), transparent)" }}
       />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
@@ -128,18 +131,17 @@ export default function About() {
         <Reveal className="text-center mb-16 md:mb-24">
           <span
             className="inline-block text-xs font-bold tracking-[0.35em] uppercase mb-4"
-            style={{ color: "#00f0ff" }}
+            style={{ color: resolvedTheme === 'light' ? "#2563eb" : "var(--accent-cyan)" }}
           >
             — Get to know me
           </span>
           <h2
-            className="font-display font-black text-4xl sm:text-5xl md:text-6xl leading-none tracking-tight"
-            style={{ color: "#ffffff" }}
+            className="font-display font-black text-4xl sm:text-5xl md:text-6xl leading-none tracking-tight text-foreground"
           >
             About{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #00f0ff 0%, #2563eb 50%, #0ea5e9 100%)",
+                background: "linear-gradient(135deg, var(--accent-cyan) 0%, #2563eb 50%, #0ea5e9 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -162,8 +164,7 @@ export default function About() {
           <div className="space-y-8">
             <Reveal fromRight delay={0.1}>
               <h3
-                className="font-display font-bold text-2xl md:text-3xl leading-snug"
-                style={{ color: "#ffffff" }}
+                className="font-display font-bold text-2xl md:text-3xl leading-snug text-foreground"
               >
                 A passionate developer who loves to{" "}
                 <TextType
@@ -179,23 +180,23 @@ export default function About() {
                   pauseAfterType={2000}
                   className="font-display font-bold"
                   textStyle={{
-                    background: "linear-gradient(90deg, #00f0ff, #2563eb)",
+                    background: "linear-gradient(90deg, var(--accent-cyan), #2563eb)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
                   }}
-                  cursorClassName="bg-[#00f0ff] mx-[2px]"
+                  cursorClassName="bg-[var(--accent-cyan)] mx-[2px]"
                 />
               </h3>
             </Reveal>
 
             <Reveal fromRight delay={0.15}>
-              <div className="space-y-4 text-[15px] leading-[1.8]" style={{ color: "rgba(255,255,255,0.5)" }}>
+              <div className="space-y-4 text-[15px] leading-[1.8] text-foreground/70 dark:text-foreground/75">
                 <p>
-                  Hai! Aku Farhan, seorang <strong className="text-white/80">Frontend Developer</strong> berbasis di Malang, Indonesia. Aku suka mengubah ide-ide kreatif menjadi pengalaman web yang interaktif, cepat, dan memanjakan mata.
+                  Hai! Aku Farhan, seorang <strong className="text-foreground/80">Frontend Developer</strong> berbasis di Batam, Indonesia. Aku suka mengubah ide-ide kreatif menjadi pengalaman web yang interaktif, cepat, dan memanjakan mata.
                 </p>
                 <p>
-                  Spesialisiku ada di ekosistem <strong className="text-white/80">React & Next.js</strong> — dari membangun UI yang responsif hingga mengoptimasi performa dan aksesibilitas. Setiap piksel itu penting bagiku.
+                  Spesialisiku ada di ekosistem <strong className="text-foreground/80">React & Next.js</strong> — dari membangun UI yang responsif hingga mengoptimasi performa dan aksesibilitas. Setiap piksel itu penting bagiku.
                 </p>
               </div>
             </Reveal>
@@ -203,38 +204,38 @@ export default function About() {
             {/* Tech stack chips */}
             <Reveal fromRight delay={0.2}>
               <div className="space-y-3">
-                <p className="text-xs font-bold tracking-widest uppercase" style={{ color: "rgba(255,255,255,0.25)" }}>
+                <p className="text-xs font-bold tracking-widest uppercase text-foreground/50">
                   Tech I Work With
                 </p>
                 <div className="grid grid-cols-2 gap-3">
                   {techs.map(({ icon: Icon, label, desc }) => (
                     <div
                       key={label}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-default"
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-default group"
                       style={{
-                        background: "rgba(255,255,255,0.03)",
-                        border: "1px solid rgba(255,255,255,0.07)",
+                        background: resolvedTheme === 'light' ? "rgba(15,23,42, 0.02)" : "rgba(var(--foreground-rgb, 255,255,255), 0.03)",
+                        border: resolvedTheme === 'light' ? "1px solid rgba(15,23,42, 0.08)" : "1px solid rgba(var(--foreground-rgb, 255,255,255), 0.07)",
                       }}
                       onMouseEnter={(e) => {
                         const el = e.currentTarget as HTMLElement;
-                        el.style.borderColor = "rgba(0,240,255,0.25)";
-                        el.style.background = "rgba(0,240,255,0.05)";
+                        el.style.borderColor = resolvedTheme === 'light' ? "rgba(37,99,235,0.25)" : "rgba(var(--accent-cyan-rgb, 0,240,255),0.25)";
+                        el.style.background = resolvedTheme === 'light' ? "rgba(37,99,235,0.05)" : "rgba(var(--accent-cyan-rgb, 0,240,255),0.05)";
                       }}
                       onMouseLeave={(e) => {
                         const el = e.currentTarget as HTMLElement;
-                        el.style.borderColor = "rgba(255,255,255,0.07)";
-                        el.style.background = "rgba(255,255,255,0.03)";
+                        el.style.borderColor = resolvedTheme === 'light' ? "rgba(15,23,42, 0.08)" : "rgba(var(--foreground-rgb, 255,255,255), 0.07)";
+                        el.style.background = resolvedTheme === 'light' ? "rgba(15,23,42, 0.02)" : "rgba(var(--foreground-rgb, 255,255,255), 0.03)";
                       }}
                     >
                       <div
                         className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                        style={{ background: "rgba(0,240,255,0.1)" }}
+                        style={{ background: resolvedTheme === 'light' ? "rgba(37,99,235,0.1)" : "rgba(var(--accent-cyan-rgb, 0,240,255),0.1)" }}
                       >
-                        <Icon size={14} style={{ color: "#00f0ff" }} />
+                        <Icon size={14} style={{ color: resolvedTheme === 'light' ? "#2563eb" : "var(--accent-cyan)" }} />
                       </div>
                       <div className="min-w-0">
-                        <div className="text-xs font-bold text-white/80 truncate">{label}</div>
-                        <div className="text-[10px] text-white/30 truncate">{desc}</div>
+                        <div className="text-xs font-bold text-foreground/80 truncate">{label}</div>
+                        <div className="text-[10px] text-foreground/50 dark:text-foreground/40 truncate">{desc}</div>
                       </div>
                     </div>
                   ))}

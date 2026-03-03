@@ -32,7 +32,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="relative w-full border-t border-white/10 bg-black/50 backdrop-blur-lg">
+    <footer className="relative w-full border-t border-foreground/10 bg-background/50 backdrop-blur-lg">
       {/* Subtle top glow line */}
       <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-cyan-500/20 to-transparent" />
 
@@ -47,8 +47,8 @@ export default function Footer() {
         >
           
           {/* Left: Branding & Time */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 text-xs font-semibold tracking-widest uppercase text-white/50">
-            <div className="flex items-center gap-1.5 transition-colors hover:text-white/80">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 text-xs font-semibold tracking-widest uppercase text-foreground/50">
+            <div className="flex items-center gap-1.5 transition-colors hover:text-foreground/80">
               <span>&copy; {new Date().getFullYear()}</span>
               <span className="w-1 h-1 rounded-full bg-white/20 mx-2" />
               <span>Built with <Heart size={12} className="inline text-pink-500 fill-pink-500 animate-pulse" /> by Han</span>
@@ -69,7 +69,7 @@ export default function Footer() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.2 + (i * 0.1), duration: 0.5 }}
-                  className="group flex items-center gap-2 text-xs font-semibold text-white/50 hover:text-white transition-colors"
+                  className="group flex items-center gap-2 text-xs font-semibold text-foreground/50 hover:text-foreground transition-colors"
                 >
                   <Icon size={14} className="group-hover:text-cyan-400 transition-colors" />
                   <span className="uppercase tracking-widest">{link.label}</span>
